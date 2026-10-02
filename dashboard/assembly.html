@@ -52,9 +52,10 @@ Work sink: ~/studex-os/nexus/work/   MCP engine: http://127.0.0.1:8765
 Local models first. No secrets. Claim one seat. File inbox/rollcall-&lt;name&gt;.md</pre>
 <h2>Waiting on Agent Lord</h2>
 <ul class="sub" style="line-height:2">
-  <li>Orgo API key + computer id → ~/.studex-os/secrets.env</li>
-  <li>Google Drive folder the fleet pushes into</li>
-  <li>Go-live on AgentMail sends (drafts until then)</li>
+  <li>Orgo Global Markets computer id (key on disk)</li>
+  <li>AGENTMAIL_SEND=yes (drafts until then)</li>
+  <li>Discord app/guild/channel IDs for grokbot-os slash</li>
+  <li>Buzz membership yes/no</li>
 </ul>
 <footer>Command deck · Owner Tumelo Ramaphosa · 2026</footer>
 <script>
@@ -75,8 +76,8 @@ async function load(){
     ["MCP engine", health.ok?"LIVE":"DOWN", "127.0.0.1:8765"],
     ["Orgo API", health.orgo_key==="present"?"KEY":"WAITING", "Global Markets VM"],
     ["AgentMail", health.agentmail_key==="present"?"KEY":"WAITING", "fleet inboxes"],
-    ["Ollama", health.ollama?"LIVE":"CHECK", ":11434 local-first"],
-    ["Work sink", "READY", "~/studex-os/nexus/work"],
+    ["Ollama", health.ollama_port?"PORT":"CHECK", ":11434 local-first"],
+    ["Death Star", "LIVE", "Google Drive work sink"],
   ];
   document.getElementById("planes").innerHTML = planes.map(([k,v,s])=>`<div class="plane"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join("");
   document.getElementById("seats").innerHTML = Object.values(seats).map(s=>`<tr><td>${s.name||""}</td><td>${s.seat||""}</td><td>${s.runtime||"—"}</td><td>${s.model||""}</td><td>${pill(s.status)}</td></tr>`).join("");

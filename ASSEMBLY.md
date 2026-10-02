@@ -2,7 +2,7 @@
 
 Date: 2026-10-02
 Owner: Tumelo Ramaphosa
-Status: wiring. Drive path pending. Orgo API pending.
+Status: engine live. Drive Death Star attached. Orgo path corrected to www.orgo.ai/api. AgentMail inboxes live.
 
 ## Decision
 
@@ -26,7 +26,7 @@ No second registry. `seats.json` stays source of truth.
 | Models | Ollama `:11434`, LM Studio, mesh-llm `:3131` | Ollama listening |
 | Ingress | Cloudflare tunnel `hermes-dashboard` | tunnel up; some backends 502 |
 | Memory | `~/studex-os/shared-memory.db` + Obsidian + ChromaDB | present |
-| Work sink | `nexus/work/` then Google Drive | local ready; Drive TBD |
+| Work sink | `nexus/work/` + Drive Death Star | list/read live; service-account upload 403 (no quota) — write locally until shared-drive/OAuth |
 | DeerFlow | Super-agent harness (`~/deer-flow`) | checkout present; run on Orgo Super Agents (Mac RAM too tight) |
 | DroidDesk | Fold roaming Linux desk | vendored; APK + heartbeat URL pending |
 
@@ -41,13 +41,13 @@ No second registry. `seats.json` stays source of truth.
 
 ## Work contract
 
-Until the Drive is attached:
+Local write:
 
 ```
 ~/studex-os/nexus/work/<agent-or-lane>/YYYY-MM-DD-<artifact>
 ```
 
-When Drive arrives, that tree is the mount point. Agents keep the same paths.
+Drive Death Star is the fleet push target. Lane IDs live in `drive.json`. Agents keep the same local paths.
 
 ## Secrets
 
@@ -61,6 +61,8 @@ Drop the Orgo API into `~/.studex-os/secrets.env` (not the repo).
 
 ## Next human inputs
 
-1. Orgo API (key + base URL + Global Markets computer id)
-2. Google Drive folder to push work into
-3. Confirm AgentMail sends are allowed (drafts until then)
+1. Orgo Global Markets computer id (key is on disk as `orgo_live.key`)
+2. Confirm AgentMail sends (`AGENTMAIL_SEND=yes` — drafts until then)
+3. Discord application/guild/channel IDs for grokbot-os slash worker
+4. Buzz membership yes/no for the 8 npubs
+5. DROIDDESK_URL + Fold APK install

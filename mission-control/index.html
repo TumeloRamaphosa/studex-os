@@ -72,12 +72,13 @@ MCP engine: http://127.0.0.1:8765
 Local models first. No secrets. Claim one seat. File inbox/rollcall-&lt;name&gt;.md</pre>
 
 <h2>Waiting on Agent Lord</h2>
-<pre>Discord app + guild + channel
-Slack channels (KEEP etherdoge or NEW)
-xAI key for Grokbot
-Buzz membership for 8 npubs
-Orgo API + Global Markets computer
-Drive folder the fleet pushes into</pre>
+<pre>Discord app + guild + channel IDs (OpenClaw discord is already live)
+Slack extra channel IDs (etherdoge socket already live)
+xAI key for grokbot-os slash worker
+Buzz membership yes/no for 8 npubs
+Orgo Global Markets computer id
+AGENTMAIL_SEND=yes (drafts until then)
+DROIDDESK_URL + Fold APK</pre>
 
 <footer>Zero build · zero dependencies · open mission-control/index.html · Tumelo Ramaphosa</footer>
 
@@ -108,31 +109,34 @@ async function get(url){
 async function load(){
   const sast = new Date().toLocaleString("en-ZA",{timeZone:"Africa/Johannesburg", hour:"2-digit", minute:"2-digit", hour12:false});
   document.getElementById("clock").textContent = sast + " SAST";
-  const [health, seatsPack, bizPack, deer, droid] = await Promise.all([
+  const [health, seatsPack, bizPack, fleet] = await Promise.all([
     get(ENGINE+"/health"),
-    get(REGISTRY+"/seats.json"),
-    get(REGISTRY+"/businesses.json"),
-    get(ENGINE+"/deerflow"),
-    get(ENGINE+"/droiddesk")
+    get(REGISTRY+"/seats.json").then(v => v || get("seats.json")),
+    get(REGISTRY+"/businesses.json").then(v => v || get("../businesses.json")),
+    get(ENGINE+"/fleet")
   ]);
   const biz = (bizPack && bizPack.businesses) || BIZ;
   const seats = (seatsPack && seatsPack.seats) || {};
+  const d = (fleet && fleet.detail) || {};
+  const mailCount = d.agentmail && d.agentmail.count;
   document.getElementById("planes").innerHTML = [
     plane("Command deck", "LIVE", "studex-nexus.vercel.app"),
     plane("MCP engine", health && health.ok ? "LIVE" : "DOWN", "127.0.0.1:8765"),
-    plane("Orgo API", health && health.orgo_key==="present" ? "KEY" : "WAIT", "Global Markets VM"),
-    plane("AgentMail", health && health.agentmail_key==="present" ? "KEY" : "WAIT", "fleet inboxes"),
-    plane("Grokbot", "ARM", "Discord + Slack pending IDs"),
-    plane("Buzz nest", "KEYS", "8 agents on disk, membership TBD"),
-    plane("OpenClaw", "LIVE", ":18789"),
-    plane("DeerFlow", deer && deer.ok ? "LIVE" : "CHECKOUT", "github.com/bytedance/deer-flow"),
-    plane("DroidDesk", droid && droid.ok ? "LIVE" : "FOLD", "github.com/orailnoor/DroidDesk"),
-    plane("Work sink", "READY", "~/studex-os/nexus/work")
+    plane("OpenClaw", d.openclaw && d.openclaw.ok ? "LIVE" : "PORT", ":18789 health"),
+    plane("Orgo API", d.orgo && d.orgo.ok ? "LIVE" : (health && health.orgo_key==="present" ? "KEY" : "WAIT"), "www.orgo.ai/api"),
+    plane("AgentMail", d.agentmail && d.agentmail.ok ? String(mailCount||"LIVE") : "WAIT", "inboxes · send gated"),
+    plane("Death Star", d.drive && d.drive.ok ? "LIVE" : "MAP", "Google Drive work sink"),
+    plane("Buzz nest", d.buzz && d.buzz.ok ? "KEYS" : "WAIT", "agents on disk, membership TBD"),
+    plane("Grokbot", d.grokbot && d.grokbot.ok ? "ARM" : "WAIT", "Discord + Slack slash pending IDs"),
+    plane("DeerFlow", d.deerflow && d.deerflow.ok ? "LIVE" : "CHECKOUT", "run on Orgo Super Agents"),
+    plane("DroidDesk", d.droiddesk && d.droiddesk.ok ? "LIVE" : "FOLD", "install APK + heartbeat URL")
   ].join("");
   document.getElementById("harness").innerHTML = `
-    <tr><td>DeerFlow 2.0</td><td>Super-agent harness, subagents, MCP, Slack</td><td>~/deer-flow · run on Orgo Super Agents</td><td>${pill(deer && deer.ok ? "live" : "checkout")}</td></tr>
-    <tr><td>DroidDesk</td><td>Z Fold 6 Linux desk + Needle</td><td>~/grokbot-os/vendor/droiddesk</td><td>${pill(droid && droid.ok ? "live" : "install-apk")}</td></tr>
-    <tr><td>LangChain MCP</td><td>Shared tool bus</td><td>127.0.0.1:8765</td><td>${pill(health && health.ok ? "live" : "down")}</td></tr>
+    <tr><td>DeerFlow 2.0</td><td>Super-agent harness, subagents, MCP, Slack</td><td>~/deer-flow · run on Orgo Super Agents</td><td>${pill(d.deerflow && d.deerflow.ok ? "live" : "checkout")}</td></tr>
+    <tr><td>DroidDesk</td><td>Z Fold 6 Linux desk + Needle</td><td>~/grokbot-os/vendor/droiddesk</td><td>${pill(d.droiddesk && d.droiddesk.ok ? "live" : "install-apk")}</td></tr>
+    <tr><td>LangChain MCP</td><td>Shared tool bus + /fleet</td><td>127.0.0.1:8765</td><td>${pill(health && health.ok ? "live" : "down")}</td></tr>
+    <tr><td>Death Star</td><td>Google Drive fleet push</td><td>drive.json · 02-Operating-System</td><td>${pill(d.drive && d.drive.ok ? "live" : "map")}</td></tr>
+    <tr><td>OpenClaw</td><td>Discord + Slack gateway</td><td>:18789</td><td>${pill(d.openclaw && d.openclaw.ok ? "live" : "port")}</td></tr>
   `;
   document.getElementById("biz").innerHTML = Object.values(biz).map(b =>
     `<tr><td>${b.name||""}</td><td>${b.ceo||""}</td><td>${b.desk||""}</td><td>${b.site?`<a href="${b.site}">${b.site.replace(/^https?:\/\//,"")}</a>`:"—"}</td><td>${pill(b.status)}</td></tr>`

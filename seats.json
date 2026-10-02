@@ -1,7 +1,7 @@
 {
   "system": "StudEx Nexus Command Deck",
   "version": "1.0.0",
-  "total_seats": 16,
+  "total_seats": 19,
   "seats": {
     "robusca": {
       "name": "ROBUSCA",
@@ -178,18 +178,60 @@
       "seat": "Super Agent Harness",
       "status": "online",
       "model": "qwen2.5:7b",
-      "runtime": "deer-flow",
+      "runtime": "checkout",
       "machine": "checkout",
-      "heartbeat_at": "2026-10-02T12:17:09.968866+00:00"
+      "heartbeat_at": "2026-10-02T13:04:34.684597+00:00",
+      "role": "DeerFlow harness"
     },
     "droiddesk": {
       "name": "droiddesk",
       "seat": "Fold roaming desk",
       "status": "pending",
       "model": "needle",
-      "runtime": "droiddesk",
+      "runtime": "vendor",
       "machine": "z-fold-6",
-      "heartbeat_at": "2026-10-02T12:17:09.993768+00:00"
+      "heartbeat_at": "2026-10-02T13:04:34.686518+00:00",
+      "role": "DroidDesk APK pending"
+    },
+    "openclaw": {
+      "name": "openclaw",
+      "seat": "Gateway",
+      "status": "online",
+      "model": "local",
+      "runtime": "clawx",
+      "machine": null,
+      "heartbeat_at": "2026-10-02T13:04:34.673578+00:00",
+      "role": "Discord+Slack gateway"
+    },
+    "grokbot": {
+      "name": "grokbot",
+      "seat": "Grokbot",
+      "status": "online",
+      "model": "local",
+      "runtime": "grokbot-os",
+      "machine": null,
+      "heartbeat_at": "2026-10-02T13:04:34.688195+00:00",
+      "role": "slash worker + OpenClaw"
+    },
+    "buzz-nest": {
+      "name": "buzz-nest",
+      "seat": "Buzz",
+      "status": "pending",
+      "model": "local",
+      "runtime": "buzz-cli",
+      "machine": null,
+      "heartbeat_at": "2026-10-02T13:04:34.691011+00:00",
+      "role": "7 agents on disk"
+    },
+    "orgo-global-markets": {
+      "name": "orgo-global-markets",
+      "seat": "Global Markets",
+      "status": "online",
+      "model": "local",
+      "runtime": "orgo",
+      "machine": null,
+      "heartbeat_at": "2026-10-02T13:04:34.695152+00:00",
+      "role": "2 CPU / 16 GB running"
     }
   }
 }

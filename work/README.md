@@ -1,13 +1,16 @@
 # Work sink
 
-Agents push finished work here until the Agent Lord attaches the Google Drive.
+Agents write here first. Google Drive **Death Star** is attached as the fleet push target.
 
 ```
 work/<lane>/YYYY-MM-DD-<artifact>
 ```
 
+Drive folder: https://drive.google.com/drive/folders/1Ap0rPgpnUli89561ZKgHxY59AIXQ5zgx
+Lane map: `drive.json`
+
 Lanes:
 - orch, ops, global-markets, content, infra, herdr, agentmail, hermes-<profile>
 
-When Drive arrives, this directory becomes the mount or a synced copy. Keep names.
-No secrets. No credentials. No client private records.
+No secrets. No credentials. No client private records. Partner/NDA decks stay local and untracked.
+
