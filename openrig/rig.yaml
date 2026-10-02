@@ -53,7 +53,7 @@ pods:
           files: []
           actions:
             - type: send_text
-              value: "echo 'Orgo Global Markets seat — waiting for ORGO_API_KEY'"
+              value: "curl -sS --noproxy '*' http://127.0.0.1:8765/orgo | python3 -m json.tool | head"
               phase: after_ready
               idempotent: true
               applies_on: [fresh_start]

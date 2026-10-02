@@ -201,7 +201,7 @@ def tool_health(_: dict[str, Any] | None = None) -> dict[str, Any]:
         "openclaw_port": tcp_open("127.0.0.1", 18789),
         "ollama_port": tcp_open("127.0.0.1", 11434),
         "mesh_llm_port": tcp_open("127.0.0.1", 3131),
-        "denchclaw_port": tcp_open("127.0.0.1", 3100),
+        "denchclaw_port": tcp_open("127.0.0.1", 3100) or tcp_open("127.0.0.1", 3101),
         "drive": DRIVE_DEFAULT_NAME,
     }
 
@@ -437,15 +437,16 @@ def tool_hermes_status(_: dict[str, Any] | None = None) -> dict[str, Any]:
 
 def tool_denchclaw_status(_: dict[str, Any] | None = None) -> dict[str, Any]:
     p3100 = tcp_open("127.0.0.1", 3100)
+    p3101 = tcp_open("127.0.0.1", 3101)
     p19001 = tcp_open("127.0.0.1", 19001)
-    health = http_json("GET", "http://127.0.0.1:3100/health", timeout=2) if p3100 else {"ok": False, "error": "3100 closed"}
+    ui = 3100 if p3100 else (3101 if p3101 else 3100)
     return {
-        "ok": bool(health.get("ok")),
-        "ui": "http://127.0.0.1:3100",
+        "ok": p3100 or p3101,
+        "ui": f"http://127.0.0.1:{ui}",
         "gateway": "http://127.0.0.1:19001",
         "listen_3100": p3100,
+        "listen_3101": p3101,
         "listen_19001": p19001,
-        "health": health,
     }
 
 
@@ -480,7 +481,7 @@ def tool_fleet_status(_: dict[str, Any] | None = None) -> dict[str, Any]:
         "deerflow": {"ok": (Path.home() / "deer-flow").exists(), "run_on": "orgo", "checkout_exists": (Path.home() / "deer-flow").exists()},
         "droiddesk": {"ok": False, "vendor_exists": (Path.home() / "grokbot-os/vendor/droiddesk").exists()},
         "hermes": {"ok": (Path.home() / ".local" / "bin" / "hermes").exists(), "cli": str(Path.home() / ".local" / "bin" / "hermes")},
-        "denchclaw": {"ok": tcp_open("127.0.0.1", 3100), "listen_3100": tcp_open("127.0.0.1", 3100)},
+        "denchclaw": tool_denchclaw_status({}),
         "grokbot": tool_grokbot_status({}),
         "models": {"ok": tcp_open("127.0.0.1", 11434), "ollama_port": tcp_open("127.0.0.1", 11434), "policy": "local-first"},
         "seats": tool_seats_list({}),

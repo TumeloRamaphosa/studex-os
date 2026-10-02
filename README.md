@@ -1,11 +1,11 @@
 # StudEx Nexus
 
-Mission Control console — no build step, no dependencies.
+Finished build 1.1.0. No compile step.
 
 ```bash
-open mission-control/index.html
-python3 mcp/langchain_engine.py          # tool bus on :8765
-python3 mcp/test_engine.py               # smoke tests
+bash scripts/up.sh
+bash scripts/doctor.sh
+open dashboard/index.html
 ```
 
 Live deck: https://studex-nexus.vercel.app/mission-control

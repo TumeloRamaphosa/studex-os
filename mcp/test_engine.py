@@ -64,6 +64,11 @@ class EngineTests(unittest.TestCase):
         self.assertIn("repo", r)
         self.assertEqual(r["repo"], "https://github.com/bytedance/deer-flow")
 
+    def test_denchclaw_shape(self):
+        r = eng.dispatch("denchclaw_status", {})
+        self.assertIn("listen_3100", r)
+        self.assertIn("listen_3101", r)
+
     def test_droiddesk_probe_shape(self):
         r = eng.dispatch("droiddesk_status", {})
         self.assertIn("repo", r)

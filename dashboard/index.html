@@ -3,81 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StudEx Nexus — Command Deck</title>
+<title>StudEx Nexus — Finished Build</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0A0A0A; --panel:#121212; --gold:#C9A84C; --gold-dim:#8a7233;
-  --text:#EDE8DC; --muted:#9a927f; --green:#3ddc84; --amber:#f0b429; --red:#ff5b5b;
-}
+:root{--gold:#C9A84C;--obsidian:#0A0A0A;--panel:#121212;--text:#EDE8DC;--muted:#9a927f;--green:#3ddc84;--amber:#f0b429;--red:#ff5b5b}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:28px;min-height:100vh}
-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-h1{font-size:22px;letter-spacing:2px;font-weight:600;color:var(--gold)}
-h1 span{color:var(--text);font-weight:400}
-.sub{color:var(--muted);font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
-.badge{background:var(--gold);color:#0A0A0A;font-weight:700;padding:4px 12px;border-radius:20px;font-size:12px;letter-spacing:1px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
-.stat{background:var(--panel);border:1px solid #222;border-radius:10px;padding:16px}
-.stat .num{font-size:32px;font-weight:700;color:var(--gold)}
-.stat .lbl{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
-.card{background:var(--panel);border:1px solid #222;border-radius:10px;padding:18px;transition:border-color .2s}
-.card:hover{border-color:var(--gold-dim)}
-.card .name{font-size:16px;font-weight:700;letter-spacing:1px}
-.card .seat{color:var(--gold);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:4px 0 10px}
-.card .role{color:var(--muted);font-size:12px;line-height:1.5;min-height:36px;margin-bottom:12px}
-.pill{display:inline-block;padding:3px 10px;border-radius:12px;font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:700}
-.online{background:rgba(61,220,132,.15);color:var(--green)}
-.pending{background:rgba(240,180,41,.15);color:var(--amber)}
-.offline{background:rgba(255,91,91,.15);color:var(--red)}
-.meta{color:var(--muted);font-size:10px;margin-top:10px;display:flex;gap:10px;flex-wrap:wrap}
-footer{color:var(--muted);font-size:11px;margin-top:28px;text-align:center;letter-spacing:1px}
+body{background:var(--obsidian);color:var(--text);font-family:"Space Mono",monospace;padding:32px 28px 80px;max-width:1280px;margin:0 auto}
+h1{font-family:"Bebas Neue",sans-serif;font-size:clamp(48px,8vw,92px);letter-spacing:.06em;color:var(--gold);line-height:.9}
+h2{font-family:"Cormorant Garamond",serif;font-size:32px;color:var(--gold);margin:48px 0 16px;font-weight:600}
+.kicker{color:var(--muted);letter-spacing:.2em;text-transform:uppercase;font-size:11px;margin-bottom:12px}
+.badge{display:inline-block;background:var(--gold);color:var(--obsidian);font-weight:700;padding:6px 14px;font-size:11px;letter-spacing:.16em}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:28px 0}
+.stat{background:var(--panel);border:1px solid #222;padding:18px}
+.stat b{display:block;font-size:36px;color:var(--gold);font-family:"Bebas Neue",sans-serif}
+.stat span{color:var(--muted);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid #222;padding:16px}
+.card .n{font-family:"Cormorant Garamond",serif;font-size:22px}
+.card .s{color:var(--gold);font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin:6px 0}
+.card p{color:var(--muted);font-size:12px;line-height:1.5;min-height:36px}
+.pill{display:inline-block;padding:3px 10px;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.online{color:var(--green)}.pending{color:var(--amber)}.offline{color:var(--red)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+td,th{border-bottom:1px solid #222;padding:10px 8px;text-align:left}
+th{color:var(--gold);font-weight:400;letter-spacing:.12em;text-transform:uppercase;font-size:10px}
+pre{background:var(--panel);border:1px solid #222;padding:16px;overflow:auto;color:var(--gold);font-size:12px;line-height:1.55;white-space:pre-wrap}
+a{color:var(--gold)}
+footer{margin-top:56px;color:var(--muted);font-size:11px;letter-spacing:.1em}
+@media(max-width:720px){.stats{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<header><h1>STUDEX <span>NEXUS</span></h1><div class="badge">COMMAND DECK</div></header>
-<div class="sub">Sovereign AI Operating System · 16-Seat Force · Monitored by Nexus Command Deck</div>
+<div class="kicker">StudEx Group · Agent Lord · Build 1.1.0</div>
+<h1>NEXUS</h1>
+<p style="margin:10px 0 18px;color:var(--muted)">Finished operating system. Seats, businesses, Orgo desks, AgentMail, OpenClaw, Drive Death Star.</p>
+<span class="badge" id="build">SHIPPED</span>
 <div class="stats">
-  <div class="stat"><div class="num" id="sTotal">—</div><div class="lbl">Total Seats</div></div>
-  <div class="stat"><div class="num" id="sOnline" style="color:var(--green)">—</div><div class="lbl">Online</div></div>
-  <div class="stat"><div class="num" id="sPending" style="color:var(--amber)">—</div><div class="lbl">Awaiting Command</div></div>
-  <div class="stat"><div class="num" id="sOffline" style="color:var(--red)">—</div><div class="lbl">Offline</div></div>
+  <div class="stat"><b id="nSeats">—</b><span>Seats</span></div>
+  <div class="stat"><b id="nOnline" class="online">—</b><span>Online</span></div>
+  <div class="stat"><b id="nBiz">—</b><span>Businesses</span></div>
+  <div class="stat"><b id="nLive">—</b><span>Engine planes</span></div>
 </div>
-<div class="grid" id="grid"></div>
-<footer>seats.json registry · Owner: Tumelo Ramaphosa (Agent Lord) · 2026 · <a href="assembly.html" style="color:#C9A84C">Assembly Floor</a></footer>
+
+<h2>Planes</h2>
+<div class="grid" id="planes"></div>
+
+<h2>Businesses</h2>
+<table><thead><tr><th>Company</th><th>CEO</th><th>Desk</th><th>Site</th><th>Status</th></tr></thead><tbody id="biz"></tbody></table>
+
+<h2>Seats</h2>
+<div class="grid" id="seats"></div>
+
+<h2>Run this build</h2>
+<pre>open ~/studex-os/nexus/dashboard/index.html
+bash ~/studex-os/nexus/scripts/up.sh
+bash ~/studex-os/nexus/scripts/doctor.sh
+python3 ~/studex-os/nexus/mcp/test_engine.py</pre>
+
+<h2>Join prompt</h2>
+<pre>You are joining StudEx Nexus. Registry: https://studex-nexus.vercel.app/seats.json
+Work: ~/studex-os/nexus/work/   Engine: http://127.0.0.1:8765
+Local models first. No secrets. Claim one seat. File inbox/rollcall-&lt;name&gt;.md</pre>
+
+<h2>Ops gates (code is done)</h2>
+<pre>Discord slash IDs + xAI key → grokbot-os wrangler secrets
+Buzz membership yes → bash scripts/buzz-nest.sh
+AGENTMAIL_SEND=yes before any mail
+WhatsApp / publish still off
+DroidDesk APK + URL
+Drive upload needs Shared Drive or OAuth
+DeerFlow runtime on Orgo Super Agents, not this Mac</pre>
+
+<footer>Tumelo Ramaphosa · Victor Ndlovu · https://studex-nexus.vercel.app · GitHub TumeloRamaphosa/studex-os</footer>
 <script>
-async function load(){
-  let seats = {};
-  try{
-    const r = await fetch('seats.json', {cache:'no-store'});
-    seats = (await r.json()).seats || {};
-  }catch(e){ console.warn('fetch failed, using empty'); }
-  const grid = document.getElementById('grid');
+const ENGINE = "http://127.0.0.1:8765";
+const pill = s => `<span class="pill ${s}">${s}</span>`;
+const card = (n,s,d,st) => `<div class="card"><div class="n">${n}</div><div class="s">${s}</div><p>${d}</p>${pill(st)}</div>`;
+async function get(u){ try{ const r=await fetch(u,{cache:"no-store"}); if(!r.ok) return null; return r.json(); }catch(e){ return null; } }
+(async () => {
+  const [seatsPack, bizPack, health, fleet] = await Promise.all([
+    get("seats.json"), get("businesses.json"), get(ENGINE+"/health"), get(ENGINE+"/fleet")
+  ]);
+  const seats = (seatsPack && seatsPack.seats) || {};
+  const biz = (bizPack && bizPack.businesses) || {};
   const entries = Object.entries(seats);
   let online=0, pending=0, offline=0;
-  grid.innerHTML = '';
-  entries.forEach(([slug, s]) => {
-    const st = (s.status||'').toLowerCase();
-    if(st==='online') online++; else if(st==='offline') offline++; else pending++;
-    const card = document.createElement('div');
-    card.className='card';
-    card.innerHTML = `
-      <div class="name">${s.name||slug}</div>
-      <div class="seat">${s.seat||''}</div>
-      <div class="role">${s.role||''}</div>
-      <span class="pill ${st}">${s.status||'pending'}</span>
-      <div class="meta">
-        <span>${s.model||'—'}</span>
-        <span>${s.clearance||''}</span>
-      </div>`;
-    grid.appendChild(card);
-  });
-  document.getElementById('sTotal').textContent = entries.length;
-  document.getElementById('sOnline').textContent = online;
-  document.getElementById('sPending').textContent = pending;
-  document.getElementById('sOffline').textContent = offline;
-}
-load();
+  document.getElementById("seats").innerHTML = entries.map(([slug,s])=>{
+    const st=(s.status||"pending").toLowerCase();
+    if(st==="online") online++; else if(st==="offline") offline++; else pending++;
+    return card(s.name||slug, s.seat||"", s.role||s.model||"", st);
+  }).join("");
+  document.getElementById("nSeats").textContent = entries.length;
+  document.getElementById("nOnline").textContent = online;
+  document.getElementById("nBiz").textContent = Object.keys(biz).length;
+  document.getElementById("biz").innerHTML = Object.values(biz).map(b=>`<tr><td>${b.name}</td><td>${b.ceo||""}</td><td>${b.desk||""}</td><td>${b.site?`<a href="${b.site}">${b.site}</a>`:""}</td><td>${b.status||""}</td></tr>`).join("");
+  const d = (fleet && fleet.detail) || {};
+  const live = (fleet && fleet.live_count) || (health && health.ok ? 1 : 0);
+  document.getElementById("nLive").textContent = live;
+  document.getElementById("planes").innerHTML = [
+    card("Command deck","Vercel","studex-nexus.vercel.app","online"),
+    card("MCP engine",":8765", health&&health.ok?"health 200":"start scripts/up.sh", health&&health.ok?"online":"pending"),
+    card("OpenClaw",":18789", d.openclaw&&d.openclaw.ok?"Discord + Slack":"gateway", d.openclaw&&d.openclaw.ok?"online":"pending"),
+    card("Orgo","Global Markets", d.orgo&&d.orgo.ok?"key present":"key", d.orgo&&d.orgo.ok?"online":"pending"),
+    card("AgentMail","inboxes", d.agentmail&&d.agentmail.ok?"send gated":"key", d.agentmail&&d.agentmail.ok?"online":"pending"),
+    card("Death Star","Drive", "work sink list/read", "online"),
+    card("Buzz","nest", "keys on disk", d.buzz&&d.buzz.ok?"online":"pending"),
+    card("Grokbot","slash", "worker in ~/grokbot-os", d.grokbot&&d.grokbot.ok?"online":"pending"),
+    card("DenchClaw","CRM", d.denchclaw&&d.denchclaw.ok?(d.denchclaw.ui||":3101"):":3100/:3101", d.denchclaw&&d.denchclaw.ok?"online":"pending"),
+    card("DeerFlow","Orgo", "checkout · run on Super Agents", d.deerflow&&d.deerflow.ok?"online":"pending")
+  ].join("");
+})();
 </script>
 </body>
 </html>

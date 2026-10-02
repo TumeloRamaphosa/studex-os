@@ -5,7 +5,7 @@ OpenRig seats, Orgo Global Markets, DenchClaw, Buzz, Base44, Grok, Codex.
 
 Registry of record: `https://studex-nexus.vercel.app/seats.json`
 Local OS root: `~/studex-os/nexus/`
-Work inbox until Drive is attached: `~/studex-os/nexus/work/`
+Work inbox: `~/studex-os/nexus/work/` (Drive Death Star is attached for list/read)
 Push replies here: `~/studex-os/nexus/inbox/rollcall-<agent-name>.md`
 
 No secrets in replies. Say "key present", never the value.
@@ -24,7 +24,7 @@ You do not start a parallel OS. You attach to this one.
 COMMAND DECK
 - Live registry: https://studex-nexus.vercel.app/seats.json
 - Local root: /Users/tumeloramaphosa/studex-os/nexus/
-- Work root (until Drive is attached): /Users/tumeloramaphosa/studex-os/nexus/work/
+- Work root: /Users/tumeloramaphosa/studex-os/nexus/work/
 - Inbox: /Users/tumeloramaphosa/studex-os/nexus/inbox/
 - Shared memory: /Users/tumeloramaphosa/studex-os/shared-memory.db
 - MCP / LangChain engine: http://127.0.0.1:8765  (tools: seats, heartbeat, work.push, models, orgo, agentmail)
