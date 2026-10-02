@@ -8,8 +8,9 @@ python3 mcp/langchain_engine.py          # tool bus on :8765
 python3 mcp/test_engine.py               # smoke tests
 ```
 
-Live deck: https://studex-nexus.vercel.app/assembly.html
-Mission Control: open `mission-control/index.html` (zero build)
+Live deck: https://studex-nexus.vercel.app/mission-control
+Assembly: https://studex-nexus.vercel.app/assembly
+Closeout: `STATUS.md`
 
 Engine:
 

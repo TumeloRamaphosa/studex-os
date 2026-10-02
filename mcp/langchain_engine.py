@@ -129,6 +129,10 @@ def read_seats() -> dict[str, Any]:
 
 
 def write_seats(data: dict[str, Any]) -> None:
+    seats = data.get("seats") or {}
+    data["system"] = data.get("system") or "StudEx Nexus Command Deck"
+    data["version"] = data.get("version") or "1.1.0"
+    data["total_seats"] = len(seats)
     SEATS.parent.mkdir(parents=True, exist_ok=True)
     blob = json.dumps(data, indent=2) + "\n"
     SEATS.write_text(blob)
@@ -311,7 +315,9 @@ def slim_desktop(desk: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def tool_orgo_status(_: dict[str, Any] | None = None) -> dict[str, Any]:
+def tool_orgo_status(args: dict[str, Any] | None = None) -> dict[str, Any]:
+    args = args or {}
+    lite = bool(args.get("lite"))
     if not secret_present("ORGO_API_KEY"):
         return {"ok": False, "error": "ORGO_API_KEY missing — paste into ~/.studex-os/secrets.env or keep ~/.openclaw/keys/orgo_live.key"}
     key = os.environ["ORGO_API_KEY"]
@@ -319,7 +325,7 @@ def tool_orgo_status(_: dict[str, Any] | None = None) -> dict[str, Any]:
     listed = None
     base_used = ORGO_DEFAULT_BASE
     for base in _orgo_bases():
-        listed = http_json("GET", f"{base}/workspaces", headers=headers, timeout=8)
+        listed = http_json("GET", f"{base}/workspaces", headers=headers, timeout=6)
         if listed.get("ok"):
             base_used = base
             break
@@ -328,25 +334,28 @@ def tool_orgo_status(_: dict[str, Any] | None = None) -> dict[str, Any]:
     body = listed.get("body") or {}
     workspaces = body.get("workspaces") or body.get("projects") or []
     desks: list[dict[str, Any]] = []
-    for ws in workspaces:
-        wid = (ws or {}).get("id")
-        if not wid:
-            continue
-        detail = http_json("GET", f"{base_used}/workspaces/{wid}", headers=headers, timeout=10)
-        if not detail.get("ok"):
-            continue
-        for desk in (detail.get("body") or {}).get("desktops") or []:
-            if isinstance(desk, dict):
-                desks.append(slim_desktop(desk))
+    if not lite:
+        for ws in workspaces[:3]:
+            wid = (ws or {}).get("id")
+            if not wid:
+                continue
+            detail = http_json("GET", f"{base_used}/workspaces/{wid}", headers=headers, timeout=6)
+            if not detail.get("ok"):
+                continue
+            for desk in (detail.get("body") or {}).get("desktops") or []:
+                if isinstance(desk, dict):
+                    desks.append(slim_desktop(desk))
     running = [d for d in desks if d.get("status") == "running"]
     return {
         "ok": True,
         "docs": "https://docs.orgo.ai/api-reference/introduction",
         "base": base_used,
         "workspace_count": len(workspaces),
+        "workspace_names": [(ws or {}).get("name") for ws in workspaces if isinstance(ws, dict)],
         "desktops": desks,
         "running": [d.get("name") for d in running],
         "running_count": len(running),
+        "lite": lite,
     }
 
 
@@ -460,19 +469,20 @@ def tool_businesses_list(_: dict[str, Any] | None = None) -> dict[str, Any]:
 
 
 def tool_fleet_status(_: dict[str, Any] | None = None) -> dict[str, Any]:
+    # Local/fast only. Live HTTP lives on /orgo /agentmail /openclaw.
     probes = {
         "engine": tool_health({}),
-        "openclaw": tool_openclaw_status({}),
-        "orgo": tool_orgo_status({}),
-        "agentmail": tool_agentmail_inboxes({}),
+        "openclaw": {"ok": tcp_open("127.0.0.1", 18789), "listen": tcp_open("127.0.0.1", 18789), "port": 18789},
+        "orgo": {"ok": secret_present("ORGO_API_KEY"), "key": "present" if secret_present("ORGO_API_KEY") else "missing"},
+        "agentmail": {"ok": secret_present("AGENTMAIL_API_KEY"), "key": "present" if secret_present("AGENTMAIL_API_KEY") else "missing", "send": "blocked until AGENTMAIL_SEND=yes"},
         "drive": tool_drive_status({}),
         "buzz": tool_buzz_status({}),
-        "deerflow": tool_deerflow_status({}),
-        "droiddesk": tool_droiddesk_status({}),
-        "hermes": tool_hermes_status({}),
-        "denchclaw": tool_denchclaw_status({}),
+        "deerflow": {"ok": (Path.home() / "deer-flow").exists(), "run_on": "orgo", "checkout_exists": (Path.home() / "deer-flow").exists()},
+        "droiddesk": {"ok": False, "vendor_exists": (Path.home() / "grokbot-os/vendor/droiddesk").exists()},
+        "hermes": {"ok": (Path.home() / ".local" / "bin" / "hermes").exists(), "cli": str(Path.home() / ".local" / "bin" / "hermes")},
+        "denchclaw": {"ok": tcp_open("127.0.0.1", 3100), "listen_3100": tcp_open("127.0.0.1", 3100)},
         "grokbot": tool_grokbot_status({}),
-        "models": tool_models_list({}),
+        "models": {"ok": tcp_open("127.0.0.1", 11434), "ollama_port": tcp_open("127.0.0.1", 11434), "policy": "local-first"},
         "seats": tool_seats_list({}),
         "businesses": tool_businesses_list({}),
     }

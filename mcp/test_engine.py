@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Smoke tests for the StudEx LangChain MCP engine. No live network required except optional probes."""
+import json
 import os
 import sys
 import tempfile
@@ -43,6 +44,8 @@ class EngineTests(unittest.TestCase):
         seats = eng.dispatch("seats_list", {})
         self.assertIn("qa-bot", seats["seats"])
         self.assertEqual(seats["seats"]["qa-bot"]["model"], "test")
+        stored = json.loads((eng.SEATS).read_text())
+        self.assertEqual(stored["total_seats"], len(stored["seats"]))
 
     def test_work_push(self):
         r = eng.dispatch("work_push", {"lane": "ops", "filename": "note.md", "content": "hello studex"})

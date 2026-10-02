@@ -1,7 +1,7 @@
 {
   "system": "StudEx Nexus Command Deck",
-  "version": "1.0.0",
-  "total_seats": 19,
+  "version": "1.1.0",
+  "total_seats": 23,
   "seats": {
     "robusca": {
       "name": "ROBUSCA",

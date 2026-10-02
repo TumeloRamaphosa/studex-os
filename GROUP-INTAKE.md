@@ -18,10 +18,10 @@ BUZZ_COMMUNITY=studex-agents.communities.buzz.xyz
 
 ===== COMPUTE =====
 ORGO_COMPUTER=Global Markets
-ORGO_API_KEY=
-ORGO_BASE_URL=
+ORGO_API_KEY=KEEP
+ORGO_BASE_URL=https://www.orgo.ai/api
 HERMES_VM=keep
-DRIVE_FOLDER_URL=
+DRIVE_FOLDER_URL=https://drive.google.com/drive/folders/1Ap0rPgpnUli89561ZKgHxY59AIXQ5zgx
 DEERFLOW_HOST=orgo-super-agents
 DROIDDESK_URL=
 

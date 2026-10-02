@@ -2,7 +2,7 @@
 
 Date: 2026-10-02
 Owner: Tumelo Ramaphosa
-Status: engine live. Drive Death Star attached. Orgo path corrected to www.orgo.ai/api. AgentMail inboxes live.
+Status: shipped. Engine, Orgo desks, AgentMail inboxes, Drive list/read, Vercel deck live. Gated items in STATUS.md.
 
 ## Decision
 
@@ -21,8 +21,8 @@ No second registry. `seats.json` stays source of truth.
 | Agent floor | Herdr workspace `studex-nexus` | seed spec written; launch from a Herdr pane |
 | Seat topology | OpenRig rig `studex-nexus` | spec in `openrig/rig.yaml` |
 | Tool bus | LangChain MCP engine `:8765` | `mcp/langchain_engine.py` |
-| CRM / mail | DenchClaw `:3100` + AgentMail | DenchClaw up; mail send gated |
-| Markets VM | Orgo Global Markets | waiting on API |
+| CRM / mail | DenchClaw `:3100` + AgentMail | DenchClaw UI down; 10 inboxes live; send gated |
+| Markets VM | Orgo Global Markets | 5 desks running |
 | Models | Ollama `:11434`, LM Studio, mesh-llm `:3131` | Ollama listening |
 | Ingress | Cloudflare tunnel `hermes-dashboard` | tunnel up; some backends 502 |
 | Memory | `~/studex-os/shared-memory.db` + Obsidian + ChromaDB | present |
@@ -61,8 +61,4 @@ Drop the Orgo API into `~/.studex-os/secrets.env` (not the repo).
 
 ## Next human inputs
 
-1. Orgo Global Markets computer id (key is on disk as `orgo_live.key`)
-2. Confirm AgentMail sends (`AGENTMAIL_SEND=yes` — drafts until then)
-3. Discord application/guild/channel IDs for grokbot-os slash worker
-4. Buzz membership yes/no for the 8 npubs
-5. DROIDDESK_URL + Fold APK install
+See `STATUS.md`. Orgo key is live. Remaining: Discord slash IDs, Buzz membership, AGENTMAIL_SEND, DroidDesk URL, Drive upload quota.
