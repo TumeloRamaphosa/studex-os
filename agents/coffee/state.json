@@ -1,0 +1,9 @@
+{
+  "agent": "COFFEE",
+  "seat": "Operations (Ops)",
+  "role": "Daily operational runbooks & budget",
+  "status": "online",
+  "current_task": "Awaiting first command from Agent Lord",
+  "github_sync": "pending",
+  "obsidian_sync": "active"
+}

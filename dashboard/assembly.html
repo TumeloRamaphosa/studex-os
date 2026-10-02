@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudEx Nexus — Assembly Floor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--obsidian:#0A0A0A;--panel:#121212;--text:#EDE8DC;--muted:#9a927f;--green:#3ddc84;--amber:#f0b429;--red:#ff5b5b;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--obsidian);color:var(--text);font-family:"Cormorant Garamond",Georgia,serif;padding:32px;max-width:1200px;margin:0 auto;}
+h1{font-size:42px;letter-spacing:.08em;color:var(--gold);font-weight:500;}
+h1 span{color:var(--text);}
+.sub{font-family:"Space Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:8px 0 28px;}
+.planes{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:28px;}
+.plane{background:var(--panel);border:1px solid #222;padding:16px;border-radius:10px;}
+.plane .k{font-family:"Space Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);}
+.plane .v{font-size:22px;margin-top:8px;}
+.plane .s{font-family:"Space Mono",ui-monospace,monospace;font-size:11px;color:var(--muted);margin-top:6px;}
+h2{font-size:22px;color:var(--gold);margin:28px 0 12px;letter-spacing:.06em;}
+table{width:100%;border-collapse:collapse;font-family:"Space Mono",ui-monospace,monospace;font-size:12px;}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #222;}
+th{color:var(--gold);letter-spacing:.12em;text-transform:uppercase;font-size:10px;}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;}
+.on{background:rgba(61,220,132,.15);color:var(--green);}
+.wait{background:rgba(240,180,41,.15);color:var(--amber);}
+.off{background:rgba(255,91,91,.15);color:var(--red);}
+.prompt{background:#111;border:1px solid #2a2a2a;padding:18px;border-radius:10px;font-family:"Space Mono",ui-monospace,monospace;font-size:12px;white-space:pre-wrap;line-height:1.55;color:#d9d2c3;}
+a{color:var(--gold);}
+footer{margin-top:40px;color:var(--muted);font-family:"Space Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.1em;}
+</style>
+</head>
+<body>
+<h1>STUDEX <span>ASSEMBLY FLOOR</span></h1>
+<p class="sub">All businesses · Grokbot · Buzz · Discord · Slack · Orgo · Local models</p>
+<div class="planes" id="planes"></div>
+<h2>Businesses</h2>
+<table>
+  <thead><tr><th>Company</th><th>CEO</th><th>Desk</th><th>Site</th><th>Status</th></tr></thead>
+  <tbody id="biz"></tbody>
+</table>
+<h2>Seats</h2>
+<table>
+  <thead><tr><th>Name</th><th>Seat</th><th>Runtime</th><th>Model</th><th>Status</th></tr></thead>
+  <tbody id="seats"></tbody>
+</table>
+<h2>Join prompt</h2>
+<p class="sub">Send to every agent. Full text in JOIN-THE-OS.md</p>
+<pre class="prompt">You are joining StudEx Nexus. Registry: https://studex-nexus.vercel.app/seats.json
+Work sink: ~/studex-os/nexus/work/   MCP engine: http://127.0.0.1:8765
+Local models first. No secrets. Claim one seat. File inbox/rollcall-&lt;name&gt;.md</pre>
+<h2>Waiting on Agent Lord</h2>
+<ul class="sub" style="line-height:2">
+  <li>Orgo API key + computer id → ~/.studex-os/secrets.env</li>
+  <li>Google Drive folder the fleet pushes into</li>
+  <li>Go-live on AgentMail sends (drafts until then)</li>
+</ul>
+<footer>Command deck · Owner Tumelo Ramaphosa · 2026</footer>
+<script>
+const ENGINE = "http://127.0.0.1:8765";
+function pill(st){
+  const s=(st||"").toLowerCase();
+  const c = s==="online"||s===true||s==="ok" ? "on" : (s==="missing"||s==="offline"||s===false ? "off" : "wait");
+  return `<span class="pill ${c}">${st||"pending"}</span>`;
+}
+async function load(){
+  let seats={}, health={}, biz={};
+  try{ seats = (await (await fetch("seats.json",{cache:"no-store"})).json()).seats || {}; }catch(e){}
+  try{ biz = ((await (await fetch("businesses.json",{cache:"no-store"})).json()).businesses) || {}; }catch(e){}
+  try{ health = await (await fetch(ENGINE+"/health",{cache:"no-store"})).json(); }catch(e){ health={ok:false}; }
+  document.getElementById("biz").innerHTML = Object.values(biz).map(b=>`<tr><td>${b.name||""}</td><td>${b.ceo||""}</td><td>${b.desk||""}</td><td>${b.site?`<a href="${b.site}">${b.site.replace(/^https?:\/\//,"")}</a>`:"—"}</td><td>${pill(b.status)}</td></tr>`).join("");
+  const planes=[
+    ["Command deck","LIVE","studex-nexus.vercel.app"],
+    ["MCP engine", health.ok?"LIVE":"DOWN", "127.0.0.1:8765"],
+    ["Orgo API", health.orgo_key==="present"?"KEY":"WAITING", "Global Markets VM"],
+    ["AgentMail", health.agentmail_key==="present"?"KEY":"WAITING", "fleet inboxes"],
+    ["Ollama", health.ollama?"LIVE":"CHECK", ":11434 local-first"],
+    ["Work sink", "READY", "~/studex-os/nexus/work"],
+  ];
+  document.getElementById("planes").innerHTML = planes.map(([k,v,s])=>`<div class="plane"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join("");
+  document.getElementById("seats").innerHTML = Object.values(seats).map(s=>`<tr><td>${s.name||""}</td><td>${s.seat||""}</td><td>${s.runtime||"—"}</td><td>${s.model||""}</td><td>${pill(s.status)}</td></tr>`).join("");
+}
+load();
+</script>
+</body>
+</html>

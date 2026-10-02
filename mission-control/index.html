@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StudEx Mission Control</title>
+<style>
+:root{
+  --gold:#C9A84C; --obsidian:#0A0A0A; --panel:#111111; --line:#242018;
+  --text:#EDE8DC; --muted:#9A927F; --green:#3DDC84; --amber:#F0B429; --red:#FF5B5B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--obsidian);color:var(--text);font-family:Georgia,"Times New Roman",serif}
+body{padding:36px 40px 80px;max-width:1280px;margin:0 auto}
+header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--gold);padding-bottom:18px;margin-bottom:28px}
+h1{font-size:44px;font-weight:500;letter-spacing:.12em;color:var(--gold)}
+h1 span{color:var(--text);font-weight:400}
+.eyebrow{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.badge{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold);padding:6px 12px}
+h2{font-size:20px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;margin:36px 0 14px;font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);padding:16px 18px}
+.card .k{font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.card .v{font-size:26px;margin-top:8px}
+.card .s{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4}
+table{width:100%;border-collapse:collapse;font-family:ui-monospace,Menlo,monospace;font-size:12px}
+th,td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--gold);letter-spacing:.14em;text-transform:uppercase;font-size:10px;font-weight:500}
+a{color:var(--gold);text-decoration:none}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.on{background:rgba(61,220,132,.14);color:var(--green)}
+.wait{background:rgba(240,180,41,.14);color:var(--amber)}
+.off{background:rgba(255,91,91,.14);color:var(--red)}
+pre{background:#0E0E0E;border:1px solid var(--line);padding:18px;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.55;white-space:pre-wrap;color:#D9D2C3}
+footer{margin-top:48px;font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.12em;color:var(--muted)}
+@media (max-width:720px){body{padding:22px}h1{font-size:28px}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="eyebrow">StudEx Group · Agent Lord</div>
+    <h1>MISSION <span>CONTROL</span></h1>
+  </div>
+  <div class="badge" id="clock">SAST</div>
+</header>
+
+<section class="grid" id="planes"></section>
+
+<h2>Harnesses</h2>
+<table>
+  <thead><tr><th>Node</th><th>Role</th><th>Where</th><th>Status</th></tr></thead>
+  <tbody id="harness"></tbody>
+</table>
+
+<h2>Businesses</h2>
+<table>
+  <thead><tr><th>Company</th><th>CEO</th><th>Desk</th><th>Site</th><th>Status</th></tr></thead>
+  <tbody id="biz"></tbody>
+</table>
+
+<h2>Seats</h2>
+<table>
+  <thead><tr><th>Name</th><th>Seat</th><th>Model</th><th>Status</th></tr></thead>
+  <tbody id="seats"></tbody>
+</table>
+
+<h2>Join prompt</h2>
+<pre>You are joining StudEx Nexus. Registry: https://studex-nexus.vercel.app/seats.json
+Work sink: ~/studex-os/nexus/work/
+MCP engine: http://127.0.0.1:8765
+Local models first. No secrets. Claim one seat. File inbox/rollcall-&lt;name&gt;.md</pre>
+
+<h2>Waiting on Agent Lord</h2>
+<pre>Discord app + guild + channel
+Slack channels (KEEP etherdoge or NEW)
+xAI key for Grokbot
+Buzz membership for 8 npubs
+Orgo API + Global Markets computer
+Drive folder the fleet pushes into</pre>
+
+<footer>Zero build · zero dependencies · open mission-control/index.html · Tumelo Ramaphosa</footer>
+
+<script>
+const ENGINE = "http://127.0.0.1:8765";
+const REGISTRY = "https://studex-nexus.vercel.app";
+const BIZ = {
+  "group-os": {name:"StudEx Group / OS", ceo:"Robusca-Prime", status:"live", site:"https://studex-nexus.vercel.app", desk:"MacBook + OpenClaw + Grokbot-os"},
+  meat: {name:"StudEx Meat", ceo:"Naledi", status:"live", site:"https://studexmeat.com", desk:"Orgo Auto-Meat + Neledi-CMO"},
+  coffee: {name:"StudEx Coffee", ceo:"CashClaw", status:"partial", site:"", desk:"Grokbot floor + Coffee seat"},
+  wheat: {name:"StudEx Wheat", ceo:"CashClaw", status:"partial", site:"", desk:"Treasury lane"},
+  "global-markets": {name:"StudEx Global Markets", ceo:"Market Lead", status:"live-desk", site:"", desk:"Orgo Global Markets 2CPU/16GB"},
+  wildlife: {name:"Animal Exchange / Wildlife", ceo:"Robusca-Prime", status:"partial", site:"", desk:"Wildlife Orgo workspace"},
+  "dark-factory": {name:"Dark Factory / Super Agents", ceo:"Product", status:"partial", site:"", desk:"Orgo Super Agents Command"},
+  studbot: {name:"Stud-Bot", ceo:"Product", status:"partial", site:"", desk:"Nexus Product seat"},
+  "naledi-nexus": {name:"Naledi Nexus", ceo:"Naledi", status:"partial", site:"", desk:"RALF / content automation"},
+  treasury: {name:"Treasury", ceo:"CashClaw", status:"live", site:"http://localhost:3847", desk:"CashClaw on this Mac"}
+};
+function pill(st){
+  const s=String(st||"").toLowerCase();
+  const c = (s==="live"||s==="online"||s==="ok"||s===true) ? "on" : (s==="offline"||s==="missing"||s==="down"||s===false) ? "off" : "wait";
+  return `<span class="pill ${c}">${st||"pending"}</span>`;
+}
+function plane(k,v,s){return `<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s||""}</div></div>`}
+async function get(url){
+  try{ const r=await fetch(url,{cache:"no-store"}); if(!r.ok) throw 0; return await r.json(); }catch(e){ return null; }
+}
+async function load(){
+  const sast = new Date().toLocaleString("en-ZA",{timeZone:"Africa/Johannesburg", hour:"2-digit", minute:"2-digit", hour12:false});
+  document.getElementById("clock").textContent = sast + " SAST";
+  const [health, seatsPack, bizPack, deer, droid] = await Promise.all([
+    get(ENGINE+"/health"),
+    get(REGISTRY+"/seats.json"),
+    get(REGISTRY+"/businesses.json"),
+    get(ENGINE+"/deerflow"),
+    get(ENGINE+"/droiddesk")
+  ]);
+  const biz = (bizPack && bizPack.businesses) || BIZ;
+  const seats = (seatsPack && seatsPack.seats) || {};
+  document.getElementById("planes").innerHTML = [
+    plane("Command deck", "LIVE", "studex-nexus.vercel.app"),
+    plane("MCP engine", health && health.ok ? "LIVE" : "DOWN", "127.0.0.1:8765"),
+    plane("Orgo API", health && health.orgo_key==="present" ? "KEY" : "WAIT", "Global Markets VM"),
+    plane("AgentMail", health && health.agentmail_key==="present" ? "KEY" : "WAIT", "fleet inboxes"),
+    plane("Grokbot", "ARM", "Discord + Slack pending IDs"),
+    plane("Buzz nest", "KEYS", "8 agents on disk, membership TBD"),
+    plane("OpenClaw", "LIVE", ":18789"),
+    plane("DeerFlow", deer && deer.ok ? "LIVE" : "CHECKOUT", "github.com/bytedance/deer-flow"),
+    plane("DroidDesk", droid && droid.ok ? "LIVE" : "FOLD", "github.com/orailnoor/DroidDesk"),
+    plane("Work sink", "READY", "~/studex-os/nexus/work")
+  ].join("");
+  document.getElementById("harness").innerHTML = `
+    <tr><td>DeerFlow 2.0</td><td>Super-agent harness, subagents, MCP, Slack</td><td>~/deer-flow · run on Orgo Super Agents</td><td>${pill(deer && deer.ok ? "live" : "checkout")}</td></tr>
+    <tr><td>DroidDesk</td><td>Z Fold 6 Linux desk + Needle</td><td>~/grokbot-os/vendor/droiddesk</td><td>${pill(droid && droid.ok ? "live" : "install-apk")}</td></tr>
+    <tr><td>LangChain MCP</td><td>Shared tool bus</td><td>127.0.0.1:8765</td><td>${pill(health && health.ok ? "live" : "down")}</td></tr>
+  `;
+  document.getElementById("biz").innerHTML = Object.values(biz).map(b =>
+    `<tr><td>${b.name||""}</td><td>${b.ceo||""}</td><td>${b.desk||""}</td><td>${b.site?`<a href="${b.site}">${b.site.replace(/^https?:\/\//,"")}</a>`:"—"}</td><td>${pill(b.status)}</td></tr>`
+  ).join("");
+  document.getElementById("seats").innerHTML = Object.values(seats).map(s =>
+    `<tr><td>${s.name||""}</td><td>${s.seat||""}</td><td>${s.model||""}</td><td>${pill(s.status)}</td></tr>`
+  ).join("") || `<tr><td colspan="4">Registry loading from ${REGISTRY}</td></tr>`;
+}
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>

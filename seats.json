@@ -1,0 +1,195 @@
+{
+  "system": "StudEx Nexus Command Deck",
+  "version": "1.0.0",
+  "total_seats": 16,
+  "seats": {
+    "robusca": {
+      "name": "ROBUSCA",
+      "seat": "CAO (Chief AI Officer)",
+      "role": "Chief AI Officer",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/robusca/IDENTITY.md",
+      "state_file": "agents/robusca/state.json"
+    },
+    "hermes": {
+      "name": "HERMES",
+      "seat": "Model House / Core Engineering",
+      "role": "Local LLM routing & Ollama infrastructure",
+      "status": "online",
+      "model": "hermes-local",
+      "clearance": "Level 1",
+      "identity_file": "agents/hermes/IDENTITY.md",
+      "state_file": "agents/hermes/state.json"
+    },
+    "claudio-cto": {
+      "name": "CLAUDIO-CTO",
+      "seat": "War Room Tech",
+      "role": "Google Cloud Microservices (Cloud Run, Firestore)",
+      "status": "online",
+      "model": "claude-code",
+      "clearance": "Level 1",
+      "identity_file": "agents/claudio-cto/IDENTITY.md",
+      "state_file": "agents/claudio-cto/state.json"
+    },
+    "adam-smasher": {
+      "name": "ADAM SMASHER",
+      "seat": "Fleet Commander",
+      "role": "Fleet health, uptime, and security",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/adam-smasher/IDENTITY.md",
+      "state_file": "agents/adam-smasher/state.json"
+    },
+    "cloud-orchestrator": {
+      "name": "CLOUD ORCHESTRATOR",
+      "seat": "Cloud Infrastructure",
+      "role": "Docker, GCP, and Tailscale mesh networks",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/cloud-orchestrator/IDENTITY.md",
+      "state_file": "agents/cloud-orchestrator/state.json"
+    },
+    "llm-engineer": {
+      "name": "LLM ENGINEER",
+      "seat": "Model Intelligence",
+      "role": "Fine-tuning datasets for Muse Glimmer 30B",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/llm-engineer/IDENTITY.md",
+      "state_file": "agents/llm-engineer/state.json"
+    },
+    "naledi": {
+      "name": "NALEDI",
+      "seat": "Chief Marketing Officer",
+      "role": "Content calendars & social media scheduling",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/naledi/IDENTITY.md",
+      "state_file": "agents/naledi/state.json"
+    },
+    "product": {
+      "name": "PRODUCT",
+      "seat": "Stud-Bot Product Manager",
+      "role": "Stud-Bot & Dark Factory UI roadmap",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/product/IDENTITY.md",
+      "state_file": "agents/product/state.json"
+    },
+    "delivery": {
+      "name": "DELIVERY",
+      "seat": "Pipeline & Deployment",
+      "role": "CI/CD pipelines to Google Cloud",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/delivery/IDENTITY.md",
+      "state_file": "agents/delivery/state.json"
+    },
+    "content": {
+      "name": "CONTENT",
+      "seat": "Content Chief",
+      "role": "Long-form technical documentation & brand voice",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/content/IDENTITY.md",
+      "state_file": "agents/content/state.json"
+    },
+    "infulencial": {
+      "name": "INFULENCIAL",
+      "seat": "PR & Influence",
+      "role": "Market sentiment & strategic partnerships",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/infulencial/IDENTITY.md",
+      "state_file": "agents/infulencial/state.json"
+    },
+    "coffee": {
+      "name": "COFFEE",
+      "seat": "Operations (Ops)",
+      "role": "Daily operational runbooks & budget",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/coffee/IDENTITY.md",
+      "state_file": "agents/coffee/state.json"
+    },
+    "cryptopia": {
+      "name": "CRYPTOPIA",
+      "seat": "Markets & Trade Flow",
+      "role": "Cross-border payment flows & blockchain compliance",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/cryptopia/IDENTITY.md",
+      "state_file": "agents/cryptopia/state.json"
+    },
+    "katjana": {
+      "name": "KATJANA",
+      "seat": "Client Communications",
+      "role": "Inbound leads & enterprise routing",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/katjana/IDENTITY.md",
+      "state_file": "agents/katjana/state.json"
+    },
+    "bohlale": {
+      "name": "BOHLALE",
+      "seat": "Client War Room Interface",
+      "role": "Active client deployments & onboarding",
+      "status": "online",
+      "model": "deepseek-v4-pro",
+      "clearance": "Level 1",
+      "identity_file": "agents/bohlale/IDENTITY.md",
+      "state_file": "agents/bohlale/state.json"
+    },
+    "os-kernel": {
+      "name": "OS KERNEL",
+      "seat": "Operating System",
+      "role": "Foundational layer \u2014 file system, seats registry, heartbeats",
+      "status": "online",
+      "model": "hermes-local",
+      "clearance": "Level 1",
+      "identity_file": "agents/os-kernel/IDENTITY.md",
+      "state_file": "agents/os-kernel/state.json"
+    },
+    "grok-assembly": {
+      "name": "grok-assembly",
+      "seat": "Assembly Floor",
+      "status": "online",
+      "model": "grok-4.6",
+      "runtime": "grok-build",
+      "machine": "macbook-pro",
+      "heartbeat_at": "2026-10-02T11:56:13.275838+00:00",
+      "role": "Wire Herdr + OpenRig + MCP"
+    },
+    "deerflow": {
+      "name": "deerflow",
+      "seat": "Super Agent Harness",
+      "status": "online",
+      "model": "qwen2.5:7b",
+      "runtime": "deer-flow",
+      "machine": "checkout",
+      "heartbeat_at": "2026-10-02T12:17:09.968866+00:00"
+    },
+    "droiddesk": {
+      "name": "droiddesk",
+      "seat": "Fold roaming desk",
+      "status": "pending",
+      "model": "needle",
+      "runtime": "droiddesk",
+      "machine": "z-fold-6",
+      "heartbeat_at": "2026-10-02T12:17:09.993768+00:00"
+    }
+  }
+}

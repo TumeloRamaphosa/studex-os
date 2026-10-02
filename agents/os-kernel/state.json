@@ -1,0 +1,9 @@
+{
+  "agent": "OS KERNEL",
+  "seat": "Operating System",
+  "role": "Foundational layer \u2014 file system, seats registry, heartbeats",
+  "status": "online",
+  "current_task": "Awaiting first command from Agent Lord",
+  "github_sync": "pending",
+  "obsidian_sync": "active"
+}

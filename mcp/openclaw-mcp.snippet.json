@@ -1,0 +1,16 @@
+{
+  "mcp": {
+    "servers": {
+      "studex-os": {
+        "command": "python3",
+        "args": [
+          "/Users/tumeloramaphosa/studex-os/nexus/mcp/langchain_engine.py",
+          "--stdio"
+        ],
+        "env": {
+          "STUDEX_OS_ROOT": "/Users/tumeloramaphosa/studex-os/nexus"
+        }
+      }
+    }
+  }
+}

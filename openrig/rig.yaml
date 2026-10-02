@@ -1,0 +1,110 @@
+version: "0.2"
+name: studex-nexus
+culture_file: culture.md
+pods:
+  - id: orch
+    label: Orchestration
+    members:
+      - id: robusca
+        agent_ref: "local:../agents/robusca"
+        profile: default
+        runtime: grok
+        cwd: ../
+      - id: os-kernel
+        agent_ref: "local:../agents/os-kernel"
+        profile: default
+        runtime: hermes
+        cwd: ../
+    edges:
+      - kind: delegates_to
+        from: robusca
+        to: os-kernel
+  - id: ops
+    label: Operations
+    members:
+      - id: coffee
+        agent_ref: "local:../agents/coffee"
+        profile: default
+        runtime: hermes
+        cwd: ../
+      - id: delivery
+        agent_ref: "local:../agents/delivery"
+        profile: default
+        runtime: claude-code
+        cwd: ../
+    edges:
+      - kind: collaborates_with
+        from: coffee
+        to: delivery
+  - id: markets
+    label: Global Markets
+    members:
+      - id: cryptopia
+        agent_ref: "local:../agents/cryptopia"
+        profile: default
+        runtime: hermes
+        cwd: ../work/global-markets
+      - id: orgo
+        agent_ref: "builtin:terminal"
+        profile: "none"
+        runtime: terminal
+        cwd: ../work/global-markets
+        startup:
+          files: []
+          actions:
+            - type: send_text
+              value: "echo 'Orgo Global Markets seat — waiting for ORGO_API_KEY'"
+              phase: after_ready
+              idempotent: true
+              applies_on: [fresh_start]
+    edges:
+      - kind: collaborates_with
+        from: cryptopia
+        to: orgo
+  - id: content
+    label: Content
+    members:
+      - id: naledi
+        agent_ref: "local:../agents/naledi"
+        profile: default
+        runtime: hermes
+        cwd: ../
+      - id: content
+        agent_ref: "local:../agents/content"
+        profile: default
+        runtime: claude-code
+        cwd: ../
+    edges:
+      - kind: collaborates_with
+        from: naledi
+        to: content
+  - id: infra
+    label: Infrastructure
+    members:
+      - id: hermes
+        agent_ref: "local:../agents/hermes"
+        profile: default
+        runtime: hermes
+        cwd: ../
+      - id: cloud
+        agent_ref: "local:../agents/cloud-orchestrator"
+        profile: default
+        runtime: claude-code
+        cwd: ../
+    edges:
+      - kind: can_observe
+        from: hermes
+        to: cloud
+edges:
+  - kind: delegates_to
+    from: orch.robusca
+    to: ops.coffee
+  - kind: delegates_to
+    from: orch.robusca
+    to: markets.cryptopia
+  - kind: delegates_to
+    from: orch.robusca
+    to: content.naledi
+  - kind: delegates_to
+    from: orch.robusca
+    to: infra.hermes

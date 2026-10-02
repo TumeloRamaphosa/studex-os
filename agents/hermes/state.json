@@ -1,0 +1,9 @@
+{
+  "agent": "HERMES",
+  "seat": "Model House / Core Engineering",
+  "role": "Local LLM routing & Ollama infrastructure",
+  "status": "online",
+  "current_task": "Awaiting first command from Agent Lord",
+  "github_sync": "pending",
+  "obsidian_sync": "active"
+}

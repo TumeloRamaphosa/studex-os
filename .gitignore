@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.DS_Store
+mcp/secrets.env
+*.env
+*.db
+iso/
+.vercel
+work/**
+!work/README.md
+inbox/**
+!inbox/README.md
+Huawei*
+OUTREACH-*
+PARTNER-*
+PROPOSAL-*
+mcp/secrets.env.example

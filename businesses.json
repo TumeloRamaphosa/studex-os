@@ -1,0 +1,89 @@
+{
+  "system": "StudEx Group",
+  "owner": "Tumelo Ramaphosa",
+  "partner": "Victor Ndlovu",
+  "updated": "2026-10-02",
+  "businesses": {
+    "group-os": {
+      "name": "StudEx Group / OS",
+      "ceo": "Robusca-Prime",
+      "status": "live",
+      "site": "https://studex-nexus.vercel.app",
+      "desk": "MacBook + OpenClaw :18789 + Grokbot-os",
+      "channels": ["discord", "slack", "buzz", "agentmail"]
+    },
+    "meat": {
+      "name": "StudEx Meat",
+      "ceo": "Naledi",
+      "status": "live",
+      "site": "https://studexmeat.com",
+      "desk": "Orgo Auto-Meat + Neledi-CMO",
+      "shop": "Shopify",
+      "channels": ["whatsapp", "instagram", "agentmail"]
+    },
+    "coffee": {
+      "name": "StudEx Coffee",
+      "ceo": "CashClaw",
+      "status": "partial",
+      "site": "",
+      "desk": "Grokbot floor + Coffee seat",
+      "channels": ["email", "whatsapp"]
+    },
+    "wheat": {
+      "name": "StudEx Wheat",
+      "ceo": "CashClaw",
+      "status": "partial",
+      "site": "",
+      "desk": "Treasury lane",
+      "channels": ["email"]
+    },
+    "global-markets": {
+      "name": "StudEx Global Markets",
+      "ceo": "Market Lead",
+      "status": "live-desk",
+      "site": "",
+      "desk": "Orgo Global Markets (2 CPU / 16 GB)",
+      "channels": ["buzz", "email"]
+    },
+    "wildlife": {
+      "name": "Animal Exchange / Wildlife",
+      "ceo": "Robusca-Prime",
+      "status": "partial",
+      "site": "",
+      "desk": "Studex Wildlife Orgo workspace",
+      "channels": ["email"]
+    },
+    "dark-factory": {
+      "name": "Dark Factory / Super Agents",
+      "ceo": "Product",
+      "status": "partial",
+      "site": "",
+      "desk": "Orgo Super Agents Command",
+      "channels": ["discord", "slack"]
+    },
+    "studbot": {
+      "name": "Stud-Bot",
+      "ceo": "Product",
+      "status": "partial",
+      "site": "",
+      "desk": "Nexus Product seat",
+      "channels": ["whatsapp"]
+    },
+    "naledi-nexus": {
+      "name": "Naledi Nexus",
+      "ceo": "Naledi",
+      "status": "partial",
+      "site": "",
+      "desk": "Content automation / RALF loop",
+      "channels": ["instagram", "whatsapp", "blotato"]
+    },
+    "treasury": {
+      "name": "Treasury",
+      "ceo": "CashClaw",
+      "status": "live",
+      "site": "http://localhost:3847",
+      "desk": "CashClaw on this Mac",
+      "channels": ["shopify", "stripe"]
+    }
+  }
+}
