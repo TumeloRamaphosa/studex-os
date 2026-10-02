@@ -78,9 +78,17 @@ DeerFlow runtime on Orgo Super Agents, not this Mac</pre>
 <footer>Tumelo Ramaphosa · Victor Ndlovu · https://studex-nexus.vercel.app · GitHub TumeloRamaphosa/studex-os</footer>
 <script>
 const ENGINE = "http://127.0.0.1:8765";
+const LIVE = "https://studex-nexus.vercel.app";
 const pill = s => `<span class="pill ${s}">${s}</span>`;
 const card = (n,s,d,st) => `<div class="card"><div class="n">${n}</div><div class="s">${s}</div><p>${d}</p>${pill(st)}</div>`;
-async function get(u){ try{ const r=await fetch(u,{cache:"no-store"}); if(!r.ok) return null; return r.json(); }catch(e){ return null; } }
+async function get(u){
+  const urls = [u];
+  if (!/^https?:/i.test(u)) urls.push(LIVE.replace(/\/$/,"") + "/" + u.replace(/^\.\//,""));
+  for (const url of urls) {
+    try { const r = await fetch(url, {cache:"no-store"}); if (r.ok) return r.json(); } catch (e) {}
+  }
+  return null;
+}
 (async () => {
   const [seatsPack, bizPack, health, fleet] = await Promise.all([
     get("seats.json"), get("businesses.json"), get(ENGINE+"/health"), get(ENGINE+"/fleet")
