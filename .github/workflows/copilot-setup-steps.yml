@@ -1,0 +1,53 @@
+# Prepares the environment Copilot cloud agent works in.
+# The job MUST be named `copilot-setup-steps`. Edit per repo if needed.
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+  push:
+    paths: [.github/workflows/copilot-setup-steps.yml]
+  pull_request:
+    paths: [.github/workflows/copilot-setup-steps.yml]
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        if: hashFiles('**/requirements*.txt', '**/pyproject.toml', '**/*.py') != ''
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python deps + tools
+        if: hashFiles('**/requirements*.txt', '**/pyproject.toml', '**/*.py') != ''
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff pytest pip-audit
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f pyproject.toml ]; then pip install -e . || true; fi
+
+      - name: Set up Node
+        if: hashFiles('**/package.json') != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Node deps
+        if: hashFiles('package.json') != ''
+        run: |
+          if [ -f pnpm-lock.yaml ]; then corepack enable && pnpm install --frozen-lockfile
+          elif [ -f package-lock.json ]; then npm ci
+          elif [ -f yarn.lock ]; then corepack enable && yarn install --frozen-lockfile
+          else npm install; fi
+
+      - name: Install gitleaks
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz \
+            | tar -xz -C /usr/local/bin gitleaks
+          gitleaks version

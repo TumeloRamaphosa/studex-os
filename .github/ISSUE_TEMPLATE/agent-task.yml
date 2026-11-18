@@ -1,0 +1,41 @@
+name: Agent task
+description: Work for the Studex Deployment Team (assign to Copilot)
+title: "[task] "
+labels: ["agent-task"]
+body:
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Which agent should take it?
+      options:
+        - lead-engineer (build / fix)
+        - architect (ADR, spec, breakdown)
+        - reviewer (review a PR)
+        - release-engineer (CI, deploy, infra)
+        - security-officer (secrets, deps, POPIA)
+        - google-cloud-engineer (Cloud Run, Firestore, Workspace — with Gemini Spark)
+        - vercel-engineer (Vercel sites — add label "factory" to hand to Foreman)
+        - cloudflare-engineer (Workers, DNS, R2, Cloudflare runners)
+        - supabase-engineer (Postgres, migrations, RLS, edge functions)
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should be true when this is done?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context, links, constraints
