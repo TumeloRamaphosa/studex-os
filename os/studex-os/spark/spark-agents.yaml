@@ -1,0 +1,70 @@
+# Studex Spark Agents — 3 Google Spark-style Marketing Agents
+# Built on Eve framework + Qwen + Grok + WhatsApp
+
+agents:
+  - name: spark-content
+    role: Content Engineer
+    model: qwen-plus
+    provider: alibaba  # Qwen API
+    
+    schedule:
+      - 08:00 SAST: Generate daily LinkedIn post
+      - 09:00 SAST: Create industry newsletter section
+      - 14:00 SAST: Write client case study paragraph
+      - 18:00 SAST: Script next video reel
+    
+    tools:
+      - linkedin_api
+      - discord_webhook
+      - whatsapp_send
+      - gmail_send
+    
+    tone: Professional African business, bold, no fluff
+    topics: [trade-finance, africa-opportunity, commodities, logistics]
+    
+  - name: spark-outreach
+    role: Outreach Agent
+    model: grok-2
+    provider: xai  # Grok API
+    
+    schedule:
+      - 09:30 SAST: Find new prospects via Crucix scanner
+      - 10:00 SAST: Send initial outreach email
+      - 12:00 SAST: WhatsApp warm follow-up
+      - 16:00 SAST: Review responses, score leads
+      - 17:00 SAST: Update Huly CRM with new leads
+    
+    tools:
+      - crucix_scanner
+      - gmail_api
+      - whatsapp_send
+      - huly_crm
+      - openwa_gateway
+    
+    target_sectors: [agriculture, mining, logistics, finance]
+    target_regions: [Rwanda, Kenya, South Africa, UAE, DRC]
+    
+  - name: spark-analytics
+    role: Analytics Agent
+    model: gemini-2.0-flash
+    provider: google  # Gemini API
+    
+    schedule:
+      - 07:00 SAST: Morning KPI digest (Discord to Tumelo)
+      - 12:00 SAST: Pipeline health check
+      - 17:00 SAST: Daily performance report
+      - every_monday: Weekly board report
+      - first_of_month: Monthly revenue report
+    
+    metrics:
+      - deal_velocity
+      - lead_score_distribution
+      - division_performance
+      - revenue_forecast
+      - sanctions_hits
+    
+    tools:
+      - huly_api
+      - discord_webhook
+      - gmail_api
+      - dashboard_render

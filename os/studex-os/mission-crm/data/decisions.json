@@ -1,0 +1,128 @@
+[
+  {
+    "id": "D01",
+    "question": "Women in AI: 26 or 27 August?",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "owner": "Tumelo + Women Agent",
+    "blocked_by": "Focus Magazine confirmation",
+    "due": "IMMEDIATE"
+  },
+  {
+    "id": "D02",
+    "question": "'KAKA' activation: exact name + host?",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "owner": "Coffee Agent",
+    "blocked_by": "Statix Coffee brand decision",
+    "due": "IMMEDIATE"
+  },
+  {
+    "id": "D03",
+    "question": "Gorilla visit: permits + location confirmed?",
+    "priority": "HIGH",
+    "status": "OPEN",
+    "owner": "Logistics Agent",
+    "blocked_by": "Permit applications",
+    "due": "+3 days"
+  },
+  {
+    "id": "D04",
+    "question": "Sunday hike: route + Timbuktoo confirmed?",
+    "priority": "HIGH",
+    "status": "OPEN",
+    "owner": "Logistics Agent",
+    "blocked_by": "Route planning",
+    "due": "+3 days"
+  },
+  {
+    "id": "D05",
+    "question": "Coffee: supplier + volume + packaging + pricing?",
+    "priority": "URGENT",
+    "status": "BLOCKED",
+    "owner": "Coffee Agent",
+    "blocked_by": "No approved producer",
+    "due": "IMMEDIATE"
+  },
+  {
+    "id": "D06",
+    "question": "Biltong Gold: exact SKU + 2,000 units feasible?",
+    "priority": "URGENT",
+    "status": "BLOCKED",
+    "owner": "Meat Agent",
+    "blocked_by": "SKU confirmation + halal cert",
+    "due": "IMMEDIATE"
+  },
+  {
+    "id": "D07",
+    "question": "Mobile data centre: equipment + demo owner?",
+    "priority": "HIGH",
+    "status": "IN_PROGRESS",
+    "owner": "Data Agent",
+    "blocked_by": "Equipment inventory",
+    "due": "+7 days"
+  },
+  {
+    "id": "D08",
+    "question": "Google/Alibaba: invited, confirmed or sponsor?",
+    "priority": "HIGH",
+    "status": "OPEN",
+    "owner": "Mission Orchestrator",
+    "blocked_by": "None",
+    "due": "+7 days"
+  },
+  {
+    "id": "D09",
+    "question": "Russia: depart 16 Sept or attend 17 Sept closing?",
+    "priority": "HIGH",
+    "status": "OPEN",
+    "owner": "Tumelo",
+    "blocked_by": "Travel booking",
+    "due": "+10 days"
+  },
+  {
+    "id": "D10",
+    "question": "Switzerland: Geneva + Zurich? Confirmed host?",
+    "priority": "MEDIUM",
+    "status": "OPEN",
+    "owner": "Mission Orchestrator",
+    "blocked_by": "Meeting list",
+    "due": "+14 days"
+  },
+  {
+    "id": "D11",
+    "question": "Budget: travel + events + products + permits + contingency?",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "owner": "Tumelo",
+    "blocked_by": "None",
+    "due": "+3 days"
+  },
+  {
+    "id": "D12",
+    "question": "Who holds final authority for daily mission decisions?",
+    "priority": "HIGH",
+    "status": "OPEN",
+    "owner": "Tumelo",
+    "blocked_by": "None",
+    "due": "IMMEDIATE"
+  },
+  {
+    "id": "D13",
+    "question": "Focus Magazine: venue + AV + guest list confirmed?",
+    "priority": "URGENT",
+    "status": "IN_PROGRESS",
+    "owner": "Women Agent",
+    "blocked_by": "Venue booking",
+    "due": "+2 days"
+  },
+  {
+    "id": "D14",
+    "question": "GITEX Nigeria: registrations + Abuja-Lagos plan?",
+    "priority": "HIGH",
+    "status": "OPEN",
+    "owner": "Mission Orchestrator",
+    "blocked_by": "Registration",
+    "due": "+7 days"
+  }
+]

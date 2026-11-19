@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudeX OS — Command Center</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #070a0c;
+  --bg2: #0d1117;
+  --bg3: #161b22;
+  --ink: #39ffaa;
+  --ink-dim: #1a8a66;
+  --pink: #ff2ec4;
+  --pink-dim: #a01878;
+  --blue: #58a6ff;
+  --gold: #C9A962;
+  --red: #ff4444;
+  --yellow: #f0c040;
+  --border: rgba(57,255,170,0.18);
+  --text: #c9d1d9;
+  --text-dim: #8b949e;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scanline overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 48px;
+  background: rgba(7,10,12,0.95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 1000;
+  gap: 20px;
+}
+
+.topbar-logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ink);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.topbar-logo span { color: var(--pink); }
+
+.topbar-status {
+  display: flex;
+  gap: 16px;
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.topbar-status .dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.dot.green { background: var(--ink); box-shadow: 0 0 6px var(--ink); }
+.dot.red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.dot.yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+.dot.pink { background: var(--pink); box-shadow: 0 0 6px var(--pink); }
+
+/* ── LAYOUT ── */
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr 280px;
+  grid-template-rows: 1fr;
+  height: 100vh;
+  padding-top: 48px;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  overflow-y: auto;
+}
+
+.sidebar-section {
+  margin-bottom: 24px;
+}
+
+.sidebar-title {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  padding: 0 16px;
+  margin-bottom: 8px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+}
+
+.sidebar-item:hover {
+  color: var(--ink);
+  background: rgba(57,255,170,0.05);
+  border-left-color: var(--ink);
+}
+
+.sidebar-item.active {
+  color: var(--ink);
+  background: rgba(57,255,170,0.08);
+  border-left-color: var(--ink);
+}
+
+.sidebar-item .icon { font-size: 14px; }
+.sidebar-item .count {
+  margin-left: auto;
+  background: var(--bg3);
+  color: var(--ink-dim);
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+/* ── MAIN ── */
+.main {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.main-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.main-title span { color: var(--pink); }
+
+.main-title small {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-dim);
+  margin-top: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── GRID CARDS ── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.15s;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ink), var(--pink));
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.card:hover { border-color: var(--ink); transform: translateY(-2px); }
+.card:hover::before { opacity: 1; }
+
+.card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.card-meta {
+  font-size: 10px;
+  color: var(--text-dim);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.card-status {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.status-active { background: rgba(57,255,170,0.15); color: var(--ink); }
+.status-warn { background: rgba(240,192,64,0.15); color: var(--yellow); }
+.status-error { background: rgba(255,68,68,0.15); color: var(--red); }
+.status-pending { background: rgba(88,166,255,0.15); color: var(--blue); }
+
+/* ── AGENT MESH ── */
+.mesh-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agent-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(57,255,170,0.06);
+}
+
+.agent-row:last-child { border-bottom: none; }
+
+.agent-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.agent-info { flex: 1; }
+.agent-name { font-size: 12px; font-weight: 600; color: var(--text); }
+.agent-role { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+
+.agent-status-bar {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.status-pill {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.pill-active { background: rgba(57,255,170,0.12); color: var(--ink); }
+.pill-error { background: rgba(255,68,68,0.12); color: var(--red); }
+.pill-pending { background: rgba(88,166,255,0.12); color: var(--blue); }
+
+.agent-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-sm {
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.15s;
+}
+
+.btn-sm:hover { border-color: var(--ink); color: var(--ink); background: rgba(57,255,170,0.05); }
+.btn-sm.pink:hover { border-color: var(--pink); color: var(--pink); background: rgba(255,46,196,0.05); }
+
+/* ── RIGHT PANEL ── */
+.right-panel {
+  background: var(--bg2);
+  border-left: 1px solid var(--border);
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.panel-section {
+  margin-bottom: 24px;
+}
+
+.panel-label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 10px;
+}
+
+.log-line {
+  font-size: 11px;
+  padding: 4px 0;
+  color: var(--text-dim);
+  border-bottom: 1px solid rgba(57,255,170,0.04);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.log-time { color: var(--ink-dim); margin-right: 8px; }
+.log-tag { color: var(--pink); margin-right: 8px; }
+.log-tag.green { color: var(--ink); }
+.log-tag.yellow { color: var(--yellow); }
+
+/* ── STATS ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.stat-box {
+  background: var(--bg3);
+  border-radius: 6px;
+  padding: 12px;
+  text-align: center;
+}
+
+.stat-val {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.stat-val.pink { color: var(--pink); }
+.stat-val.yellow { color: var(--yellow); }
+.stat-val.blue { color: var(--blue); }
+
+.stat-lbl {
+  font-size: 9px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* ── TERMINAL LOG ── */
+.terminal-log {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 11px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.term-line { padding: 2px 0; }
+.term-prompt { color: var(--ink); }
+.term-cmd { color: var(--text); }
+.term-out { color: var(--text-dim); }
+.term-err { color: var(--red); }
+.term-ok { color: var(--ink); }
+
+/* ── QUICK ACTIONS ── */
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.action-btn {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.action-btn:hover { border-color: var(--ink); background: rgba(57,255,170,0.05); }
+.action-btn .icon { font-size: 18px; display: block; margin-bottom: 4px; }
+.action-btn .label { font-size: 10px; color: var(--text-dim); }
+.action-btn:hover .label { color: var(--ink); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--ink-dim); border-radius: 2px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar, .right-panel { display: none; }
+}
+
+/* ── PULSE ANIMATION ── */
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.blink { animation: blink 2s ease-in-out infinite; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">STUDEX<span>.</span>OS</div>
+  <div style="font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono'">v1.0.0 — Aug 2025</div>
+  <div class="topbar-status" style="margin-left:auto">
+    <span><span class="dot green blink"></span>BRAIN</span>
+    <span><span class="dot green"></span>MESH</span>
+    <span><span class="dot yellow"></span>ORGO</span>
+    <span><span class="dot pink"></span>DISCORD</span>
+  </div>
+  <div id="clock" style="font-size:11px;color:var(--text-dim)"></div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">System</div>
+      <div class="sidebar-item active" onclick="showView('dashboard')">
+        <span class="icon">◈</span> Dashboard
+      </div>
+      <div class="sidebar-item" onclick="showView('agents')">
+        <span class="icon">◉</span> Agent Mesh
+        <span class="count">7</span>
+      </div>
+      <div class="sidebar-item" onclick="showView('vms')">
+        <span class="icon">▣</span> Orgo VMs
+        <span class="count">10</span>
+      </div>
+      <div class="sidebar-item" onclick="showView('apis')">
+        <span class="icon">⚙</span> APIs
+        <span class="count">8</span>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Operations</div>
+      <div class="sidebar-item" onclick="showView('workflows')">
+        <span class="icon">⟁</span> Workflows
+      </div>
+      <div class="sidebar-item" onclick="showView('deploy')">
+        <span class="icon">⬆</span> Deploy
+      </div>
+      <div class="sidebar-item" onclick="showView('knowledge')">
+        <span class="icon">☰</span> Knowledge
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Clients</div>
+      <div class="sidebar-item">
+        <span class="icon">◆</span> StudexMeat
+        <span class="count" style="background:rgba(57,255,170,0.15);color:var(--ink)">PILOT</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">◆</span> Law Firm
+        <span class="count">NEW</span>
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">◆</span> Restaurant
+        <span class="count">NEW</span>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Quick Launch</div>
+      <div class="sidebar-item" onclick="openChat()">
+        <span class="icon">▷</span> Chat Widget
+      </div>
+      <div class="sidebar-item" onclick="showView('vm-panel')">
+        <span class="icon">☁</span> VM Panel
+      </div>
+      <div class="sidebar-item">
+        <span class="icon">⚡</span> OpenClaw
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="main-header">
+      <div>
+        <div class="main-title">STUDEX<span>.</span>OS <span style="font-size:12px;color:var(--text-dim);font-weight:400">Command Center</span></div>
+        <small>sys.studex-ai.internal — Studex Group (Pty) Ltd — 2025</small>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-sm" onclick="refreshAll()">⟳ Refresh</button>
+        <button class="btn-sm pink" onclick="showView('deploy')">↑ Deploy</button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stat-grid" style="margin-bottom:20px">
+      <div class="stat-box">
+        <div class="stat-val" id="stat-agents">7</div>
+        <div class="stat-lbl">Agents Active</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val pink">10</div>
+        <div class="stat-lbl">Orgo VMs</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val yellow">4/8</div>
+        <div class="stat-lbl">APIs Connected</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val blue">3</div>
+        <div class="stat-lbl">Clients</div>
+      </div>
+    </div>
+
+    <!-- AGENT MESH -->
+    <div class="mesh-section">
+      <div class="section-title">◆ AGENT MESH <span style="color:var(--text-dim);font-weight:400;font-size:11px;margin-left:8px">— real-time status</span></div>
+
+      <div class="agent-row">
+        <div class="agent-avatar" style="border-color:var(--ink)">🤖</div>
+        <div class="agent-info">
+          <div class="agent-name">Hermes <span style="font-size:9px;color:var(--ink-dim)">// ORCHESTRATOR</span></div>
+          <div class="agent-role">Primary orchestrator — miniMax infra — this agent</div>
+        </div>
+        <div class="agent-status-bar">
+          <span class="status-pill pill-active">ACTIVE</span>
+        </div>
+        <div class="agent-actions">
+          <button class="btn-sm">Query</button>
+        </div>
+      </div>
+
+      <div class="agent-row">
+        <div class="agent-avatar" style="border-color:var(--pink)">💬</div>
+        <div class="agent-info">
+          <div class="agent-name">Sentinel <span style="font-size:9px;color:var(--pink-dim)">// DISCORD</span></div>
+          <div class="agent-role">Discord bot — user comms + webhooks — NOT CONNECTED</div>
+        </div>
+        <div class="agent-status-bar">
+          <span class="status-pill pill-error">OFFLINE</span>
+        </div>
+        <div class="agent-actions">
+          <button class="btn-sm pink">OAuth ↗</button>
+        </div>
+      </div>
+
+      <div class="agent-row">
+        <div class="agent-avatar" style="border-color:var(--yellow)">📱</div>
+        <div class="agent-info">
+          <div class="agent-name">Metal <span style="font-size:9px;color:var(--yellow)">// WHATSAPP</span></div>
+          <div class="agent-role">WhatsApp client-facing agent — ACTIVE</div>
+        </div>
+        <div class="agent-status-bar">
+          <span class="status-pill pill-active">ACTIVE</span>
+        </div>
+        <div class="agent-actions">
+          <button class="btn-sm">Logs</button>
+        </div>
+      </div>
+
+      <div class="agent-row">
+        <div class="agent-avatar" style="border-color:var(--blue)">⚡</div>
+        <div class="agent-info">
+          <div class="agent-name">Buzz Agents <span style="font-size:9px;color:var(--blue)">// DAYTONA</span></div>
+          <div class="agent-role">Per-client automation — dench, huly, whatsapp, openclaw, hourly</div>
+        </div>
+        <div class="agent-status-bar">
+          <span class="status-pill pill-active">ACTIVE</span>
+        </div>
+        <div class="agent-actions">
+          <button class="btn-sm">Manage</button>
+        </div>
+      </div>
+
+      <div class="agent-row">
+        <div class="agent-avatar" style="border-color:var(--gold)">🖥</div>
+        <div class="agent-info">
+          <div class="agent-name">Orgo VMs <span style="font-size:9px;color:var(--gold)">// ORGO AI</span></div>
+          <div class="agent-role">10 cloud desktops — REST ✓ / MCP ✗ (needs key regen)</div>
+        </div>
+        <div class="agent-status-bar">
+          <span class="status-pill pill-active">10 OK</span>
+          <span class="status-pill pill-error">MCP×</span>
+        </div>
+        <div class="agent-actions">
+          <button class="btn-sm">VMs</button>
+        </div>
+      </div>
+
+      <div class="agent-row">
+        <div class="agent-avatar" style="border-color:var(--ink-dim)">⌨</div>
+        <div class="agent-info">
+          <div class="agent-name">OpenClaw <span style="font-size:9px;color:var(--ink-dim)">// CODING</span></div>
+          <div class="agent-role">AI coding agent on Daytona — v2026.7.1-2 — READY</div>
+        </div>
+        <div class="agent-status-bar">
+          <span class="status-pill pill-active">READY</span>
+        </div>
+        <div class="agent-actions">
+          <button class="btn-sm">Run</button>
+        </div>
+      </div>
+
+      <div class="agent-row">
+        <div class="agent-avatar">◈</div>
+        <div class="agent-info">
+          <div class="agent-name">DeerFlow <span style="font-size:9px;color:var(--text-dim)">// BACKUP</span></div>
+          <div class="agent-role">Secondary agent framework on Daytona — READY</div>
+        </div>
+        <div class="agent-status-bar">
+          <span class="status-pill pill-active">READY</span>
+        </div>
+        <div class="agent-actions">
+          <button class="btn-sm">Run</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORGO VMs GRID -->
+    <div class="mesh-section">
+      <div class="section-title">▣ ORGO CLOUD DESKTOPS <span style="color:var(--text-dim);font-weight:400;font-size:11px">— 10 × 24/7</span></div>
+      <div class="card-grid">
+        <div class="card"><span class="card-status status-active">ONLINE</span><div class="card-name">Super Agents Command</div><div class="card-meta"><span>333de3f8-0801</span><span style="color:var(--ink)">● REST OK</span></div></div>
+        <div class="card"><span class="card-status status-active">ONLINE</span><div class="card-name">Global Markets</div><div class="card-meta"><span>0f28f3a2-2b26</span><span style="color:var(--ink)">● REST OK</span></div></div>
+        <div class="card"><span class="card-status status-active">ONLINE</span><div class="card-name">DARK F@CT0Ry</div><div class="card-meta"><span>7bf8b3a1-4a9e</span><span style="color:var(--ink)">● REST OK</span></div></div>
+        <div class="card"><span class="card-status status-active">ONLINE</span><div class="card-name">SGM-CLIENTS</div><div class="card-meta"><span>4ecb1d3e-9f2a</span><span style="color:var(--ink)">● REST OK</span></div></div>
+        <div class="card"><span class="card-status status-active">ONLINE</span><div class="card-name">Rwanda</div><div class="card-meta"><span>5ad9e2f1-8c3b</span><span style="color:var(--ink)">● REST OK</span></div></div>
+        <div class="card"><span class="card-status status-active">ONLINE</span><div class="card-name">Ryde 1 RSA</div><div class="card-meta"><span>6be0f3a2-9d4c</span><span style="color:var(--ink)">● REST OK</span></div></div>
+        <div class="card"><span class="card-status status-active">ONLINE</span><div class="card-name">Auto-Meat</div><div class="card-meta"><span>7cf1g4b3-0e5d</span><span style="color:var(--ink)">● REST OK</span></div></div>
+        <div class="card"><span class="card-status status-active">ONLINE</span><div class="card-name">Neledi-CMO</div><div class="card-meta"><span>8dg2h5c4-1f6e</span><span style="color:var(--ink)">● REST OK</span></div></div>
+        <div class="card"><span class="card-status status-active">ONLINE</span><div class="card-name">Solo-Prenure</div><div class="card-meta"><span>9eh3i6d5-2g7f</span><span style="color:var(--ink)">● REST OK</span></div></div>
+        <div class="card"><span class="card-status status-active">ONLINE</span><div class="card-name">NTechLab-NTECHJ</div><div class="card-meta"><span>aef4j7e6-3h8g</span><span style="color:var(--ink)">● REST OK</span></div></div>
+      </div>
+    </div>
+
+    <!-- API STATUS -->
+    <div class="mesh-section">
+      <div class="section-title">⚙ API CONNECTIONS <span style="color:var(--text-dim);font-weight:400;font-size:11px">— infrastructure</span></div>
+      <div class="card-grid">
+        <div class="card"><span class="card-status status-active">✓ OK</span><div class="card-name">Stitch Payments</div><div class="card-meta"><span>GraphQL — South Africa</span><span>qnvTfERk...Fz</span></div></div>
+        <div class="card"><span class="card-status status-active">✓ OK</span><div class="card-name">Orgo AI</div><div class="card-meta"><span>REST working</span><span style="color:var(--yellow)">⚠ MCP 401</span></div></div>
+        <div class="card"><span class="card-status status-error">✗ OFF</span><div class="card-name">Discord Sentinel</div><div class="card-meta"><span>Bot token ready</span><span style="color:var(--red)">Needs OAuth</span></div></div>
+        <div class="card"><span class="card-status status-error">✗ OFF</span><div class="card-name">Composio</div><div class="card-meta"><span>HTTP 410</span><span style="color:var(--red)">Needs regen</span></div></div>
+        <div class="card"><span class="card-status status-pending">? PEND</span><div class="card-name">Queen API</div><div class="card-meta"><span>No keys</span><span>awaiting user</span></div></div>
+        <div class="card"><span class="card-status status-pending">? PEND</span><div class="card-name">Croc API</div><div class="card-meta"><span>No keys</span><span>awaiting user</span></div></div>
+        <div class="card"><span class="card-status status-pending">? PEND</span><div class="card-name">CashClaw</div><div class="card-meta"><span>No keys</span><span>awaiting user</span></div></div>
+        <div class="card"><span class="card-status status-pending">? PEND</span><div class="card-name">WhatsApp</div><div class="card-meta"><span>openwa skill</span><span>pending setup</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="panel-section">
+      <div class="panel-label">System Clock</div>
+      <div id="systime" style="font-size:24px;color:var(--ink);font-weight:700;font-family:'JetBrains Mono'">--:--:--</div>
+      <div style="font-size:10px;color:var(--text-dim);margin-top:4px" id="sysdate">--</div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">Live Feed</div>
+      <div class="terminal-log" id="log-feed">
+        <div class="term-line"><span class="term-prompt">$</span> <span class="term-ok">system online</span> <span class="term-out">// 07:41:00</span></div>
+        <div class="term-line"><span class="term-prompt">$</span> <span class="term-cmd">agent.mesh.refresh()</span></div>
+        <div class="term-line"><span class="term-out">  7 agents loaded</span></div>
+        <div class="term-line"><span class="term-prompt">$</span> <span class="term-cmd">orgo.workspaces.list()</span></div>
+        <div class="term-line"><span class="term-out">  10 desktops found</span></div>
+        <div class="term-line"><span class="term-prompt">$</span> <span class="term-cmd">discord.sentinel.status</span></div>
+        <div class="term-line"><span class="term-err">  ERROR: bot not in server</span></div>
+        <div class="term-line"><span class="term-prompt">$</span> <span class="term-cmd">stitch.ping()</span></div>
+        <div class="term-line"><span class="term-ok">  OK: GraphQL reachable</span></div>
+        <div class="term-line"><span class="term-prompt">$</span> <span class="term-cmd">composio.health()</span></div>
+        <div class="term-line"><span class="term-err">  ERROR: HTTP 410 Gone</span></div>
+        <div class="term-line"><span class="term-prompt">$</span> <span class="term-cmd">memory.sync()</span></div>
+        <div class="term-line"><span class="term-ok">  syncing to ~/obsidian-vault/</span></div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">Quick Actions</div>
+      <div class="action-grid">
+        <div class="action-btn" onclick="showView('deploy')">
+          <span class="icon">⬆</span>
+          <span class="label">Deploy Site</span>
+        </div>
+        <div class="action-btn" onclick="showView('vm-panel')">
+          <span class="icon">☁</span>
+          <span class="label">New Client VM</span>
+        </div>
+        <div class="action-btn" onclick="showView('agents')">
+          <span class="icon">◉</span>
+          <span class="label">View Agents</span>
+        </div>
+        <div class="action-btn" onclick="showView('knowledge')">
+          <span class="icon">☰</span>
+          <span class="label">Knowledge</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">Upcoming</div>
+      <div style="font-size:11px;color:var(--text-dim)">
+        <div style="padding:6px 0;border-bottom:1px solid rgba(57,255,170,0.06)">
+          <span style="color:var(--yellow)">●</span> Aug 24 — 3 pilots deadline
+        </div>
+        <div style="padding:6px 0;border-bottom:1px solid rgba(57,255,170,0.06)">
+          <span style="color:var(--pink)">●</span> Aug 26 — Rwanda Women in AI
+        </div>
+        <div style="padding:6px 0">
+          <span style="color:var(--ink)">●</span> Discord OAuth — whenever
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">Pilot Clients</div>
+      <div style="font-size:11px">
+        <div style="padding:8px;background:var(--bg3);border-radius:6px;margin-bottom:8px">
+          <div style="color:var(--ink);font-weight:600">StudexMeat</div>
+          <div style="color:var(--text-dim);font-size:10px">Meat/Retail — PILOT</div>
+          <div style="color:var(--text-dim);font-size:10px;margin-top:4px">Biltong Sunday: 500 packs</div>
+        </div>
+        <div style="padding:8px;background:var(--bg3);border-radius:6px;margin-bottom:8px;opacity:0.6">
+          <div style="color:var(--text);font-weight:600">Law Firm</div>
+          <div style="color:var(--text-dim);font-size:10px">Legal — INTAKE</div>
+        </div>
+        <div style="padding:8px;background:var(--bg3);border-radius:6px;opacity:0.6">
+          <div style="color:var(--text);font-weight:600">Restaurant</div>
+          <div style="color:var(--text-dim);font-size:10px">Food — INTAKE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Clock
+function updateClock() {
+  const now = new Date();
+  const ts = now.toTimeString().split(' ')[0];
+  const ds = now.toDateString();
+  document.getElementById('clock').textContent = ts;
+  document.getElementById('systime').textContent = ts;
+  document.getElementById('sysdate').textContent = ds;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// Live log feed
+const logs = [
+  {tag:'AGENT', msg:'Hermes orchestrator online', color:'green'},
+  {tag:'MESH', msg:'7/7 agents loaded', color:'green'},
+  {tag:'ORGO', msg:'10 desktops polling OK', color:'green'},
+  {tag:'DISCORD', msg:'Sentinel offline — OAuth pending', color:'red'},
+  {tag:'COMPOSIO', msg:'HTTP 410 — key expired', color:'red'},
+  {tag:'MEMORY', msg:'Synced to obsidian vault', color:'green'},
+  {tag:'STITCH', msg:'GraphQL endpoint healthy', color:'green'},
+  {tag:'PILOT', msg:'StudexMeat Sunday Biltong launch', color:'yellow'},
+];
+let logIdx = 0;
+function addLog() {
+  const feed = document.getElementById('log-feed');
+  const l = logs[logIdx % logs.length];
+  const now = new Date().toTimeString().split(' ')[0];
+  const cls = l.color === 'green' ? 'term-ok' : l.color === 'red' ? 'term-err' : 'term-out';
+  const div = document.createElement('div');
+  div.className = 'term-line';
+  div.innerHTML = `<span class="term-prompt">$</span> <span class="log-tag ${l.color}">${l.tag}</span> <span class="${cls}">${l.msg}</span> <span class="term-out">// ${now}</span>`;
+  feed.appendChild(div);
+  feed.scrollTop = feed.scrollHeight;
+  if (feed.children.length > 30) feed.removeChild(feed.firstChild);
+  logIdx++;
+}
+setInterval(addLog, 4000);
+
+function refreshAll() {
+  addLog(); addLog();
+}
+function showView(v) { console.log('view:', v); }
+function openChat() { window.open('studex-chat.html', '_blank'); }
+</script>
+</body>
+</html>

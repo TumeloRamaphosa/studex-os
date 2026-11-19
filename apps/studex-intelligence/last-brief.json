@@ -1,0 +1,269 @@
+{
+  "meta": {
+    "timestamp": "2026-09-22T23:52:49.971625",
+    "sourcesRun": 5,
+    "sourcesOk": 5,
+    "ms": 13693,
+    "framework": "Studex Intelligence Scanner v1.0",
+    "poweredBy": "Crucix OSINT Engine (Python port)"
+  },
+  "results": [
+    {
+      "name": "Comtrade",
+      "status": "ok",
+      "ms": 3365,
+      "data": {
+        "source": "UN Comtrade",
+        "records": [],
+        "status": "no_data"
+      }
+    },
+    {
+      "name": "Sanctions",
+      "status": "ok",
+      "ms": 680,
+      "data": {
+        "source": "OpenSanctions",
+        "entities": [],
+        "status": "no_data"
+      }
+    },
+    {
+      "name": "GDELT",
+      "status": "ok",
+      "ms": 9646,
+      "data": {
+        "source": "GDELT",
+        "articles": [],
+        "status": "no_data"
+      }
+    },
+    {
+      "name": "Maritime",
+      "status": "ok",
+      "ms": 0,
+      "data": {
+        "source": "Maritime Intelligence",
+        "chokepoints": {
+          "Red Sea": {
+            "status": "DISRUPTED",
+            "note": "70% traffic rerouted via Cape of Good Hope"
+          },
+          "Cape of Good Hope": {
+            "status": "SURGING",
+            "note": "Permanent Asia-Europe trade lane; 14 extra days"
+          },
+          "Strait of Hormuz": {
+            "status": "TENSION",
+            "note": "Iran war driving oil tanker rerouting"
+          }
+        },
+        "africanPorts": {
+          "Durban": "OPPORTUNITY \u2014 Southern Africa hub growing",
+          "Walvis Bay": "GROWING \u2014 Lobito Corridor gateway",
+          "Mombasa": "OPPORTUNITY \u2014 East Africa transshipment hub"
+        },
+        "keySignal": "Cape of Good Hope route shift = permanent structural opportunity for African logistics and ports",
+        "status": "ok"
+      }
+    },
+    {
+      "name": "Macro",
+      "status": "ok",
+      "ms": 0,
+      "data": {
+        "source": "Macro Context",
+        "gold": "$4,700-$4,720/oz (May-Sep 2026)",
+        "oil": "Red Sea disruption driving freight cost surge",
+        "copper": "DRC Q1 2026: 955K tonnes (-14.6% YoY) \u2014 supply constrained",
+        "theme": "Sanctions + conflict = new global trade architecture; Africa positioned to benefit",
+        "saFDI": "Rwanda: 1.5 projects/$1B GDP vs SA: 0.32",
+        "eastAfricaTrade": "$46B+ regional trade (EAC)",
+        "africaFoodMarket": "$280B \u2192 $1T by 2030",
+        "status": "ok"
+      }
+    }
+  ],
+  "opportunities": [
+    {
+      "id": "AFR-001",
+      "division": "Agriculture",
+      "category": "Fosapro Fertilizer Bridge",
+      "region": "Russia \u2192 Africa rerouted",
+      "thesis": "Western sanctions on Russian fertilizer exporters create supply gaps across African agricultural markets. Fosapro is uniquely positioned to fill this via alternative routing.",
+      "confidence": "HIGH",
+      "horizon": "Weeks",
+      "priority": 1,
+      "signals": [
+        "Fosapro $800M Russia deal confirmed in pipeline",
+        "DRC agricultural inputs disrupted",
+        "Africa food market $280B \u2192 $1T by 2030"
+      ],
+      "action": "Fast-track Fosapro deal; position as Africa fertilizer bridge"
+    },
+    {
+      "id": "AFR-002",
+      "division": "Logistics",
+      "category": "Cape of Good Hope Routing Surge",
+      "region": "Southern Africa (Durban, Walvis Bay, Mombasa)",
+      "thesis": "70% of Red Sea cargo rerouted via Cape of Good Hope. African bunkering hubs, ports, and freight forwarders experiencing structural demand surge. Route becoming permanent.",
+      "confidence": "HIGH",
+      "horizon": "Months",
+      "priority": 1,
+      "signals": [
+        "Cape route now permanent per France24 May 2026",
+        "African bunkering hubs surging (Reuters Mar 2026)",
+        "Durban + Walvis Bay growing as transshipment hubs"
+      ],
+      "action": "Establish logistics JV at Durban or Walvis Bay; bunkering partnerships; freight forwarding"
+    },
+    {
+      "id": "AFR-003",
+      "division": "Energy & Mining",
+      "category": "Critical Minerals \u2014 DRC/Zambia Copper Belt",
+      "region": "DRC, Zambia, Zimbabwe",
+      "thesis": "Global copper demand surging for EVs, AI data centers, and renewable energy. DRC is world's largest cobalt producer. Zimbabwe gold output +42% in 2026. Lobito Corridor connecting DRC copper to Atlantic.",
+      "confidence": "HIGH",
+      "horizon": "Months",
+      "priority": 1,
+      "signals": [
+        "DRC Q1 2026: 955K tonnes copper exported (-14.6% YoY supply constrained)",
+        "Zimbabwe gold Q1 2026: $1.19B (+104% YoY)",
+        "Lithium demand +353% projected 2024-2040 (IEA)",
+        "Lobito Corridor active \u2014 DRC copper to Namibia"
+      ],
+      "action": "Copper/cobalt offtake agreements in DRC; gold trading desk via Zimbabwe; Lobito logistics stake"
+    },
+    {
+      "id": "AFR-004",
+      "division": "Global Markets",
+      "category": "Sanctions Arbitrage \u2014 Payment Corridors",
+      "region": "UAE, China, Africa triangular trade",
+      "thesis": "US secondary tariffs up to 100% on Russian oil buyers forcing creative payment solutions. UAE buying 50% of Zimbabwe exports. Africa emerging as neutral RMB/ZAR settlement zone.",
+      "confidence": "MEDIUM",
+      "horizon": "Weeks",
+      "priority": 2,
+      "signals": [
+        "Lindsey O. Graham Sanctions Act 2026: 100% tariffs on Russian oil importers",
+        "UAE buying 50% of Zimbabwe exports",
+        "China zero-tariff to 21 African nations",
+        "RMB-ZAR corridors emerging"
+      ],
+      "action": "Build multi-currency corridors (ZAR/RMB/USD); offer sanctions-compliant trade finance for UAE-Africa-China"
+    },
+    {
+      "id": "AFR-005",
+      "division": "Trade Finance",
+      "category": "Rwanda-East Africa $42B Infrastructure",
+      "region": "Rwanda, Kenya, Tanzania, Ethiopia",
+      "thesis": "East Africa needs $42B/year infrastructure investment through 2040. Rwanda 7.2% GDP growth 2026. Regional trade $46B. Every infrastructure dollar creates trade finance demand.",
+      "confidence": "HIGH",
+      "horizon": "Months",
+      "priority": 2,
+      "signals": [
+        "Rwanda: 1.5 FDI projects per $1B GDP (South Africa: 0.32)",
+        "EAC regional trade: $46B+",
+        "East Africa 5.8% growth projected 2026"
+      ],
+      "action": "Establish Rwanda HQ for East Africa operations; Huly workspace live; RFP for trade finance"
+    },
+    {
+      "id": "AFR-006",
+      "division": "Agriculture",
+      "category": "Africa Food Market $280B \u2192 $1T",
+      "region": "Pan-Africa",
+      "thesis": "African food market growing from $280B to $1T by 2030. Kenya $1B debt-for-food-security deal with DFC. Massive opportunity in agricultural commodity trading and warehouse receipt financing.",
+      "confidence": "HIGH",
+      "horizon": "Months",
+      "priority": 2,
+      "signals": [
+        "IFC launching African agrifood investment vehicle 2026",
+        "IFC + DFC active in Africa agriculture",
+        "Continental food market expanding from $280B to $1T"
+      ],
+      "action": "Agricultural commodity desk; warehouse receipt financing; offtake contracts with African farmers"
+    },
+    {
+      "id": "AFR-007",
+      "division": "Technology",
+      "category": "South Africa AI SaaS $5.9B by 2030",
+      "region": "South Africa / Pan-Africa",
+      "thesis": "South Africa AI SaaS market $5.9B by 2030. B2B SaaS globally $634B in 2026. Studex OS with 250+ agents across 19 divisions can capture enterprise AI market across Africa.",
+      "confidence": "MEDIUM",
+      "horizon": "Weeks",
+      "priority": 2,
+      "signals": [
+        "South Africa AI SaaS: $5.9B by 2030",
+        "B2B SaaS: $634B global 2026 \u2192 $4.4T 2034",
+        "Studex OS: 250+ agents, 19 divisions"
+      ],
+      "action": "Deploy Studex OS to enterprise clients; SaaS pricing tiers ($500-4K/mo); IGH demo as template"
+    },
+    {
+      "id": "AFR-008",
+      "division": "Global Markets",
+      "category": "Gold \u2014 $4,700 \u2192 $6,300/oz",
+      "region": "Zimbabwe, South Africa, Global",
+      "thesis": "Gold surging past $4,700/oz in May 2026, forecasts to $6,300 by year-end. Zimbabwe gold exports +104% YoY. South Africa top-5 gold producer. Studex should establish gold trading position immediately.",
+      "confidence": "HIGH",
+      "horizon": "Days-Weeks",
+      "priority": 1,
+      "signals": [
+        "Gold > $4,700/oz May 2026",
+        "Zimbabwe gold Q1 2026: $1.19B (+104% YoY)",
+        "Forecasts: $6,300/oz by end 2026"
+      ],
+      "action": "Gold trading desk (buy Zimbabwe/SA, sell to UAE/India/China); offtake agreements with Fidelity Printers"
+    },
+    {
+      "id": "AFR-009",
+      "division": "Logistics",
+      "category": "Lobito Corridor \u2014 DRC Copper Export Route",
+      "region": "DRC \u2192 Zambia \u2192 Namibia",
+      "thesis": "Lobito Corridor connects DRC copper belt to Namibian Atlantic port, bypassing South African ports. China-backed railway. Game-changer for copper export logistics.",
+      "confidence": "MEDIUM",
+      "horizon": "Months",
+      "priority": 2,
+      "signals": [
+        "Lobito Corridor active in 2026",
+        "DRC copper 955K tonnes Q1 2026",
+        "Namibia port development accelerating"
+      ],
+      "action": "Walvis Bay logistics JV; freight forwarding on Lobito Corridor; warehousing"
+    },
+    {
+      "id": "AFR-010",
+      "division": "Trade Finance",
+      "category": "USD Shortage \u2192 ZAR/RMB Trade Surge",
+      "region": "Africa-China, Africa-UAE",
+      "thesis": "Sanctions creating USD scarcity in some Africa corridors. China zero-tariff to Africa. Opportunity for multi-currency trade finance products using ZAR and RMB.",
+      "confidence": "MEDIUM",
+      "horizon": "Months",
+      "priority": 2,
+      "signals": [
+        "China zero-tariff to 21 African nations",
+        "UAE buying 50% Zimbabwe exports",
+        "USD shortage in Africa-Russia corridors"
+      ],
+      "action": "RMB and ZAR-denominated trade finance; currency swap lines with African banks"
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "highConfidence": 6,
+    "byDivision": {
+      "Agriculture": 2,
+      "Logistics": 2,
+      "Energy & Mining": 1,
+      "Global Markets": 2,
+      "Trade Finance": 2,
+      "Technology": 1
+    },
+    "priorityOnes": [
+      "AFR-001 Fosapro Fertilizer Bridge",
+      "AFR-002 Cape of Good Hope Routing Surge",
+      "AFR-003 Critical Minerals \u2014 DRC/Zambia Copper Belt",
+      "AFR-008 Gold \u2014 $4,700 \u2192 $6,300/oz"
+    ]
+  }
+}

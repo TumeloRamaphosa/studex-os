@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudEx Group — Global Markets</title>
+    <style>
+        :root {
+            --charcoal: #1a1a1a;
+            --ember: #ff4500;
+            --gold: #ffd700;
+            --black: #000000;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Chakra Petch', system-ui, -apple-system, sans-serif;
+            background: var(--black);
+            color: #fff;
+            line-height: 1.6;
+        }
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, var(--charcoal) 0%, var(--black) 100%);
+            padding: 2rem;
+            text-align: center;
+        }
+        .logo {
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold), var(--ember));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: 0.2em;
+        }
+        .tagline {
+            font-size: 1.8rem;
+            color: #aaa;
+            margin-bottom: 3rem;
+            font-family: 'Garamond', serif;
+            max-width: 800px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .nav-links a {
+            color: var(--ember);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+        .card {
+            background: var(--charcoal);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+        .card h3 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .card p {
+            color: #999;
+            line-height: 1.8;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: var(--charcoal);
+            border-radius: 12px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--ember);
+        }
+        .stat-label {
+            color: #888;
+            margin-top: 0.5rem;
+        }
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .agent-badge {
+            background: var(--black);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 69, 0, 0.2);
+        }
+        .agent-badge strong {
+            color: var(--ember);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .agent-badge span {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff00;
+            margin-right: 0.5rem;
+            box-shadow: 0 0 8px #00ff00;
+        }
+        footer {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            font-family: 'Garamond', serif;
+            border-top: 1px solid var(--charcoal);
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <h1 class="logo">STUDEX GROUP</h1>
+        <p class="tagline">
+            Connecting Russian Pharma Innovation to African Markets Through Autonomous Agent Infrastructure
+        </p>
+        <div class="nav-links">
+            <a href="#markets">Markets</a>
+            <a href="#agents">Agent Swarm</a>
+            <a href="#partners">Partners</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </section>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-number">19</div>
+            <div class="stat-label">African Countries</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">6</div>
+            <div class="stat-label">Russian Partners</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">7</div>
+            <div class="stat-label">Super Agents</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Autonomous Ops</div>
+        </div>
+    </div>
+
+    <div class="grid" id="markets">
+        <div class="card">
+            <h3>🌍 African Markets</h3>
+            <p>Pharmaceutical distribution across 19 countries with localized compliance, logistics, and payment infrastructure managed by Naledi CMO + CashClaw agents.</p>
+        </div>
+        <div class="card">
+            <h3>🇷🇺 Russia Corridor</h3>
+            <p>Direct partnerships with ART Engineering (modular data centers), NtechLab (AI vision), Pharmasyntez (pharmaceutical manufacturing) for market entry.</p>
+        </div>
+        <div class="card">
+            <h3>🤖 Agent Economy</h3>
+            <p>7 Buzz agents on Nostr relay coordinating lead generation, arbitrage detection, compliance monitoring, and shipment optimization 24/7.</p>
+        </div>
+        <div class="card">
+            <h3>💰 Revenue Loops</h3>
+            <p>Karpathy-style autonomous income: agents run experiments, measure metrics, iterate, and report — making money while you sleep.</p>
+        </div>
+    </div>
+
+    <div class="grid" id="agents" style="max-width: 1000px;">
+        <div class="card" style="grid-column: 1 / -1;">
+            <h3 style="text-align: center; margin-bottom: 2rem;">Super Agent Fleet</h3>
+            <div class="agent-grid">
+                <div class="agent-badge">
+                    <strong><span class="status-indicator"></span>Robusca-Prime</strong>
+                    <span>Executive CAO</span>
+                </div>
+                <div class="agent-badge">
+                    <strong><span class="status-indicator"></span>Katjana</strong>
+                    <span>Coordinator</span>
+                </div>
+                <div class="agent-badge">
+                    <strong><span class="status-indicator"></span>OpenClaw</strong>
+                    <span>Recon & Execution</span>
+                </div>
+                <div class="agent-badge">
+                    <strong><span class="status-indicator"></span>CashClaw</strong>
+                    <span>Payments</span>
+                </div>
+                <div class="agent-badge">
+                    <strong><span class="status-indicator"></span>Naledi</strong>
+                    <span>Africa Markets CMO</span>
+                </div>
+                <div class="agent-badge">
+                    <strong><span class="status-indicator"></span>Goose</strong>
+                    <span>Logistics</span>
+                </div>
+                <div class="agent-badge">
+                    <strong><span class="status-indicator"></span>Cypher Trace</strong>
+                    <span>Compliance</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid" id="partners">
+        <div class="card">
+            <h3>🏢 Russian Partners</h3>
+            <ul style="list-style: none; color: #999; line-height: 2;">
+                <li>• ART Engineering — Modular Data Centers</li>
+                <li>• NtechLab — AI Vision Systems</li>
+                <li>• Pharmasyntez — Pharmaceutical Manufacturing</li>
+                <li>• +3 strategic partners in pipeline</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>🚀 Rwanda POC</h3>
+            <p>September 2026 deployment as flagship pilot before PwC Middle East pitch. Generating case study metrics: 67% L1 deflection, uptime, response times.</p>
+        </div>
+    </div>
+
+    <footer id="contact">
+        <p>&copy; 2026 StudEx Group Global Markets. All rights reserved.</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">
+            Headquarters: Rwanda • Operations: 19 African Countries + Russia
+        </p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">
+            Powered by StudEx Nexus • Base44 • Buzz Relay • Hermes Agent
+        </p>
+    </footer>
+
+    <script>
+        // Live agent status via Buzz relay
+        const ws = new WebSocket('wss://studex-agents.communities.buzz.xyz');
+        ws.onopen = () => {
+            console.log('✅ Connected to Buzz relay');
+            ws.send(JSON.stringify({ type: 'subscribe', channel: 'agent-status' }));
+        };
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'agent-update') {
+                // Update agent badges dynamically
+                console.log('Agent update:', data);
+            }
+        };
+        ws.onerror = (err) => console.error('Buzz relay error:', err);
+        ws.onclose = () => console.log('Buzz relay disconnected');
+    </script>
+</body>
+</html>

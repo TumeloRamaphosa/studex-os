@@ -1,0 +1,29 @@
+name: dev-lead
+version: "1.0"
+description: >
+  Orchestration lead — dispatches tasks to dev-owner and dev-naledi.
+  Receives tasks from LangChain connector and routes to appropriate agents.
+
+defaults:
+  runtime: claude-code
+
+profiles:
+  default:
+    uses:
+      skills: [development-team]
+      guidance: []
+      subagents: []
+      plugins: []
+      runtime_resources: []
+
+resources:
+  guidance:
+    - id: role
+      path: guidance/role.md
+
+startup:
+  files:
+    - path: guidance/role.md
+      delivery_hint: send_text
+      required: true
+  actions: []

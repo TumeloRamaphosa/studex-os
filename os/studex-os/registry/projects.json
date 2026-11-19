@@ -1,0 +1,32 @@
+[
+  {
+    "id": "studex-os",
+    "name": "StudeX OS",
+    "status": "IN_PROGRESS",
+    "priority": "HIGH"
+  },
+  {
+    "id": "website-redesign",
+    "name": "Website Redesign",
+    "status": "IN_PROGRESS",
+    "priority": "HIGH"
+  },
+  {
+    "id": "chat-widget",
+    "name": "Chat Widget",
+    "status": "IN_PROGRESS",
+    "priority": "HIGH"
+  },
+  {
+    "id": "sentinel-connect",
+    "name": "Sentinel Discord Connect",
+    "status": "PENDING",
+    "priority": "HIGH"
+  },
+  {
+    "id": "vm-panel",
+    "name": "VM Deployment Panel",
+    "status": "PLANNED",
+    "priority": "MEDIUM"
+  }
+]

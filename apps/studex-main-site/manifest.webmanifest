@@ -1,0 +1,57 @@
+{
+  "id": "/app.html",
+  "name": "StudEx Group",
+  "short_name": "StudEx",
+  "description": "StudEx Group in Johannesburg. Halaal Wagyu, speciality coffee, wheat, and Global Markets. Orders go to the desk.",
+  "start_url": "/app.html",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "any",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "lang": "en",
+  "categories": ["business", "food"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Meat",
+      "url": "/app.html#meat",
+      "description": "Halaal Wagyu and a note to the desk"
+    },
+    {
+      "name": "Coffee",
+      "url": "/app.html#coffee",
+      "description": "Rwandan speciality coffee"
+    },
+    {
+      "name": "Markets",
+      "url": "/app.html#markets",
+      "description": "Global Markets"
+    },
+    {
+      "name": "Wheat",
+      "url": "/app.html#wheat",
+      "description": "Ask for a wheat quote"
+    }
+  ]
+}

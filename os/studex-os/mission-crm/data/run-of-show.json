@@ -1,0 +1,82 @@
+{
+  "mission": "Rwanda → Nigeria → Russia → Switzerland",
+  "launch_date": "2026-08-25",
+  "end_date": "2026-10-03",
+  "countries": ["RWANDA", "NIGERIA", "RUSSIA", "SWITZERLAND"],
+  "commercial_tracks": [
+    {"id":"T01","name":"StudEx Coffee","owner":"COFFEE.AGENT","priority":1,"status":"BLOCKED","blocked_by":"No approved producer"},
+    {"id":"T02","name":"Wagyu Biltong Gold","owner":"MEAT.AGENT","priority":2,"status":"BLOCKED","blocked_by":"SKU not confirmed"},
+    {"id":"T03","name":"Mobile Data Centres","owner":"DATA.AGENT","priority":3,"status":"IN_PROGRESS","blocked_by":"Demo equipment TBC"},
+    {"id":"T04","name":"Agentic Rise","owner":"ORCHESTRATOR","priority":4,"status":"IN_PROGRESS","blocked_by":"Cohort curriculum"},
+    {"id":"T05","name":"Gaming & Esports","owner":"GAMING.AGENT","priority":5,"status":"IN_PROGRESS","blocked_by":"Tournament format"},
+    {"id":"T06","name":"Coding Education","owner":"COFFEE.AGENT","priority":6,"status":"OPEN","blocked_by":"Google/Alibaba status"},
+    {"id":"T07","name":"Women in AI Rwanda","owner":"WOMEN.AI","priority":7,"status":"IN_PROGRESS","blocked_by":"Venue confirmation"},
+    {"id":"T08","name":"Lake Kivu Methane","owner":"DATA.AGENT","priority":8,"status":"OPEN","blocked_by":"Opportunity note not started"},
+    {"id":"T09","name":"Statix Coffee AI Restaurant","owner":"ORCHESTRATOR","priority":9,"status":"OPEN","blocked_by":"SOPs not written"},
+    {"id":"T10","name":"Nigeria GITEX","owner":"ORCHESTRATOR","priority":10,"status":"OPEN","blocked_by":"Registration not done"},
+    {"id":"T11","name":"Russia Market Activation","owner":"ORCHESTRATOR","priority":11,"status":"OPEN","blocked_by":"Commercial pack not ready"},
+    {"id":"T12","name":"Switzerland Deal Room","owner":"ORCHESTRATOR","priority":12,"status":"NOT_STARTED","blocked_by":"Meeting list empty"},
+    {"id":"T13","name":"International Distribution","owner":"COFFEE.AGENT","priority":13,"status":"OPEN","blocked_by":"China/Russia maps not built"},
+    {"id":"T14","name":"Timbuktoo Initiative","owner":"ORCHESTRATOR","priority":14,"status":"OPEN","blocked_by":"Cape Town engagement not started"},
+    {"id":"T15","name":"International Coffee Distribution","owner":"COFFEE.AGENT","priority":15,"status":"OPEN","blocked_by":"China market owner not nominated"}
+  ],
+  "success_metrics": {
+    "rwanda": {
+      "contacts": {"target": 50, "current": 0},
+      "cohort_applications": {"target": 20, "current": 0},
+      "founder_profiles": {"target": 10, "current": 0},
+      "coffee_samples_sent": {"target": 5, "current": 0},
+      "pilot_opportunities": {"target": 3, "current": 0}
+    },
+    "nigeria": {
+      "qualified_contacts": {"target": 20, "current": 0},
+      "formal_followups": {"target": 10, "current": 0},
+      "pilot_discussions": {"target": 3, "current": 0},
+      "distribution_prospects": {"target": 2, "current": 0},
+      "location_shortlist": {"target": 1, "current": 0}
+    },
+    "russia": {
+      "coffee_distributors": {"target": 5, "current": 0},
+      "biltong_interest": {"target": 3, "current": 0},
+      "tech_partners": {"target": 3, "current": 0},
+      "youth_ambassadors": {"target": 5, "current": 0}
+    },
+    "switzerland": {
+      "investor_meetings": {"target": 10, "current": 0},
+      "trade_prospects": {"target": 5, "current": 0},
+      "due_diligence_requests": {"target": 2, "current": 0},
+      "named_followups": {"target": 10, "current": 0}
+    }
+  },
+  "required_outputs": {
+    "rwanda": [
+      "Producer + cooperative registry",
+      "Coffee-lot shortlist",
+      "Sample register",
+      "Women in AI run sheet",
+      "Working prototypes",
+      "Talent Passports",
+      "Lake Kivu methane opportunity note",
+      "Mission results recording"
+    ],
+    "nigeria": [
+      "20 qualified contacts",
+      "Signed meeting records",
+      "LOIs or pilot scopes",
+      "Nigeria location shortlist",
+      "Mobile data centre opportunity"
+    ],
+    "russia": [
+      "Coffee buyer/distributor pipeline",
+      "Biltong Gold expressions of interest",
+      "Speaking assets + media",
+      "Post-festival Russia market plan"
+    ],
+    "switzerland": [
+      "Funding + partnership pipeline",
+      "Trade + distribution prospects",
+      "Investment structure recommendations",
+      "Named follow-up owners + dates"
+    ]
+  }
+}

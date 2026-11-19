@@ -1,0 +1,1 @@
+[master-store] listening on 0.0.0.0:5005 db=/workspace/master-command-center/data/store.db

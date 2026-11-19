@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Studex Global Markets runs beef, coffee, wheat and commodity trade on a fleet of AI agents. Agentic Rise opens that system to twenty invited companies; AI, learning and coding hubs across five African markets bring the next generation through.">
+<link rel="canonical" href="https://www.studex-group.com/arcade.html">
+<meta name="theme-color" content="#07070b">
+<meta property="og:title" content="Stud-Ex Arcade and Agentic Rise">
+<meta property="og:description" content="A business is a computer. The system we run Studex on, opened to partners and builders across five African markets.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.studex-group.com/arcade.html">
+<title>Stud-Ex Arcade and Agentic Rise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: a cabinet screen — scoreboard strip, two tracks side by side, one ladder down the middle. Single dark world by choice. */
+  :root {
+    color-scheme: dark;
+    --ink: #07070b;
+    --panel: #101018;
+    --panel-2: #16161f;
+    --line: #26262f;
+    --fg: #ece9e3;
+    --mute: #8d8b96;
+    --gold: #e7b74a;
+    --gold-soft: #f2d089;
+    --ember: #f0691e;
+    --live: #3fd08a;
+    --display: "Chakra Petch", "Trebuchet MS", sans-serif;
+    --body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--fg);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; padding-block: 0; }
+  section { padding-block: 56px; border-top: 1px solid var(--line); }
+  section:first-of-type { border-top: 0; }
+  h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.1; }
+  h1 { font-size: clamp(38px, 7vw, 76px); letter-spacing: -0.5px; }
+  h2 { font-size: clamp(24px, 3.4vw, 34px); margin-bottom: 10px; }
+  h3 { font-size: 19px; }
+  p { margin: 0 0 14px; max-width: 62ch; }
+  a { color: var(--gold-soft); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 2.4px;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+  }
+  .lede { font-size: 18px; color: #d7d4ce; }
+  .mute { color: var(--mute); }
+
+  /* hero */
+  .hero { padding-block: 64px 48px; }
+  .hero h1 span { color: var(--gold); display: block; }
+  .hero .rule { height: 3px; width: 92px; background: linear-gradient(90deg, var(--gold), var(--ember)); margin: 24px 0; }
+  .hero-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: end; }
+  .cab {
+    border: 1px solid var(--line); border-radius: 14px; background:
+      radial-gradient(120% 90% at 50% 0%, rgba(231,183,74,.12), transparent 60%), var(--panel);
+    padding: 22px; min-width: 0;
+  }
+  .cab h3 { color: var(--gold-soft); margin-bottom: 10px; }
+  .cab ul { margin: 0; padding-left: 18px; color: var(--mute); font-size: 14.5px; }
+  .cab li { margin-bottom: 6px; }
+
+  /* scoreboard */
+  .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
+  .stat b {
+    display: block; font-family: var(--display); font-size: 30px; color: var(--gold);
+    font-variant-numeric: tabular-nums; line-height: 1.15;
+  }
+  .stat span { font-size: 13px; color: var(--mute); display: block; margin-top: 4px; }
+
+  /* tracks */
+  .tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .track { border: 1px solid var(--line); border-radius: 14px; padding: 26px; background: var(--panel); min-width: 0; }
+  .track.rise { background: var(--panel-2); }
+  .track .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 1.6px; text-transform: uppercase; }
+  .track.play .tag { color: var(--ember); }
+  .track.rise .tag { color: var(--gold); }
+  .track h2 { margin-block: 8px 12px; }
+  .track dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 18px 0 0; font-size: 14.5px; }
+  .track dt { font-family: var(--mono); font-size: 12px; color: var(--mute); text-transform: uppercase; letter-spacing: 1px; padding-top: 3px; }
+  .track dd { margin: 0; }
+
+  /* ladder */
+  .ladder { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 26px; }
+  .rung { border: 1px solid var(--line); border-right: 0; padding: 20px 18px; background: var(--panel); min-width: 0; }
+  .rung:last-child { border-right: 1px solid var(--line); }
+  .rung .n { font-family: var(--mono); font-size: 12px; color: var(--ember); letter-spacing: 1.5px; }
+  .rung h3 { margin: 6px 0 8px; }
+  .rung p { font-size: 14px; color: var(--mute); margin: 0; }
+
+  /* calendar */
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-family: var(--mono); font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--mute); }
+  td.when { font-family: var(--mono); color: var(--gold-soft); white-space: nowrap; }
+  .scroller { overflow-x: auto; }
+  .pill { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
+  .pill.apply { color: var(--live); border-color: rgba(63,208,138,.4); }
+  .pill.watch { color: var(--mute); }
+
+  /* join */
+  .doors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+  .door { border: 1px solid var(--line); border-radius: 12px; padding: 22px; background: var(--panel); min-width: 0; }
+  .door.highlight { border-color: rgba(231,183,74,.5); }
+  .door h3 { color: var(--gold-soft); margin-bottom: 8px; }
+  .door p { font-size: 14.5px; color: var(--mute); }
+  .contact {
+    margin-top: 26px; border: 1px solid var(--line); border-radius: 12px; padding: 20px;
+    background: var(--panel-2); display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;
+  }
+  .addr { font-family: var(--mono); font-size: 16px; color: var(--gold); user-select: all; word-break: break-all; }
+  button {
+    font-family: var(--mono); font-size: 13px; letter-spacing: 1px; text-transform: uppercase;
+    background: var(--gold); color: #1a1409; border: 0; border-radius: 8px; padding: 11px 18px; cursor: pointer;
+  }
+  button:hover { background: var(--gold-soft); }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 3px; }
+  footer { border-top: 1px solid var(--line); padding-block: 30px 44px; color: var(--mute); font-size: 13px; }
+  footer p { max-width: 70ch; }
+  .notes { font-size: 12.5px; color: var(--mute); margin-top: 18px; }
+  .notes a { color: var(--mute); }
+
+  @media (max-width: 860px) {
+    .hero-grid, .tracks, .doors { grid-template-columns: 1fr; }
+    .board { grid-template-columns: 1fr 1fr; }
+    .ladder { grid-template-columns: 1fr; }
+    .rung { border-right: 1px solid var(--line); border-bottom: 0; }
+    .rung:last-child { border-bottom: 1px solid var(--line); }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow">Studex Global Markets · Johannesburg</div>
+    <div class="hero-grid">
+      <div>
+        <h1>A business is a computer<span>and a computer is a business</span></h1>
+        <div class="rule"></div>
+        <p class="lede">Studex runs real trade — beef, coffee, wheat, commodities — on a fleet of AI agents operated from Johannesburg. We built the operating system because we needed it ourselves. Now we're opening it to partners and to the people coming up behind us.</p>
+        <p class="mute">Two programmes carry that: Agentic Rise, for companies and builders who want the system, and the Stud-Ex Arcade, where the next generation earns their way in.</p>
+      </div>
+      <div class="cab">
+        <h3>Season 01 — five countries</h3>
+        <ul>
+          <li>South Africa, Eswatini, Zimbabwe, Mozambique, Rwanda</li>
+          <li>A gaming hub in each, then an Agentic Rise cohort behind it</li>
+          <li>Johannesburg first, because that is where the venue and the team already are</li>
+          <li>Dates and venues confirm as each sponsor signs</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Who is behind it</div>
+    <h2>Ten years of building, in public</h2>
+    <p>Studex started in 2016 with a blockchain platform that let people own a share of a farm animal in South Africa. The business grew into a group: premium halaal Wagyu and Ankole beef, speciality coffee, wheat, commodity trade across borders, and the cloud and agent platform that now runs all of it.</p>
+    <p>It is operated by a founder and a fleet of agents rather than a large head office. Every vertical is a test of the same idea: if a business is really a computer, then the work of running one can be written down, handed to agents, and watched on a screen. The ones that survive that test become products other companies can buy.</p>
+    <div class="tracks">
+      <div class="track play">
+        <div class="tag">What we run</div>
+        <h2>Our own books first</h2>
+        <dl>
+          <dt>Meat</dt><dd>Halaal Wagyu and Ankole, sold direct</dd>
+          <dt>Coffee</dt><dd>Green buying, roasting and cupping in our own lab</dd>
+          <dt>Trade</dt><dd>Commodity flows and market entry across borders</dd>
+          <dt>Cloud</dt><dd>Virtual machines and agent runtimes per client</dd>
+        </dl>
+      </div>
+      <div class="track rise">
+        <div class="tag">What we sell</div>
+        <h2>The system that runs them</h2>
+        <dl>
+          <dt>Agent OS</dt><dd>Identity, permissions, goals, tasks, approvals, audit</dd>
+          <dt>Business Ghost</dt><dd>One durable memory per company</dd>
+          <dt>Super Agents</dt><dd>A working team for a specific company, on its own machine</dd>
+          <dt>Proof</dt><dd>We use all of it ourselves, daily, before anyone else does</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Why this, why now</div>
+    <h2>The players are already here</h2>
+    <p>Africa has more gamers than most continents have people, and almost nowhere for the best of them to turn skill into a career. The same is true of young engineers. The talent is not the bottleneck. Structure is.</p>
+    <div class="board">
+      <div class="stat"><b>349M</b><span>gamers across Africa</span></div>
+      <div class="stat"><b>$2.1B</b><span>African gaming market</span></div>
+      <div class="stat"><b>$278M</b><span>South Africa's share</span></div>
+      <div class="stat"><b>$3.2B</b><span>African startup funding, 2025</span></div>
+    </div>
+    <p class="notes">Figures from the Maliyo Games Africa report (Nov 2025) and Africa: The Big Deal (Jan 2026). Esports specifically is still small, around $40M continent-wide, which is why the Arcade is built as a talent ladder first and a prize circuit second.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">The two tracks</div>
+    <div class="tracks">
+      <div class="track play">
+        <div class="tag">Track A · Play</div>
+        <h2>Stud-Ex Arcade</h2>
+        <p class="mute">Competition with a record attached. Every match, jam and build you finish goes on a talent passport that a sponsor or employer can actually read.</p>
+        <dl>
+          <dt>Who</dt><dd>Gamers, programmers, creators, students</dd>
+          <dt>Format</dt><dd>Weekly ladder, game jams, monthly finals</dd>
+          <dt>Costs</dt><dd>Free to enter</dd>
+          <dt>Prize</dt><dd>Cash where sponsors fund it, plus a cohort seat</dd>
+        </dl>
+      </div>
+      <div class="track rise">
+        <div class="tag">Track B · Build</div>
+        <h2>Agentic Rise</h2>
+        <p class="mute">A cohort for people building with AI agents. You get a private machine, the Studex Agent OS on it, and a real brief from one of our markets rather than a toy project.</p>
+        <dl>
+          <dt>Who</dt><dd>Developers, AI engineers, small studios, researchers — and twenty invited companies in the first African intake</dd>
+          <dt>Format</dt><dd>Cohort, mentors on a weekly rhythm, demo day</dd>
+          <dt>You get</dt><dd>VM seat, Agent OS, Business Ghost memory, review time</dd>
+          <dt>We get</dt><dd>Work shipped into live country programmes</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Season 01 footprint</div>
+    <h2>Five countries, one pattern</h2>
+    <p>Each country gets the same three pieces in the same order. A hub: a room with machines where people learn AI and code, mentors hold sessions, startups work and the Arcade runs its nights. An Agentic Rise cohort behind it, so the ones who are serious get a team of agents and a real brief. And compute close enough that the work actually runs. The hub is cheap and fast. The compute is the part that needs a partner.</p>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>Country</th><th>AI, learning and coding hub</th><th>Agentic Rise</th><th>Compute</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>South Africa</strong><br><span class="mute">Johannesburg</span></td>
+            <td>First venue. Team and equipment in place.</td>
+            <td>Cohort one</td>
+            <td>Existing cloud capacity. Edge node only if a tenant needs it.</td>
+          </tr>
+          <tr>
+            <td><strong>Eswatini</strong><br><span class="mute">Mbabane / Manzini</span></td>
+            <td>Hub with the university and enterprise track</td>
+            <td>Cohort two</td>
+            <td>Small node, sized to one anchor tenant</td>
+          </tr>
+          <tr>
+            <td><strong>Rwanda</strong><br><span class="mute">Kigali</span></td>
+            <td>Arena-scale esports already exists here</td>
+            <td>Cohort two</td>
+            <td>Node with its own backup power. Personal data has to stay in the country by law.</td>
+          </tr>
+          <tr>
+            <td><strong>Zimbabwe</strong><br><span class="mute">Harare</span></td>
+            <td>Scouting venues and partners</td>
+            <td>Cohort three</td>
+            <td>Assessment stage</td>
+          </tr>
+          <tr>
+            <td><strong>Mozambique</strong><br><span class="mute">Maputo</span></td>
+            <td>Scouting venues and partners</td>
+            <td>Cohort three</td>
+            <td>Assessment stage. Coastal landing points are the reason to look here.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>A hub runs on three things: machines and connectivity from our infrastructure partners, the StudBot harness that puts an agent in front of every member, and models hosted close to the room — local where the hardware allows it, cloud where it doesn't. Nobody in the hub needs a foreign credit card to start working.</p>
+    <p class="notes">Rwanda's data-protection law requires personal data to be stored in-country unless the regulator authorises otherwise, and the grid has a dry-season shortfall that any node has to plan around. Those two facts shape the Kigali design more than anything else on this page.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">How someone moves through it</div>
+    <h2>Play, build, deploy, earn</h2>
+    <p>The ladder only works if each rung is something a person can actually reach from the one below it.</p>
+    <div class="ladder">
+      <div class="rung">
+        <div class="n">RUNG 01</div>
+        <h3>Play</h3>
+        <p>Enter a ladder night or a jam. Finish. Your result is recorded on your passport whether you win or not.</p>
+      </div>
+      <div class="rung">
+        <div class="n">RUNG 02</div>
+        <h3>Build</h3>
+        <p>Top finishers take a cohort seat. A machine, an agent team and a brief with a deadline.</p>
+      </div>
+      <div class="rung">
+        <div class="n">RUNG 03</div>
+        <h3>Deploy</h3>
+        <p>What you build goes into a country programme or a client workspace, with a human approving anything consequential.</p>
+      </div>
+      <div class="rung">
+        <div class="n">RUNG 04</div>
+        <h3>Earn</h3>
+        <p>Paid work through the Execution Exchange: tenders, projects and partner briefs allocated to people who have shipped.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Season calendar</div>
+    <h2>Where we're taking it</h2>
+    <p>These are the fixtures we are applying to or building around. Nothing here is a partnership until it's signed, and this table says which is which.</p>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>When</th><th>What</th><th>Where</th><th>Our status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="when">27–29 Nov 2026</td>
+            <td>rAge gaming and esports festival</td>
+            <td>Johannesburg</td>
+            <td><span class="pill apply">Attending, scouting teams</span></td>
+          </tr>
+          <tr>
+            <td class="when">Quarterly</td>
+            <td>UNDP timbuktoo CreativeTech launchpad, which covers gaming</td>
+            <td>Hosted from South Africa</td>
+            <td><span class="pill apply">Applying as a partner</span></td>
+          </tr>
+          <tr>
+            <td class="when">Annual</td>
+            <td>Carry1st Africa Cup, with city qualifiers</td>
+            <td>Lagos, Cape Town, Nairobi</td>
+            <td><span class="pill watch">Watching the qualifier model</span></td>
+          </tr>
+          <tr>
+            <td class="when">Sept, annual</td>
+            <td>Continental esports cup at BK Arena</td>
+            <td>Kigali</td>
+            <td><span class="pill watch">Scouting for a Kigali venue</span></td>
+          </tr>
+          <tr>
+            <td class="when">Season 01</td>
+            <td>Stud-Ex Arcade ladder and finals</td>
+            <td>Johannesburg first</td>
+            <td><span class="pill apply">In setup</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">For infrastructure partners</div>
+    <h2>What we bring, what we're asking for</h2>
+    <p>A data centre in a new market is usually a bet on demand that hasn't arrived yet. This is the opposite: the demand is built first, in public, and the compute is sized to it.</p>
+    <div class="tracks">
+      <div class="track play">
+        <div class="tag">We bring</div>
+        <h2>Demand and ground presence</h2>
+        <dl>
+          <dt>Users</dt><dd>Hub members and cohort builders who need compute from day one</dd>
+          <dt>Workloads</dt><dd>Agent runtimes, game servers, inference close to the player</dd>
+          <dt>Local</dt><dd>Registration, relationships, regulators, on-site support</dd>
+          <dt>Operations</dt><dd>The agent operating system that runs and reports on the estate</dd>
+        </dl>
+      </div>
+      <div class="track rise">
+        <div class="tag">We're asking for</div>
+        <h2>Modular capacity and power</h2>
+        <dl>
+          <dt>Hardware</dt><dd>Prefabricated modules that land in weeks, not a two-year build</dd>
+          <dt>Power</dt><dd>Hybrid design with real backup, because the grid is the binding constraint</dd>
+          <dt>Phasing</dt><dd>One small node first, tied to a named tenant, then repeat</dd>
+          <dt>Terms</dt><dd>Milestone payments and a support commitment that works across borders</dd>
+        </dl>
+      </div>
+    </div>
+    <p class="notes">We start a node when a tenant signs, not before. Any partner named on this page will have passed sanctions and compliance screening first, which is why none is named yet.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">Get in</div>
+    <h2>Three doors</h2>
+    <div class="doors">
+      <div class="door">
+        <h3>Players</h3>
+        <p>Tell us your game, your city and your best result. Ladder nights and jam dates go out to everyone on the list first.</p>
+      </div>
+      <div class="door highlight">
+        <h3>Builders</h3>
+        <p>Send one thing you have made and one thing you want to make with a team of agents behind you. Cohort seats are limited by how many machines we can run.</p>
+      </div>
+      <div class="door">
+        <h3>Partners and sponsors</h3>
+        <p>Venues, prize money, compute, hardware, or a brief you want built. We will tell you honestly what is signed and what is still a plan.</p>
+      </div>
+    </div>
+    <div class="contact">
+      <div>
+        <div class="eyebrow" style="margin-bottom:6px">Write to us</div>
+        <div class="addr" id="addr">sales@studex-group.com</div>
+      </div>
+      <button id="copy" type="button">Copy address</button>
+    </div>
+    <p class="notes" id="note">Put "Arcade" or "Agentic Rise" in the subject line so it reaches the right desk.</p>
+  </section>
+
+  <footer>
+    <p><strong>Stud-Ex Arcade and Agentic Rise</strong> are programmes of Studex Global Markets, Johannesburg. Market figures on this page carry their source. Events listed are fixtures we are attending or applying to; none of them implies a partnership, endorsement or affiliation unless this page says an agreement is signed.</p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var btn = document.getElementById('copy');
+    var addr = document.getElementById('addr');
+    var note = document.getElementById('note');
+    var original = note.textContent;
+    btn.addEventListener('click', function () {
+      var text = addr.textContent.trim();
+      var done = function (msg) {
+        note.textContent = msg;
+        window.setTimeout(function () { note.textContent = original; }, 3000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          done('Address copied. Put "Arcade" or "Agentic Rise" in the subject line.');
+        }).catch(select);
+      } else {
+        select();
+      }
+      function select() {
+        var range = document.createRange();
+        range.selectNodeContents(addr);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        done('Address selected — copy it with your keyboard.');
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>

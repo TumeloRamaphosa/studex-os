@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>StudEx Group</title>
+  <meta name="description" content="StudEx Group in Johannesburg. Halaal Wagyu, speciality coffee, wheat, and Global Markets. Orders go to the desk.">
+  <link rel="canonical" href="https://www.studex-group.com/app.html">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="StudEx">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Space+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-2: #141414;
+      --ink: #f0e5d3;
+      --muted: #b7b1a6;
+      --line: #2a2a2a;
+      --gold: #c9a84c;
+      --gold-ink: #1a1408;
+      --rail: 232px;
+      --bar: 64px;
+      --dock: 74px;
+    }
+    * { box-sizing: border-box; }
+    html { color-scheme: dark; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 1.2rem;
+      line-height: 1.45;
+    }
+    a { color: inherit; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .app {
+      display: grid;
+      grid-template-columns: var(--rail) 1fr;
+      min-height: 100dvh;
+    }
+    .rail {
+      position: sticky;
+      top: 0;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      padding: 1.4rem 1.1rem 1.2rem;
+      border-right: 1px solid var(--line);
+      background: var(--bg);
+    }
+    .word {
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.16em;
+      font-size: 1.7rem;
+      text-decoration: none;
+      line-height: 1;
+    }
+    .rail-kicker {
+      margin: 0.45rem 0 1.6rem;
+      color: var(--muted);
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .rail nav, .dock {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .rail a, .dock a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 2.75rem;
+      padding: 0 0.7rem;
+      text-decoration: none;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+    .rail a[aria-current="page"], .dock a[aria-current="page"] {
+      color: var(--gold);
+      border-color: var(--line);
+      background: var(--bg-2);
+    }
+    .count {
+      font-size: 0.65rem;
+      color: var(--gold);
+    }
+    .count:empty, .count[hidden] { display: none; }
+    .rail-foot {
+      margin-top: auto;
+      padding-top: 1.1rem;
+      color: var(--muted);
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.02em;
+      line-height: 1.55;
+    }
+    .rail-foot a { color: var(--ink); }
+    .stage { min-width: 0; }
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-height: var(--bar);
+      padding: 0 1.3rem;
+      background: rgba(10, 10, 10, 0.94);
+      border-bottom: 1px solid var(--line);
+    }
+    .room-name {
+      margin: 0;
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.12em;
+      font-size: 1.45rem;
+      font-weight: 400;
+    }
+    .top-actions { display: flex; gap: 0.5rem; align-items: center; }
+    .top-actions a, .install {
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--ink);
+      background: transparent;
+      border: 1px solid var(--line);
+      min-height: 2.4rem;
+      padding: 0 0.75rem;
+      cursor: pointer;
+    }
+    .install { border-color: var(--gold); color: var(--gold); }
+    .install[hidden] { display: none; }
+    .room { display: none; }
+    .room:target { display: block; }
+    .app:not(:has(.room:target)) #home { display: block; }
+    .pad { padding: 1.7rem 1.6rem 2.6rem; max-width: 52rem; }
+    .home-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      min-height: calc(100dvh - var(--bar));
+    }
+    .home-copy { display: flex; flex-direction: column; justify-content: flex-end; padding: 2.2rem 1.8rem 1.6rem; }
+    .eyebrow, .kicker {
+      margin: 0 0 0.7rem;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    h1 {
+      margin: 0;
+      font-family: "Bebas Neue", sans-serif;
+      font-weight: 400;
+      font-size: clamp(3.4rem, 6vw, 5.8rem);
+      letter-spacing: 0.04em;
+      line-height: 0.88;
+    }
+    h2 {
+      margin: 0 0 0.7rem;
+      font-family: "Bebas Neue", sans-serif;
+      font-weight: 400;
+      font-size: clamp(2.8rem, 5vw, 4.4rem);
+      letter-spacing: 0.05em;
+      line-height: 0.9;
+    }
+    .lede { max-width: 36rem; margin: 1rem 0 0; color: var(--muted); font-size: 1.4rem; }
+    p { margin: 0 0 0.9rem; }
+    .closed {
+      margin: 1.3rem 0 0;
+      padding-top: 0.9rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .photo { overflow: hidden; background: var(--bg-2); }
+    .photo.band { height: 22rem; }
+    @media (min-width: 861px) {
+      #meat:target, #coffee:target {
+        display: grid;
+        grid-template-columns: 0.86fr 1.14fr;
+        align-items: stretch;
+      }
+      #meat:target .photo.band, #coffee:target .photo.band {
+        height: 100%;
+        min-height: calc(100dvh - var(--bar));
+      }
+      #coffee:target .photo { order: 2; }
+    }
+    .tiles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--line);
+    }
+    .tile {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      min-height: 9.5rem;
+      padding: 1.25rem 1.2rem 1.1rem;
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+    }
+    .tile:nth-child(odd) { border-right: 1px solid var(--line); }
+    .tile strong {
+      font-family: "Bebas Neue", sans-serif;
+      font-weight: 400;
+      font-size: 2rem;
+      letter-spacing: 0.06em;
+    }
+    .tile span { color: var(--muted); font-size: 1.12rem; }
+    .tile em {
+      margin-top: auto;
+      font-style: normal;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .price {
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.82rem;
+      color: var(--gold);
+      letter-spacing: 0.03em;
+    }
+    form { margin-top: 1.4rem; padding-top: 0.3rem; border-top: 1px solid var(--line); }
+    label {
+      display: block;
+      margin: 1rem 0 0.35rem;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    input, select, textarea {
+      width: 100%;
+      min-height: 3rem;
+      padding: 0.65rem 0.75rem;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 0;
+    }
+    select {
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--gold) 50%), linear-gradient(135deg, var(--gold) 50%, transparent 50%);
+      background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 12px) calc(50% - 2px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      padding-right: 2rem;
+    }
+    textarea { min-height: 7.5rem; resize: vertical; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.2rem; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 3rem;
+      padding: 0.7rem 1.05rem;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--gold);
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .btn-solid { background: var(--gold); color: var(--gold-ink); }
+    .btn:active { transform: translateY(1px); }
+    .status { min-height: 1.4rem; margin: 0.8rem 0 0; color: var(--gold); font-size: 1.05rem; }
+    .note-list { list-style: none; margin: 1rem 0 0; padding: 0; }
+    .note-list li { padding: 1rem 0; border-top: 1px solid var(--line); }
+    .note-list p { margin: 0 0 0.4rem; }
+    .quiet { color: var(--muted); font-size: 1.05rem; }
+    .os-link {
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .dock {
+      display: none;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+      grid-template-columns: repeat(6, 1fr);
+      min-height: calc(var(--dock) + env(safe-area-inset-bottom));
+      padding: 0.25rem 0.2rem env(safe-area-inset-bottom);
+      background: rgba(10, 10, 10, 0.96);
+      border-top: 1px solid var(--line);
+    }
+    .dock a {
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.15rem;
+      min-height: 3rem;
+      padding: 0.3rem 0.1rem;
+      font-size: 0.58rem;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .help { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+    @media (max-width: 860px) {
+      .app { grid-template-columns: 1fr; }
+      .rail { display: none; }
+      .dock { display: grid; }
+      .stage { padding-bottom: calc(var(--dock) + env(safe-area-inset-bottom) + 1.5rem); }
+      input, select, textarea, .btn { scroll-margin-bottom: calc(var(--dock) + 1.25rem); }
+      .actions { display: grid; grid-template-columns: 1fr 1fr; }
+      .actions .btn { padding: 0.7rem 0.45rem; font-size: 0.62rem; letter-spacing: 0.04em; white-space: normal; text-align: center; line-height: 1.3; }
+      .home-grid, .split { grid-template-columns: 1fr; }
+      .home-copy, .pad { padding: 1.35rem 1.05rem 1.6rem; }
+      .home-grid .photo { height: 46vw; min-height: 0; }
+      .photo.band { height: 5.5rem; }
+      .tiles { grid-template-columns: 1fr; }
+      .tile:nth-child(odd) { border-right: 0; }
+      h1 { font-size: 3.6rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .btn:active { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="rail">
+      <a class="word" href="#home">StudEx</a>
+      <p class="rail-kicker">Johannesburg</p>
+      <nav aria-label="Desks">
+        <a href="#home">Home</a>
+        <a href="#meat">Meat</a>
+        <a href="#coffee">Coffee</a>
+        <a href="#markets">Markets</a>
+        <a href="#wheat">Wheat</a>
+        <a href="#desk">Desk <span class="count" data-count></span></a>
+      </nav>
+      <p class="rail-foot">Four desks. One group.<br><a href="mailto:t.ramaphosa@studex.dev">Desk mail</a></p>
+    </aside>
+
+    <div class="stage">
+      <header class="top">
+        <p class="room-name" id="room-name">Home</p>
+        <div class="top-actions">
+          <button class="install" id="install" type="button" hidden>Install</button>
+          <a href="index.html">Site</a>
+        </div>
+      </header>
+
+      <section class="room" id="home">
+        <div class="home-grid">
+          <div class="home-copy">
+            <p class="eyebrow">StudEx Group, Johannesburg</p>
+            <h1>Four desks.<br>One group.</h1>
+            <p class="lede">Halaal Wagyu, speciality coffee, wheat, and Global Markets. Tumelo Ramaphosa and Victor Ndlovu.</p>
+            <p class="closed">The Shopify counter at studexmeat.com is closed while the shop is reactivated. An order is a note to the desk.</p>
+          </div>
+          <div class="photo">
+            <img src="images/meat.jpg" alt="A raw Wagyu ribeye on a black board with a gold rim" width="1248" height="832">
+          </div>
+        </div>
+        <div class="tiles">
+          <a class="tile" href="#meat">
+            <strong>Meat</strong>
+            <span>Halaal Wagyu and Ankole. Biltong Gold in Original, chilli, and BBQ.</span>
+            <em>Open</em>
+          </a>
+          <a class="tile" href="#coffee">
+            <strong>Coffee</strong>
+            <span>Rwandan speciality on the same counter. No second store.</span>
+            <em>Open</em>
+          </a>
+          <a class="tile" href="#markets">
+            <strong>Markets</strong>
+            <span>The page holds the offer. It does not take a card.</span>
+            <em>Open</em>
+          </a>
+          <a class="tile" href="#wheat">
+            <strong>Wheat</strong>
+            <span>Quoted per contract. No public menu and no checkout.</span>
+            <em>Open</em>
+          </a>
+        </div>
+      </section>
+
+      <section class="room" id="meat">
+        <div class="photo band">
+          <img src="images/meat.jpg" alt="A raw Wagyu ribeye on a black board with a gold rim" width="1248" height="832">
+        </div>
+        <div class="pad">
+          <p class="kicker">StudEx Meat</p>
+          <h2>Meat</h2>
+          <p>Halaal Wagyu and Ankole, cut and packed for the table. Wagyu Biltong Gold is air-dried in Original, chilli, and BBQ.</p>
+          <p class="price">StudBot Rise, R4,599. 1kg of Halaal Wagyu Biltong Gold in 14 sealed 70g packets.</p>
+          <p>The Shopify counter at studexmeat.com is closed while the shop is reactivated. An order is a note to the desk, with the cut and the quantity named.</p>
+          <form id="meat-form" data-desk="Meat">
+            <div class="split">
+              <div>
+                <label for="meat-cut">Cut</label>
+                <select id="meat-cut" name="cut" required>
+                  <option value="">Choose a cut</option>
+                  <option>Wagyu Biltong Gold, Original</option>
+                  <option>Wagyu Biltong Gold, chilli</option>
+                  <option>Wagyu Biltong Gold, BBQ</option>
+                  <option value="other">Another cut</option>
+                </select>
+              </div>
+              <div>
+                <label for="meat-qty">Quantity</label>
+                <input id="meat-qty" name="quantity" required maxlength="40" autocomplete="off" placeholder="1kg, or 14 packets">
+              </div>
+            </div>
+            <div id="meat-other-wrap" hidden>
+              <label for="meat-other">Name the cut</label>
+              <input id="meat-other" name="other" maxlength="80" autocomplete="off">
+            </div>
+            <label for="meat-name">Your name</label>
+            <input id="meat-name" name="name" maxlength="80" autocomplete="name">
+            <div class="actions">
+              <button class="btn btn-solid" type="submit" data-act="save">Save on this device</button>
+              <button class="btn" type="submit" data-act="send">Send to the desk</button>
+            </div>
+            <p class="status" id="meat-status" role="status"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="room" id="coffee">
+        <div class="photo band">
+          <img src="images/coffee.jpg" alt="A black cup of coffee on a dark wood counter" width="1248" height="832">
+        </div>
+        <div class="pad">
+          <p class="kicker">StudEx Coffee</p>
+          <h2>Coffee</h2>
+          <p>Rwandan speciality coffee shares the meat checkout. Fully washed, honey, aerobic, and natural. There is no second store.</p>
+          <p>The same closed counter applies. A coffee order is a note to the desk, with the process and the bag size named.</p>
+          <form id="coffee-form" data-desk="Coffee">
+            <div class="split">
+              <div>
+                <label for="coffee-process">Process</label>
+                <select id="coffee-process" name="process" required>
+                  <option value="">Choose a process</option>
+                  <option>Fully washed</option>
+                  <option>Honey</option>
+                  <option>Aerobic</option>
+                  <option>Natural</option>
+                </select>
+              </div>
+              <div>
+                <label for="coffee-bag">Bag size</label>
+                <input id="coffee-bag" name="bag" required maxlength="40" autocomplete="off" placeholder="250g, or 1kg">
+              </div>
+            </div>
+            <label for="coffee-name">Your name</label>
+            <input id="coffee-name" name="name" maxlength="80" autocomplete="name">
+            <div class="actions">
+              <button class="btn btn-solid" type="submit" data-act="save">Save on this device</button>
+              <button class="btn" type="submit" data-act="send">Send to the desk</button>
+            </div>
+            <p class="status" id="coffee-status" role="status"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="room" id="markets">
+        <div class="pad">
+          <p class="kicker">StudEx Global Markets</p>
+          <h2>Markets</h2>
+          <p>Global Markets introduces a partner only after the work can be checked. The page holds the offer. It does not take a card.</p>
+          <div class="actions">
+            <a class="btn btn-solid" href="https://markets.studex-group.com">Open the markets page</a>
+            <a class="btn" href="mailto:t.ramaphosa@studex.dev?subject=StudEx%20Global%20Markets">Write to the desk</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="room" id="wheat">
+        <div class="pad">
+          <p class="kicker">StudEx Wheat</p>
+          <h2>Wheat</h2>
+          <p>Wheat is quoted per contract. There is no public menu and no checkout on this page.</p>
+          <form id="wheat-form" data-desk="Wheat">
+            <label for="wheat-need">What you need quoted</label>
+            <textarea id="wheat-need" name="need" required maxlength="500" placeholder="Volume, grade, and when you need it."></textarea>
+            <label for="wheat-name">Your name</label>
+            <input id="wheat-name" name="name" maxlength="80" autocomplete="name">
+            <div class="actions">
+              <button class="btn btn-solid" type="submit" data-act="save">Save on this device</button>
+              <button class="btn" type="submit" data-act="send">Send to the desk</button>
+            </div>
+            <p class="status" id="wheat-status" role="status"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="room" id="desk">
+        <div class="pad">
+          <p class="kicker">The desk</p>
+          <h2>Desk</h2>
+          <p>Notes stay on this phone or computer until you send them. Sending opens your mail to <a href="mailto:t.ramaphosa@studex.dev">t.ramaphosa@studex.dev</a>. Nothing is paid here.</p>
+          <ul class="note-list" id="notes"></ul>
+          <p class="quiet" id="empty-notes">No notes on this device.</p>
+          <div class="help">
+            <p class="kicker">Install</p>
+            <p>On a phone, use the browser share menu and choose Add to Home Screen. On a computer, use the browser install control. The same app opens either way.</p>
+            <p><a class="os-link" href="os.html">Command center</a></p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <nav class="dock" aria-label="Desks">
+      <a href="#home">Home</a>
+      <a href="#meat">Meat</a>
+      <a href="#coffee">Coffee</a>
+      <a href="#markets">Markets</a>
+      <a href="#wheat">Wheat</a>
+      <a href="#desk">Desk</a>
+    </nav>
+  </div>
+
+  <script>
+    const KEY = "studex-group-notes";
+    const DESK = "t.ramaphosa@studex.dev";
+    const ROOMS = ["home", "meat", "coffee", "markets", "wheat", "desk"];
+    const TITLES = {
+      home: "StudEx Group",
+      meat: "Meat · StudEx Group",
+      coffee: "Coffee · StudEx Group",
+      markets: "Markets · StudEx Group",
+      wheat: "Wheat · StudEx Group",
+      desk: "Desk · StudEx Group"
+    };
+
+    function loadNotes() {
+      try {
+        const notes = JSON.parse(localStorage.getItem(KEY) || "[]");
+        return Array.isArray(notes) ? notes : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveNotes(notes) {
+      localStorage.setItem(KEY, JSON.stringify(notes.slice(0, 30)));
+    }
+
+    function esc(value) {
+      return String(value).replace(/[&<>"']/g, (ch) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[ch]));
+    }
+
+    function stamp(at) {
+      return new Date(at).toLocaleString("en-ZA", {
+        timeZone: "Africa/Johannesburg",
+        dateStyle: "medium",
+        timeStyle: "short"
+      });
+    }
+
+    function roomFromHash() {
+      const id = location.hash.replace("#", "");
+      return ROOMS.includes(id) ? id : "home";
+    }
+
+    function markRoom() {
+      const id = roomFromHash();
+      document.title = TITLES[id];
+      const name = document.getElementById("room-name");
+      name.textContent = id.charAt(0).toUpperCase() + id.slice(1);
+      document.querySelectorAll(".rail a, .dock a").forEach((link) => {
+        const on = link.getAttribute("href") === "#" + id;
+        if (on) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
+    }
+
+    function renderNotes() {
+      const notes = loadNotes();
+      const list = document.getElementById("notes");
+      const empty = document.getElementById("empty-notes");
+      document.querySelectorAll("[data-count]").forEach((node) => {
+        node.textContent = notes.length ? String(notes.length) : "";
+        node.hidden = notes.length === 0;
+      });
+      empty.hidden = notes.length > 0;
+      list.innerHTML = notes.map((note) => `
+        <li>
+          <p class="kicker">${esc(note.desk)} · ${esc(stamp(note.at))}</p>
+          <p>${esc(note.summary)}</p>
+          <div class="actions">
+            <button class="btn btn-solid" type="button" data-send="${esc(note.id)}">Send to the desk</button>
+            <button class="btn" type="button" data-drop="${esc(note.id)}">Remove</button>
+          </div>
+        </li>
+      `).join("");
+    }
+
+    function mail(subject, body) {
+      location.href = "mailto:" + DESK + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    }
+
+    function linesFrom(form) {
+      const desk = form.dataset.desk;
+      const data = new FormData(form);
+      const name = String(data.get("name") || "").trim();
+      let summary = "";
+      if (desk === "Meat") {
+        const cut = data.get("cut") === "other" ? String(data.get("other") || "").trim() : String(data.get("cut") || "").trim();
+        const quantity = String(data.get("quantity") || "").trim();
+        summary = cut + ". Quantity " + quantity + ".";
+      } else if (desk === "Coffee") {
+        summary = String(data.get("process") || "").trim() + ". Bag " + String(data.get("bag") || "").trim() + ".";
+      } else {
+        summary = String(data.get("need") || "").trim();
+      }
+      const body = [
+        "Desk: " + desk,
+        summary,
+        name ? "Name: " + name : "",
+        "",
+        "Sent from the StudEx Group app. The counter is closed. This is a note, not a payment."
+      ].filter(Boolean).join("\n");
+      return {
+        id: String(Date.now()),
+        desk: desk,
+        summary: name ? summary + " " + name + "." : summary,
+        subject: "StudEx " + desk + " note",
+        body: body,
+        at: new Date().toISOString()
+      };
+    }
+
+    document.getElementById("meat-cut").addEventListener("change", (event) => {
+      const other = event.target.value === "other";
+      const wrap = document.getElementById("meat-other-wrap");
+      const field = document.getElementById("meat-other");
+      wrap.hidden = !other;
+      field.required = other;
+      if (!other) field.setCustomValidity("");
+    });
+
+    document.querySelectorAll("form[data-desk]").forEach((form) => {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const other = document.getElementById("meat-other");
+        if (form.id === "meat-form" && document.getElementById("meat-cut").value === "other" && !other.value.trim()) {
+          other.setCustomValidity("Name the cut.");
+          other.reportValidity();
+          return;
+        }
+        if (other) other.setCustomValidity("");
+        const note = linesFrom(form);
+        if (!note.summary || note.summary.length < 2) {
+          form.querySelector(".status").textContent = "Name what you want before saving.";
+          return;
+        }
+        const notes = loadNotes();
+        notes.unshift(note);
+        saveNotes(notes);
+        renderNotes();
+        form.querySelector(".status").textContent = event.submitter && event.submitter.dataset.act === "send"
+          ? "Saved on this device. Your mail should open with the note."
+          : "Saved on this device.";
+        if (event.submitter && event.submitter.dataset.act === "send") mail(note.subject, note.body);
+        form.reset();
+        document.getElementById("meat-other-wrap").hidden = true;
+        document.getElementById("meat-other").required = false;
+      });
+    });
+
+    document.getElementById("notes").addEventListener("click", (event) => {
+      const send = event.target.closest("[data-send]");
+      const drop = event.target.closest("[data-drop]");
+      const notes = loadNotes();
+      if (send) {
+        const note = notes.find((item) => item.id === send.dataset.send);
+        if (note) mail(note.subject, note.body);
+      }
+      if (drop) {
+        saveNotes(notes.filter((item) => item.id !== drop.dataset.drop));
+        renderNotes();
+      }
+    });
+
+    let deferredInstall = null;
+    const install = document.getElementById("install");
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      deferredInstall = event;
+      install.hidden = false;
+    });
+    install.addEventListener("click", async () => {
+      if (!deferredInstall) return;
+      deferredInstall.prompt();
+      await deferredInstall.userChoice;
+      deferredInstall = null;
+      install.hidden = true;
+    });
+
+    window.addEventListener("hashchange", markRoom);
+    markRoom();
+    renderNotes();
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    }
+  </script>
+</body>
+</html>

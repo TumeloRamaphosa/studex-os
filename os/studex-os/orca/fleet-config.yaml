@@ -1,0 +1,67 @@
+# Orca Fleet ADE Configuration
+# Agent Development Environment across all machines
+
+version: "1.0"
+fleet_name: "studex-warehouse"
+
+machines:
+  - name: msi-claw-8
+    type: handheld
+    os: windows_wsl2
+    hostname: MSI-Claw-8-AI-Plus
+    endpoint: ws://localhost:9090
+    runtime: orca-runtime
+    models:
+      - qwen2.5:14b
+      - qwen2.5-coder:7b
+    tags: [coding, marketing, handheld]
+    
+  - name: legion-go-2
+    type: handheld
+    os: steam_os
+    hostname: Legion-Go-2
+    endpoint: ws://localhost:9090
+    runtime: orca-runtime
+    models:
+      - qwen2.5:14b
+      - qwen2.5-coder:7b
+    tags: [coding, mobile, handheld]
+
+  - name: razer-blade
+    type: desktop
+    os: linux
+    hostname: Razer-Blade-2017
+    endpoint: ws://10.0.0.5:9090
+    runtime: orca-runtime-gpu
+    gpu: nvidia-gtx-1080
+    models:
+      - llama3.3:70b
+      - kev:latest
+      - laya:latest
+    tags: [gpu, coding, decision-models, server]
+
+  - name: orgo-vm-global-markets
+    type: vm
+    os: linux
+    hostname: orgo-global-markets
+    endpoint: ws://185.209.179.145:9090
+    runtime: orca-runtime
+    models:
+      - qwen2.5:14b
+    tags: [server, coding, gitea]
+
+agent_pools:
+  coding:
+    size: 4
+    machines: [msi-claw-8, legion-go-2, orgo-vm-global-markets]
+    model: qwen2.5-coder:7b
+    
+  marketing:
+    size: 3
+    machines: [msi-claw-8, legion-go-2]
+    model: qwen2.5:14b
+    
+  decision:
+    size: 2
+    machines: [razer-blade]
+    model: kev:latest

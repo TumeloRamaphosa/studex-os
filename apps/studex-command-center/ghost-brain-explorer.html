@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studex Ghost Brain — explore a business's second brain</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--slate:#0B0E14;--slate2:#12161F;--slate3:#1A202C;--paper:#EDEFF3;--steel:#8B93A7;--steel2:#5A6172;
+--teal:#4FD1C5;--amber:#F2A93B;--purple:#8B7CF6;--line:rgba(139,147,167,.16)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--slate);color:var(--paper);min-height:100vh}
+.mono{font-family:'IBM Plex Mono',monospace}
+header{border-bottom:1px solid var(--line);padding:16px 24px;display:flex;align-items:center;gap:13px}
+.glyph{width:30px;height:30px;border-radius:9px;background:radial-gradient(circle at 38% 32%,var(--teal),#166b64);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#04120f;font-family:'Space Grotesk'}
+header h1{font-family:'Space Grotesk';font-size:1.02rem;font-weight:600}
+header p{font-family:'IBM Plex Mono';font-size:.58rem;color:var(--steel);letter-spacing:.12em;text-transform:uppercase}
+.layout{display:grid;grid-template-columns:230px 1fr 300px;height:calc(100vh - 63px)}
+.tree{border-right:1px solid var(--line);overflow-y:auto;padding:14px 0}
+.folder{font-family:'IBM Plex Mono';font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--steel2);padding:12px 18px 5px}
+.file{display:block;width:100%;text-align:left;background:none;border:none;color:var(--steel);font-size:.82rem;padding:6px 18px 6px 26px;cursor:pointer;font-family:'Inter');transition:all .12s}
+.file:hover{color:var(--paper);background:var(--slate2)}
+.file.on{color:var(--teal);background:var(--slate2);border-left:2px solid var(--teal);padding-left:24px}
+.note{overflow-y:auto;padding:32px 40px}
+.note h2{font-family:'Space Grotesk';font-size:1.6rem;margin-bottom:16px}
+.note h3{font-family:'Space Grotesk';font-size:1.05rem;margin:22px 0 8px;color:var(--teal)}
+.note p,.note li{font-size:.92rem;line-height:1.7;color:var(--paper);margin-bottom:10px}
+.note ul{padding-left:20px}
+.note blockquote{border-left:2px solid var(--amber);padding:8px 16px;margin:14px 0;color:var(--amber);background:rgba(242,169,59,.06);border-radius:0 8px 8px 0;font-size:.9rem}
+.note table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.84rem}
+.note th{text-align:left;font-family:'IBM Plex Mono';font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);padding:8px 10px;border-bottom:1px solid var(--line)}
+.note td{padding:9px 10px;border-bottom:1px solid rgba(139,147,167,.08)}
+.wl{color:var(--teal);cursor:pointer;border-bottom:1px dashed rgba(79,209,197,.4)}
+.wl:hover{color:#8ee6dd}
+.tagrow{margin-bottom:18px}
+.tag{display:inline-block;font-family:'IBM Plex Mono';font-size:.58rem;letter-spacing:.1em;color:var(--purple);background:rgba(139,124,246,.1);border:1px solid rgba(139,124,246,.3);border-radius:14px;padding:3px 10px;margin-right:6px}
+.gpane{border-left:1px solid var(--line);display:flex;flex-direction:column}
+.gtitle{font-family:'IBM Plex Mono';font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--steel);padding:16px 18px 8px}
+canvas{flex:1;width:100%}
+.hint{font-size:.7rem;color:var(--steel2);padding:12px 18px;border-top:1px solid var(--line);line-height:1.6}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.tree,.gpane{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="glyph">GB</div>
+  <div><h1>Studex Ghost Brain</h1><p>a business's second brain · live demo</p></div>
+</header>
+<div class="layout">
+  <nav class="tree" id="tree"></nav>
+  <main class="note" id="note"></main>
+  <aside class="gpane">
+    <div class="gtitle">Knowledge graph</div>
+    <canvas id="graph"></canvas>
+    <div class="hint">Every note links to others — like neurons. Agents read this brain before every answer and write back after. Click any node or [[link]] to travel.</div>
+  </aside>
+</div>
+
+<script>
+// ── The vault, embedded (mirrors ghost-brain-template/) ──────────────
+const VAULT = {
+"Home":{folder:"",tags:["home"],md:`# 🧠 Studex Ghost Brain
+This is the **shared second brain** every Studex agent reads before answering and writes to after every interaction. Plain markdown. Linked notes. Yours.
+## The map
+- **Products** → [[Super-Agents-Catalogue]] · [[StudExClaw]] · [[Plans-and-Pricing]]
+- **Services** → [[Cloud-Virtual-Spaces]] · [[Onboarding-Northstar]]
+- **Policies** → [[Service-Policy]] · [[Support-and-SLAs]]
+- **Customers** → [[Example-Customer]] *(demo, anonymised)*
+- **Agents** → [[Agent-Capabilities]] · [[How-Agents-Use-This-Brain]]
+- **Loops** → [[Daily-Loop]]
+> If it isn't in this brain, the agent says "I'll confirm" — never invents.`},
+"Super-Agents-Catalogue":{folder:"10-Products",tags:["catalogue"],md:`# Super Agents Catalogue — the Eight Masterworks
+| No. | Agent | Masterwork | Does | From |
+|---|---|---|---|---|
+| 001 | Naledi | Michelangelo | Retail: carts, catalogue, upsells | R3,500/mo |
+| 002 | Care | da Vinci | Health: bookings, reminders | R7,500/mo |
+| 003 | Listings | Raphael | Property: qualify, viewings | R7,500/mo |
+| 004 | Hello | Vermeer | Restaurants: reservations, menu | R5,000/mo |
+| 005 | Office | Rembrandt | Professional: diary, invoices | R10,000/mo |
+| 006 | Close | van Gogh | Sales: qualify, close | R15,000/mo |
+| 007 | Ubuntu | Botticelli | Multi-vertical | R20,000/mo |
+| 008 | Jobs | Caravaggio | Trades: intake, quotes | R4,500/mo |
+Every agent ships with its own [[How-Agents-Use-This-Brain]], works on WhatsApp + email, runs 24/7 from a [[Cloud-Virtual-Spaces]]. Detail → [[Plans-and-Pricing]].`},
+"StudExClaw":{folder:"10-Products",tags:["flagship"],md:`# StudExClaw — your business's ghost in the machine
+An agent with a **face and a voice** that lives in a VM, talks to customers, and routes each request to the right specialist from the [[Super-Agents-Catalogue]].
+## What makes it different
+- **Talks** — realtime voice with an animated avatar
+- **Routes** — reads intent, hands to the right agent → [[Agent-Capabilities]]
+- **Remembers** — reads/writes this very brain, every conversation
+- **Stays up** — cloud model online, local model in load-shedding, syncs on reconnect
+> Honest scope: local mode keeps essential tasks running; complex work waits for the cloud. We say this to customers too — [[Service-Policy]].`},
+"Plans-and-Pricing":{folder:"10-Products",tags:["pricing"],md:`# Plans & Pricing
+| Plan | For | Price |
+|---|---|---|
+| Starter | One agent, one channel | R3,500/mo |
+| Business | Agent + WhatsApp + email + brain | R7,500/mo |
+| Enterprise | Multi-agent, [[StudExClaw]], custom | talk to Close |
+- Month-to-month, cancel anytime.
+- If a price isn't in this note, agents say "I'll confirm" — [[Service-Policy]].`},
+"Cloud-Virtual-Spaces":{folder:"20-Services",tags:["infrastructure"],md:`# Studex Cloud Virtual Spaces
+Every agent gets its own **persistent cloud computer** — always on, isolated per client, reachable from any device. Your agent doesn't sleep when your laptop does.
+- One space per client. Your data never shares a machine.
+- The agent's [[How-Agents-Use-This-Brain|Ghost Brain]] lives here.
+- Powers the whole [[Super-Agents-Catalogue]].`},
+"Onboarding-Northstar":{folder:"20-Services",tags:["onboarding"],md:`# Onboarding — the Northstar
+Four steps, ~30 minutes:
+1. **Commission** — pick from the [[Super-Agents-Catalogue]], pay, done.
+2. **Connect** — WhatsApp, email, calendar, shop: one tap each.
+3. **Northstar** — six questions that give the agent its soul.
+4. **Live** — it starts working and writing its [[How-Agents-Use-This-Brain|Ghost Brain]].`},
+"Service-Policy":{folder:"30-Policies",tags:["policy"],md:`# Service Policy (what agents may promise)
+- **Truth over hype**: not in this brain → "I'll confirm" + flag a human. Never invent prices, stock, availability.
+- **POPIA**: one customer's details never reach another. Brains are per-client.
+- **Human handoff**: any customer can ask for a person, anytime.
+- **Honest capability**: no claiming features that aren't live → [[Agent-Capabilities]].`},
+"Support-and-SLAs":{folder:"30-Policies",tags:["policy"],md:`# Support & SLAs
+- Hours: 08:00–18:00 SAST, WhatsApp + email.
+- Uptime target: 99% monthly.
+- Response: Starter next day · Business same day · Enterprise 4h.
+- Escalations → human on the [[Daily-Loop]] review.`},
+"Example-Customer":{folder:"40-Customers",tags:["demo"],md:`# Example Customer — "Thabo's Butchery" (demo)
+*Demonstration note. Real customer notes are private, per-client, POPIA-isolated.*
+- **Prefers**: WhatsApp, afternoon deliveries, EFT
+- **History**: 6 orders, favourite = weekend braai box
+- **Last conversation**: asked bulk pricing → quoted from [[Plans-and-Pricing]], follow-up Friday
+This is agent memory: next time Thabo messages, the agent already knows all of this.`},
+"Agent-Capabilities":{folder:"50-Agents",tags:["superpowers"],md:`# Agent Capabilities — the superpowers
+Status-checked like a capability layer: **live** or **building** — never faked.
+| Superpower | What it does | Status |
+|---|---|---|
+| Answer | WhatsApp/email replies in your voice | ● live |
+| Recover | Chases carts and quotes | ● live |
+| Book | Calendar + reminders | ● live |
+| Remember | Writes back to this brain | ● live |
+| Route | [[StudExClaw]] picks the right agent | ● live |
+| Loop | Scheduled work → [[Daily-Loop]] | ● live |
+| Stay-up | Local fallback in load-shedding | ◐ building |
+Ask any agent "what can you actually do?" — this table is the answer.`},
+"How-Agents-Use-This-Brain":{folder:"50-Agents",tags:["how-it-works"],md:`# How agents use this brain
+**Before answering:** load the relevant notes — [[Super-Agents-Catalogue|products]], [[Service-Policy|policies]], the customer's note.
+**While answering:** every claim traces to a note. No note → "I'll confirm."
+**After answering:** write back what changed → [[Example-Customer]].
+**Compounding:** week one it answers questions; month three it knows your business better than a new hire. Plain markdown, yours, open it in Obsidian anytime.`},
+"Daily-Loop":{folder:"60-Loops",tags:["loop"],md:`# The Daily Loop
+What the agent does on repeat, without being asked:
+- **07:30** — read overnight messages, answer from the brain
+- **08:00** — your morning brief: what happened, what needs a human
+- **12:00** — follow-ups due today → [[Example-Customer|Thabo's Friday quote]]
+- **17:00** — chase open carts/quotes
+- **22:00** — write the day back; flag anything odd
+One loop per agent. Enterprise stacks loops across the [[Super-Agents-Catalogue|team]].`},
+}
+
+// ── Tiny markdown renderer (headers, tables, lists, bold, wikilinks) ──
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function md2html(md){
+  const lines=md.split("\n");let html="",inT=false,inU=false
+  const inline=t=>esc(t)
+    .replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g,'<span class="wl" data-n="$1">$2</span>')
+    .replace(/\[\[([^\]]+)\]\]/g,'<span class="wl" data-n="$1">$1</span>')
+    .replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/\*([^*]+)\*/g,"<i>$1</i>")
+  for(const L of lines){
+    if(/^\|/.test(L)){
+      if(/^\|[\s\-|]+\|$/.test(L))continue
+      const cells=L.split("|").slice(1,-1).map(c=>inline(c.trim()))
+      if(!inT){html+="<table><tr>"+cells.map(c=>`<th>${c}</th>`).join("")+"</tr>";inT=true}
+      else html+="<tr>"+cells.map(c=>`<td>${c}</td>`).join("")+"</tr>"
+      continue
+    } else if(inT){html+="</table>";inT=false}
+    if(/^- /.test(L)){if(!inU){html+="<ul>";inU=true};html+=`<li>${inline(L.slice(2))}</li>`;continue}
+    else if(inU){html+="</ul>";inU=false}
+    if(/^### /.test(L))html+=`<h3>${inline(L.slice(4))}</h3>`
+    else if(/^## /.test(L))html+=`<h3>${inline(L.slice(3))}</h3>`
+    else if(/^# /.test(L))html+=`<h2>${inline(L.slice(2))}</h2>`
+    else if(/^> /.test(L))html+=`<blockquote>${inline(L.slice(2))}</blockquote>`
+    else if(/^\d+\. /.test(L)){if(!inU){html+="<ul>";inU=true};html+=`<li>${inline(L.replace(/^\d+\. /,""))}</li>`}
+    else if(L.trim())html+=`<p>${inline(L)}</p>`
+  }
+  if(inT)html+="</table>";if(inU)html+="</ul>"
+  return html
+}
+
+// ── Links between notes (for the graph) ──────────────────────────────
+const NAMES=Object.keys(VAULT)
+const LINKS=[]
+for(const n of NAMES){
+  const m=VAULT[n].md.match(/\[\[([^\]|]+)/g)||[]
+  for(const l of m){const t=l.slice(2);if(NAMES.includes(t)&&n!==t)LINKS.push([n,t])}
+}
+
+// ── Sidebar tree ──────────────────────────────────────────────────────
+const tree=document.getElementById("tree")
+const folders={}
+NAMES.forEach(n=>{const f=VAULT[n].folder||"Brain";(folders[f]=folders[f]||[]).push(n)})
+for(const f of Object.keys(folders)){
+  const d=document.createElement("div");d.className="folder";d.textContent=f||"—";tree.appendChild(d)
+  folders[f].forEach(n=>{
+    const b=document.createElement("button");b.className="file";b.textContent=n.replace(/-/g," ");b.dataset.n=n
+    b.onclick=()=>open(n);tree.appendChild(b)
+  })
+}
+
+// ── Open a note ───────────────────────────────────────────────────────
+let current="Home"
+function open(n){
+  current=n
+  const v=VAULT[n]
+  document.getElementById("note").innerHTML=
+    `<div class="tagrow">${v.tags.map(t=>`<span class="tag">#${t}</span>`).join("")}</div>`+md2html(v.md)
+  document.querySelectorAll(".file").forEach(b=>b.classList.toggle("on",b.dataset.n===n))
+  document.querySelectorAll(".wl").forEach(w=>w.onclick=()=>VAULT[w.dataset.n]&&open(w.dataset.n))
+  drawGraph()
+}
+
+// ── Force-ish graph ───────────────────────────────────────────────────
+const cv=document.getElementById("graph"),ctx=cv.getContext("2d")
+let P={}
+function layout(){
+  const w=cv.width=cv.offsetWidth*2,h=cv.height=cv.offsetHeight*2
+  NAMES.forEach((n,i)=>{
+    const a=(i/NAMES.length)*Math.PI*2
+    P[n]={x:w/2+Math.cos(a)*w*.33,y:h/2+Math.sin(a)*h*.36}
+  })
+  P["Home"]={x:w/2,y:h/2}
+}
+function drawGraph(){
+  if(!P.Home)layout()
+  const w=cv.width,h=cv.height
+  ctx.clearRect(0,0,w,h)
+  ctx.lineWidth=1.4
+  for(const[a,b]of LINKS){
+    const hot=a===current||b===current
+    ctx.strokeStyle=hot?"rgba(79,209,197,.65)":"rgba(139,147,167,.16)"
+    ctx.beginPath();ctx.moveTo(P[a].x,P[a].y);ctx.lineTo(P[b].x,P[b].y);ctx.stroke()
+  }
+  for(const n of NAMES){
+    const on=n===current
+    ctx.beginPath();ctx.arc(P[n].x,P[n].y,on?16:9,0,7)
+    ctx.fillStyle=on?"#4FD1C5":n==="Home"?"#8B7CF6":"#2A3140"
+    ctx.fill()
+    if(on||n==="Home"){
+      ctx.fillStyle="#EDEFF3";ctx.font="500 20px Inter";ctx.textAlign="center"
+      ctx.fillText(n.replace(/-/g," ").slice(0,22),P[n].x,P[n].y-24)
+    }
+  }
+}
+cv.onclick=e=>{
+  const r=cv.getBoundingClientRect(),x=(e.clientX-r.left)*2,y=(e.clientY-r.top)*2
+  for(const n of NAMES){const d=Math.hypot(P[n].x-x,P[n].y-y);if(d<30){open(n);return}}
+}
+window.onresize=()=>{layout();drawGraph()}
+open("Home")
+</script>
+</body>
+</html>

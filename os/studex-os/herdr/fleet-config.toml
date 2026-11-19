@@ -1,0 +1,53 @@
+[server]
+host = "10.0.0.1"  # Super Agents Command on Orgo
+port = 2244
+
+[[agents]]
+name = "steam-deck"
+host = "10.0.0.1"
+hostname = "steam-deck"
+os = "bazzite-linux"
+models = ["qwen2.5-coder:7b"]
+role = "dev-workstation"
+
+[[agents]]
+name = "msi-claw-8"
+host = "10.0.0.2"
+hostname = "msi-claw-8"
+os = "windows-wsl2"
+models = ["qwen2.5:14b"]
+role = "coding-fleet"
+
+[[agents]]
+name = "legion-go-2"
+host = "10.0.0.4"
+hostname = "legion-go-2"
+os = "steamos-windows"
+models = ["qwen2.5:14b"]
+role = "mobile-ade"
+
+[[agents]]
+name = "razer-blade"
+host = "10.0.0.5"
+hostname = "razer-blade"
+os = "linux"
+gpu = "gtx-1080"
+models = ["llama3.3:70b", "kev:latest", "laya:latest"]
+role = "gpu-node"
+
+[[agents]]
+name = "z-fold-6"
+host = "10.0.0.6"
+hostname = "z-fold-6"
+os = "android-termux"
+models = ["qwen2.5-coder:7b"]
+role = "phone-agent"
+
+[[agents]]
+name = "desktop"
+host = "10.0.0.5"
+hostname = "studex-desktop"
+os = "linux"
+gpu = "dual-8gb"
+models = ["llama3.3:70b", "deepseek-r1:70b"]
+role = "gpu-server"

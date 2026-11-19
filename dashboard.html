@@ -1,0 +1,2539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux StudEx — Agent Operating System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ── Light cream default theme ────────────────────────────────────────── */
+  --cream: oklch(0.97 0.01 85);
+  --cream-2: oklch(0.95 0.012 85);
+  --cream-3: oklch(0.92 0.015 85);
+  --cream-dark: oklch(0.85 0.02 85);
+  --neon-purple: oklch(0.50 0.26 305);
+  --neon-purple-light: oklch(0.62 0.22 305);
+  --neon-purple-dark: oklch(0.38 0.24 305);
+  --neon-purple-glow: oklch(0.55 0.28 305);
+  --neon-magenta: oklch(0.55 0.30 330);
+  --neon-cyan: oklch(0.50 0.16 200);
+  --gold: oklch(0.62 0.14 85);
+  --gold-light: oklch(0.72 0.10 85);
+  --gold-dark: oklch(0.50 0.16 85);
+  --bg-primary: #FAF7F2;
+  --bg-secondary: #F5F1EA;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-hover: rgba(250, 247, 242, 0.95);
+  --border-color: rgba(120, 80, 180, 0.12);
+  --border-hover: rgba(120, 80, 180, 0.25);
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(176, 38, 255, 0.12);
+  --text-primary: oklch(0.12 0.008 285);
+  --text-secondary: oklch(0.35 0.015 280);
+  --text-muted: oklch(0.55 0.015 280);
+  --success: oklch(0.55 0.18 145);
+  --success-bg: rgba(80, 200, 120, 0.08);
+  --warning: oklch(0.65 0.18 75);
+  --warning-bg: rgba(200, 180, 50, 0.08);
+  --error: oklch(0.55 0.22 25);
+  --error-bg: rgba(220, 80, 80, 0.08);
+  --info: oklch(0.50 0.16 240);
+  --terminal-bg: rgba(245, 241, 234, 0.90);
+  --yaml-key: oklch(0.45 0.20 280);
+  --yaml-value: oklch(0.35 0.02 280);
+  --yaml-colon: oklch(0.60 0.02 280);
+  --yaml-bg: rgba(176, 38, 255, 0.04);
+  --shadow-sm: 0 1px 3px rgba(80, 50, 120, 0.06);
+  --shadow-md: 0 4px 12px rgba(80, 50, 120, 0.08);
+  --shadow-lg: 0 8px 30px rgba(80, 50, 120, 0.10);
+  --shadow-neon: 0 0 20px rgba(120, 80, 180, 0.15);
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Space Mono', 'SF Mono', monospace;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── DARK THEME (toggleable) ─────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --cream: oklch(0.02 0.005 285);
+  --cream-2: oklch(0.05 0.008 285);
+  --cream-3: oklch(0.08 0.012 285);
+  --cream-dark: oklch(0.18 0.018 285);
+  --neon-purple: oklch(0.65 0.30 305);
+  --neon-purple-light: oklch(0.78 0.24 305);
+  --neon-purple-dark: oklch(0.38 0.28 305);
+  --neon-purple-glow: oklch(0.55 0.32 305);
+  --bg-primary: oklch(0.02 0.005 285);
+  --bg-secondary: oklch(0.05 0.008 285);
+  --bg-card: rgba(5, 3, 15, 0.55);
+  --bg-card-hover: rgba(8, 5, 20, 0.65);
+  --border-color: rgba(176, 38, 255, 0.20);
+  --border-hover: rgba(176, 38, 255, 0.40);
+  --glass-bg: rgba(5, 3, 15, 0.55);
+  --glass-border: rgba(176, 38, 255, 0.25);
+  --text-primary: oklch(0.95 0.01 285);
+  --text-secondary: oklch(0.70 0.03 280);
+  --text-muted: oklch(0.45 0.02 280);
+  --success-bg: rgba(80, 200, 120, 0.12);
+  --warning-bg: rgba(200, 180, 50, 0.12);
+  --error-bg: rgba(220, 80, 80, 0.12);
+  --terminal-bg: rgba(2, 1, 10, 0.85);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
+  --shadow-neon: 0 0 20px rgba(176, 38, 255, 0.2);
+  --yaml-bg: rgba(176, 38, 255, 0.06);
+}
+[data-theme="dark"] body { background: var(--bg-primary); }
+[data-theme="dark"] body::before {
+  filter: brightness(0.30) saturate(1.4) contrast(1.2);
+}
+[data-theme="dark"] body::after {
+  background:
+    linear-gradient(135deg, rgba(30, 0, 60, 0.70) 0%, rgba(10, 0, 30, 0.50) 40%, rgba(0, 0, 0, 0.65) 100%),
+    radial-gradient(ellipse at 50% 0%, rgba(176, 38, 255, 0.15) 0%, transparent 60%);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ── CREAM WHITE BACKGROUND ──────────────────────────────────────────────── */
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('hero-bg.png') center center / cover no-repeat fixed;
+  filter: brightness(1.0) saturate(0.7) contrast(0.85) opacity(0.12);
+  z-index: -2;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(176, 38, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(120, 80, 180, 0.02) 0%, transparent 50%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ── REMOTION-STYLE KEYFRAMES ──────────────────────────────────────────── */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes revealScale {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes neonPulse {
+  0% { text-shadow: 0 0 4px var(--neon-purple-light), 0 0 8px var(--neon-purple-glow), 0 0 16px transparent; }
+  50% { text-shadow: 0 0 4px var(--neon-purple-light), 0 0 12px var(--neon-purple-glow), 0 0 24px rgba(176, 38, 255, 0.15); }
+  100% { text-shadow: 0 0 4px var(--neon-purple-light), 0 0 8px var(--neon-purple-glow), 0 0 16px transparent; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes blink {
+  0%, 96%, 100% { transform: scaleY(1); }
+  98% { transform: scaleY(0.1); }
+}
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(15deg); }
+  75% { transform: rotate(-10deg); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Remotion-style staggered animations */
+.reveal-1 { animation: revealUp 0.5s var(--ease-out) 0.1s both; }
+.reveal-2 { animation: revealUp 0.5s var(--ease-out) 0.2s both; }
+.reveal-3 { animation: revealUp 0.5s var(--ease-out) 0.3s both; }
+.reveal-4 { animation: revealUp 0.5s var(--ease-out) 0.4s both; }
+.reveal-5 { animation: revealUp 0.5s var(--ease-out) 0.5s both; }
+.reveal-6 { animation: revealUp 0.5s var(--ease-out) 0.6s both; }
+.reveal-7 { animation: revealUp 0.5s var(--ease-out) 0.7s both; }
+.reveal-8 { animation: revealUp 0.5s var(--ease-out) 0.8s both; }
+
+/* ── YAML DATA BLOCKS ──────────────────────────────────────────────────── */
+.yaml-block {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  padding: 16px 20px;
+  background: var(--yaml-bg);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--neon-purple);
+  overflow-x: auto;
+}
+.yaml-block .yaml-comment {
+  color: var(--text-muted);
+  font-style: italic;
+}
+.yaml-block .yaml-key {
+  color: var(--yaml-key);
+  font-weight: 600;
+}
+.yaml-block .yaml-colon {
+  color: var(--yaml-colon);
+}
+.yaml-block .yaml-value {
+  color: var(--yaml-value);
+}
+.yaml-block .yaml-string {
+  color: var(--success);
+}
+.yaml-block .yaml-number {
+  color: var(--gold-dark);
+}
+.yaml-block .yaml-bool {
+  color: var(--neon-purple);
+}
+.yaml-block .yaml-null {
+  color: var(--text-muted);
+}
+.yaml-block .yaml-list {
+  color: var(--neon-cyan);
+}
+.yaml-block .yaml-anchor {
+  color: var(--neon-magenta);
+}
+.yaml-block .yaml-indent {
+  display: inline-block;
+  width: 2ch;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--cream-2); }
+::-webkit-scrollbar-thumb { background: var(--cream-dark); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--neon-purple-light); }
+
+/* Layout */
+.container { max-width: 1440px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+
+/* Typography */
+h1 { font-family: var(--font-heading); font-size: 4rem; letter-spacing: -0.02em; line-height: 1.05; font-weight: 700; margin-bottom: 8px; }
+h2 { font-family: var(--font-heading); font-size: 2.8rem; letter-spacing: -0.01em; line-height: 1.1; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; text-wrap: pretty; }
+h2 .neon-accent {
+  color: var(--neon-purple);
+  text-shadow: 0 0 8px rgba(120, 80, 180, 0.2);
+  animation: neonPulse 3s ease-in-out infinite;
+}
+h3 { font-size: 1.4rem; font-weight: 600; line-height: 1.3; color: var(--text-primary); margin-bottom: 12px; }
+h4 { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--neon-purple); margin-bottom: 8px; }
+p { margin-bottom: 16px; text-wrap: pretty; }
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.header {
+  padding: 16px 0 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250, 247, 242, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 1px 4px rgba(80, 50, 120, 0.04);
+}
+.header-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+}
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-purple-dark));
+  clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(176, 38, 255, 0.3);
+  margin-bottom: 4px;
+}
+.logo-text h1 {
+  margin-bottom: 0;
+  line-height: 1;
+  color: var(--neon-purple-dark);
+  text-shadow:
+    0 0 8px rgba(120, 80, 180, 0.15),
+    0 0 16px rgba(120, 80, 180, 0.08);
+  font-size: 2.4rem;
+  letter-spacing: 4px;
+  font-weight: 700;
+}
+.logo-text span { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase; }
+.header-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.status-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  display: inline-block; margin-right: 6px;
+}
+.status-dot.online { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.status-dot.offline { background: var(--error); box-shadow: 0 0 6px var(--error); }
+.status-dot.busy { background: var(--warning); box-shadow: 0 0 6px var(--warning); }
+
+/* ── Cream Card (alias glass-card for backward compat) ──────────────────── */
+.cream-card, .glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s var(--ease-out);
+}
+.cream-card::before, .glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 0;
+  background: linear-gradient(180deg, var(--neon-purple), var(--neon-magenta));
+  transition: height 0.4s var(--ease-out);
+  z-index: 1;
+}
+.cream-card:hover::before, .glass-card:hover::before { height: 100%; }
+.cream-card:hover, .glass-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+  background: var(--bg-card-hover);
+}
+
+/* ── TMUX Terminal Bar ──────────────────────────────────────────────────── */
+.tmux-bar {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  margin: 32px 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.tmux-statusline {
+  background: var(--cream-2);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tmux-windows { display: flex; gap: 4px; }
+.tmux-win {
+  padding: 2px 10px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tmux-win.active {
+  background: var(--neon-purple-dark);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(176, 38, 255, 0.3);
+}
+.tmux-win:hover:not(.active) { background: rgba(176, 38, 255, 0.15); color: var(--neon-purple-light); }
+.tmux-clock { color: var(--text-muted); font-size: 0.7rem; }
+.tmux-terminal {
+  background: var(--terminal-bg);
+  padding: 20px;
+  min-height: 200px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.tmux-line { color: var(--text-secondary); margin-bottom: 2px; }
+.tmux-line .prompt { color: var(--neon-purple); font-weight: 700; }
+.tmux-line .cmd { color: var(--text-primary); }
+.tmux-line .output { color: var(--text-muted); }
+.tmux-line .highlight { color: var(--gold-dark); }
+.tmux-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.tmux-input .prompt-char { color: var(--neon-purple); font-weight: 700; font-family: var(--font-mono); }
+.tmux-input input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  caret-color: var(--neon-purple);
+}
+.tmux-input input::placeholder { color: var(--text-muted); }
+
+/* ── Agent Grid ─────────────────────────────────────────────────────────── */
+.agent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+  margin: 32px 0;
+}
+
+.agent-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 28px;
+  transition: all 0.4s var(--ease-out);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.agent-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 0;
+  background: linear-gradient(180deg, var(--neon-purple), var(--neon-magenta));
+  transition: height 0.4s var(--ease-out);
+  z-index: 1;
+}
+.agent-card:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+  box-shadow: var(--shadow-md);
+}
+.agent-card:hover::before { height: 100%; }
+
+/* Pixel Agent Sprite */
+.pixel-agent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.pixel-art {
+  width: 96px;
+  height: 96px;
+  image-rendering: pixelated;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pixel-body {
+  width: 48px;
+  height: 64px;
+  position: relative;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.pixel-head {
+  width: 32px; height: 32px;
+  margin: 0 auto;
+  border-radius: 4px;
+  position: relative;
+}
+.pixel-eyes {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 10px;
+}
+.pixel-eye {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  animation: blink 4s infinite;
+}
+@keyframes blink {
+  0%, 96%, 100% { transform: scaleY(1); }
+  98% { transform: scaleY(0.1); }
+}
+.pixel-torso {
+  width: 48px; height: 24px;
+  margin: 0 auto;
+  border-radius: 2px;
+  position: relative;
+}
+.pixel-arms {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+  position: absolute;
+  width: 100%;
+  top: 8px;
+}
+.pixel-arm {
+  width: 8px; height: 16px;
+  border-radius: 2px;
+  animation: wave 2s ease-in-out infinite;
+}
+.pixel-arm.right { animation-delay: 0.5s; }
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(15deg); }
+  75% { transform: rotate(-10deg); }
+}
+.pixel-legs {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 2px;
+}
+.pixel-leg {
+  width: 12px; height: 12px;
+  border-radius: 2px;
+}
+.agent-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--neon-purple-dark);
+  margin-top: 8px;
+  letter-spacing: -0.01em;
+}
+.agent-role {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.agent-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  justify-content: center;
+  border-top: 1px solid var(--border-color);
+  padding-top: 14px;
+  flex-wrap: wrap;
+}
+.agent-stat {
+  text-align: center;
+}
+.agent-stat-value {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.agent-stat-label {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 3px;
+}
+
+/* ── Token Usage Badge ──────────────────────────────────────────────────── */
+.token-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--yaml-bg);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-bottom: 12px;
+  justify-content: center;
+}
+.token-badge:hover {
+  background: var(--cream-2);
+  border-color: var(--border-hover);
+}
+.token-badge .token-icon {
+  color: var(--neon-purple);
+  font-size: 0.8rem;
+}
+.token-badge .token-value {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.token-badge .token-cost {
+  color: var(--gold-dark);
+}
+
+/* Agent Colors */
+.agent-cashclaw .pixel-head { background: #FF6B35; }
+.agent-cashclaw .pixel-eye { background: #fff; }
+.agent-cashclaw .pixel-torso { background: #E55A2B; }
+.agent-cashclaw .pixel-arm { background: #FF6B35; }
+.agent-cashclaw .pixel-leg { background: #CC4F22; }
+
+.agent-hermes .pixel-head { background: var(--neon-purple); }
+.agent-hermes .pixel-eye { background: #fff; }
+.agent-hermes .pixel-torso { background: #6A4FE0; }
+.agent-hermes .pixel-arm { background: var(--neon-purple); }
+.agent-hermes .pixel-leg { background: #5A3FCC; }
+
+.agent-openhuman .pixel-head { background: #00C9A7; }
+.agent-openhuman .pixel-eye { background: #fff; }
+.agent-openhuman .pixel-torso { background: #00B090; }
+.agent-openhuman .pixel-arm { background: #00C9A7; }
+.agent-openhuman .pixel-leg { background: #00997A; }
+
+.agent-cursor .pixel-head { background: #00A3FF; }
+.agent-cursor .pixel-eye { background: #fff; }
+.agent-cursor .pixel-torso { background: #008FE0; }
+.agent-cursor .pixel-arm { background: #00A3FF; }
+.agent-cursor .pixel-leg { background: #007ACC; }
+
+.agent-farm .pixel-head { background: #888888; }
+.agent-farm .pixel-eye { background: #fff; }
+.agent-farm .pixel-torso { background: #777777; }
+.agent-farm .pixel-arm { background: #888888; }
+.agent-farm .pixel-leg { background: #666666; }
+
+/* Agent Chat */
+.agent-chat {
+  background: rgba(2, 1, 10, 0.6);
+  border: 1px solid var(--glass-border);
+  margin-top: 16px;
+  overflow: hidden;
+}
+.chat-messages {
+  padding: 14px;
+  min-height: 100px;
+  max-height: 180px;
+  overflow-y: auto;
+  font-size: 0.8rem;
+}
+.chat-msg {
+  margin-bottom: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.chat-msg .sender {
+  color: var(--neon-purple-light);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  flex-shrink: 0;
+  min-width: 5em;
+}
+.chat-msg .msg-text { color: var(--text-secondary); line-height: 1.5; }
+.chat-msg.system .msg-text { color: var(--text-muted); font-style: italic; font-size: 0.75rem; }
+.chat-input-bar {
+  display: flex;
+  border-top: 1px solid var(--glass-border);
+}
+.chat-input-bar input {
+  flex: 1;
+  background: rgba(2, 1, 10, 0.5);
+  border: none;
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  outline: none;
+}
+.chat-input-bar input::placeholder { color: var(--text-muted); }
+.chat-input-bar button {
+  background: var(--neon-purple-dark);
+  border: none;
+  color: #fff;
+  padding: 10px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+}
+.chat-input-bar button:hover { background: var(--neon-purple); box-shadow: 0 0 15px var(--neon-purple); }
+
+/* ── Section Styling ────────────────────────────────────────────────────── */
+.section {
+  padding: 64px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+.section:last-child { border-bottom: none; }
+.section-header {
+  margin-bottom: 48px;
+}
+.section-header h2 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2.8rem;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  text-wrap: pretty;
+}
+.section-header p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 540px;
+  line-height: 1.7;
+}
+
+/* ── Tables ─────────────────────────────────────────────────────────────── */
+.cheatsheet-table, .spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+}
+.cheatsheet-table th, .spec-table th {
+  background: var(--cream-2);
+  color: var(--neon-purple-dark);
+  padding: 14px 20px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--neon-purple);
+}
+.cheatsheet-table td, .spec-table td {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+.cheatsheet-table tr:last-child td, .spec-table tr:last-child td { border-bottom: none; }
+.cheatsheet-table tr:hover td, .spec-table tr:hover td { background: var(--yaml-bg); }
+.cheatsheet-table .key { color: var(--neon-purple); font-family: var(--font-mono); font-size: 0.75rem; white-space: nowrap; }
+.cheatsheet-table .desc { color: var(--text-primary); }
+.cheatsheet-table .cat { display: inline-block; padding: 3px 10px; font-family: var(--font-mono); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.08em; border: 1px solid; }
+.cat-session { border-color: var(--neon-purple); color: var(--neon-purple); }
+.cat-window { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+.cat-pane { border-color: var(--gold-dark); color: var(--gold-dark); }
+.cat-misc { border-color: var(--text-muted); color: var(--text-muted); }
+.spec-table .vm-name { color: var(--neon-purple-dark); font-weight: 700; font-family: var(--font-mono); }
+
+/* ── Config Blocks (YAML style) ──────────────────────────────────────────── */
+.config-block {
+  background: var(--yaml-bg);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--neon-purple);
+  padding: 28px;
+  margin: 24px 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+}
+.config-block .comment { color: var(--text-muted); font-style: italic; }
+.config-block .code { color: var(--neon-purple); font-weight: 600; }
+.config-block .string { color: var(--success); }
+.config-block pre {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+.copy-btn {
+  background: var(--cream-2);
+  border: 1px solid var(--border-color);
+  color: var(--neon-purple);
+  padding: 6px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  margin-bottom: 12px;
+}
+.copy-btn:hover { background: var(--neon-purple); color: #fff; box-shadow: var(--shadow-neon); }
+
+/* ── Integration Grid ───────────────────────────────────────────────────── */
+.integration-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2px;
+  margin: 32px 0;
+  border: 1px solid var(--border-color);
+}
+.integration-card {
+  background: var(--bg-card);
+  padding: 28px;
+  transition: all 0.3s var(--ease-out);
+  cursor: pointer;
+}
+.integration-card:hover {
+  background: var(--cream-2);
+}
+.integration-icon {
+  width: 40px; height: 40px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+.int-obsidian { border-color: var(--neon-purple); color: var(--neon-purple); }
+.int-tencent { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+.int-feedhive { border-color: var(--gold-dark); color: var(--gold-dark); }
+.int-openclaw { border-color: var(--success); color: var(--success); }
+.integration-card h4 { margin-bottom: 8px; font-family: var(--font-heading); font-weight: 700; font-size: 1.2rem; color: var(--text-primary); text-transform: none; letter-spacing: -0.01em; }
+.integration-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0; }
+
+/* ── LLM Mesh Status Bar ────────────────────────────────────────────────── */
+.llm-mesh-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 12px 20px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow-sm);
+}
+.llm-mesh-bar .mesh-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.llm-mesh-bar .mesh-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+.llm-mesh-bar .mesh-connected { color: var(--success); }
+.llm-mesh-bar .mesh-disconnected { color: var(--error); }
+.llm-mesh-bar .mesh-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  display: inline-block;
+}
+.llm-mesh-bar .mesh-dot.connected { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.llm-mesh-bar .mesh-dot.disconnected { background: var(--error); box-shadow: 0 0 6px var(--error); }
+.llm-mesh-bar .mesh-model {
+  color: var(--neon-purple-light);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+.llm-mesh-bar .mesh-switch {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  padding: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.llm-mesh-bar .mesh-switch:hover {
+  border-color: var(--neon-purple);
+  color: var(--neon-purple-light);
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+.footer {
+  background: rgba(5, 3, 15, 0.80);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--glass-border);
+  padding: 48px 0;
+  text-align: center;
+}
+.footer p { color: var(--text-muted); font-size: 0.8rem; line-height: 1.8; }
+.footer .gold { color: var(--gold); }
+
+/* ── Connection Status ──────────────────────────────────────────────────── */
+.connection-status {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  background: rgba(5, 3, 15, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s var(--ease-out);
+}
+.connection-status .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.connection-status.connected .dot { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.connection-status.disconnected .dot { background: var(--error); box-shadow: 0 0 6px var(--error); }
+.connection-status.connecting .dot { background: var(--warning); animation: blink 1s infinite; }
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border: 1px solid var(--glass-border);
+  background: rgba(176, 38, 255, 0.10);
+  color: var(--neon-purple-light);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+}
+.btn:hover {
+  background: var(--neon-purple-dark);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(176, 38, 255, 0.3);
+  border-color: var(--neon-purple);
+}
+.btn-group { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin: 24px 0; }
+
+/* ── Animations ─────────────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate { animation: fadeInUp 0.6s var(--ease-out) forwards; }
+
+/* ── Scroll Snap Grids ──────────────────────────────────────────────────── */
+.farm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  h1 { font-size: 2rem; }
+  .section-header h2 { font-size: 1.6rem; }
+  .container { padding: 0 20px; }
+  .agent-grid { grid-template-columns: 1fr; }
+  .header-inner { flex-direction: column; text-align: center; }
+  .header-status { justify-content: center; flex-wrap: wrap; }
+  .tmux-windows { flex-wrap: wrap; }
+  .cheatsheet-table { font-size: 0.65rem; }
+  .integration-grid { grid-template-columns: 1fr; }
+  .farm-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 1.6rem; }
+  .section-header h2 { font-size: 1.3rem; }
+  body { font-size: 16px; }
+  .section { padding: 40px 0; }
+  .farm-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- Hero Header with Neon Purple Heading -->
+<header class="header">
+  <div class="container header-inner">
+    <div class="logo">
+      <div class="logo-icon">SV</div>
+      <div class="logo-text">
+        <h1>StudEx Linux VM Command</h1>
+        <span>Agent Operating System v1.0</span>
+      </div>
+    </div>
+    <div class="header-status" id="header-status">
+      <span id="vm-count"><span class="status-dot online"></span>14 VMs Online</span>
+      <span id="agent-count"><span class="status-dot online"></span>5 Agents Active</span>
+      <span id="msg-count" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted)">0 msgs</span>
+      <span id="total-cost" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--gold)">$0.000</span>
+      <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted)" id="clock">00:00 SAST</span>
+      <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 Dark</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- LLM Mesh Status Bar -->
+  <div class="llm-mesh-bar reveal-1" style="margin-top:24px;" id="llm-mesh-bar">
+    <span class="mesh-label">⬡ LLM Mesh</span>
+    <span class="mesh-status" id="mesh-connect-status">
+      <span class="mesh-dot disconnected" id="mesh-dot"></span>
+      <span id="mesh-status-text" style="color:var(--text-muted);">Scanning...</span>
+    </span>
+    <span class="mesh-label" style="margin-left:8px;">Model:</span>
+    <span class="mesh-model" id="mesh-model-name">—</span>
+    <span class="mesh-label" style="margin-left:8px;">Provider:</span>
+    <span class="mesh-model" id="mesh-provider-name">lm-studio</span>
+    <span style="flex:1;"></span>
+    <button class="mesh-switch" onclick="switchMeshProvider('lm-studio')">LM Studio</button>
+    <button class="mesh-switch" onclick="switchMeshProvider('ollama')">Ollama</button>
+    <button class="mesh-switch" onclick="refreshLlmMesh()">⟳</button>
+    <span style="flex:0.5;"></span>
+    <span class="mesh-label">⬇ Internet</span>
+    <span class="mesh-status" id="net-status">
+      <span class="mesh-dot disconnected" id="net-dot"></span>
+      <span id="net-text" style="color:var(--text-muted);font-size:0.7rem;">—</span>
+    </span>
+    <button class="mesh-switch" onclick="runSpeedTest()">TEST</button>
+  </div>
+
+  <!-- TMUX Master Terminal -->
+  <section class="section reveal-2" style="padding-top:32px;">
+    <div class="section-header">
+      <h2>⨠ Master Terminal</h2>
+      <p>tmux session controlling all 14 agent VMs. Click a window to switch agent terminals.</p>
+    </div>
+    <div class="tmux-bar" id="master-terminal">
+      <div class="tmux-statusline">
+        <div class="tmux-windows">
+          <span class="tmux-win active" onclick="switchTmuxWindow(this, 'main')">0:bash*</span>
+          <span class="tmux-win" onclick="switchTmuxWindow(this, 'cashclaw')">1:cashclaw</span>
+          <span class="tmux-win" onclick="switchTmuxWindow(this, 'hermes')">2:hermes</span>
+          <span class="tmux-win" onclick="switchTmuxWindow(this, 'openhuman')">3:openhuman</span>
+          <span class="tmux-win" onclick="switchTmuxWindow(this, 'cursor')">4:cursor</span>
+          <span class="tmux-win" onclick="switchTmuxWindow(this, 'farm')">5:farm*</span>
+        </div>
+        <span class="tmux-clock" id="tmux-clock">"Linux-StudEx" 00:00 01-Jun-26</span>
+    <span class="connection-status disconnected" id="conn-status"><span class="dot"></span>Offline</span>
+      </div>
+      <div class="tmux-terminal" id="tmux-output">
+        <div class="tmux-line"><span class="prompt">studex@agent-os:~$</span> <span class="cmd">tmux new -s linux-studex</span></div>
+        <div class="tmux-line"><span class="output">[14 panes] [4 agents] [10 farm] [uptime 0:42]</span></div>
+        <div class="tmux-line"><span class="prompt">studex@agent-os:~$</span> <span class="cmd">./orbit --status</span></div>
+        <div class="tmux-line"><span class="highlight">╔══════════════════════════════════════════════════════════╗</span></div>
+        <div class="tmux-line"><span class="highlight">║  RVS1  cashclaw   ● Online   20GB   2vCPU    4GB    1.3k ║</span></div>
+        <div class="tmux-line"><span class="highlight">║  RVS2  hermes     ● Online   20GB   2vCPU    4GB   8.4k ║</span></div>
+        <div class="tmux-line"><span class="highlight">║  RVS3  openhuman  ● Online   20GB   2vCPU    4GB   3.1k ║</span></div>
+        <div class="tmux-line"><span class="highlight">║  RVS4  cursor     ● Online   20GB   2vCPU    4GB   5.6k ║</span></div>
+        <div class="tmux-line"><span class="highlight">║  RVS5-14 farm     ● Online   5GB×10 1vCPU×10 1GB×10 12.8k ║</span></div>
+        <div class="tmux-line"><span class="highlight">╚══════════════════════════════════════════════════════════╝</span></div>
+        <div class="tmux-line"><span class="prompt">studex@agent-os:~$</span> <span class="cmd" id="tmux-cursor">_</span></div>
+        <div class="tmux-input">
+          <span class="prompt-char">$</span>
+          <input type="text" id="tmux-input" placeholder="send command to all agents..." autocomplete="off" onkeydown="handleTmuxInput(event)">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VM Specs -->
+  <section class="section reveal-3">
+    <div class="section-header">
+      <h2>Virtual Machines</h2>
+      <p>14 VMs across 4 agent nodes + 10 farm nodes. Total: 130GB disk, 28GB RAM.</p>
+    </div>
+    <table class="spec-table">
+      <thead>
+        <tr><th>RVS</th><th>Agent</th><th>Size</th><th>Status</th><th>CPU</th><th>RAM</th><th>Tokens</th><th>Cost</th><th>Services</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="vm-name">RVS1</td><td>Cashclaw Agent</td><td>20GB</td>
+          <td><span class="status-dot online"></span> Online</td><td>2 vCPU</td><td>4GB</td>
+          <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--neon-purple-light);" id="rvs1-tokens">—</td>
+          <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--gold);" id="rvs1-cost">—</td>
+          <td>Ollama, n8n</td>
+        </tr>
+        <tr>
+          <td class="vm-name">RVS2</td><td>Hermes Agent</td><td>20GB</td>
+          <td><span class="status-dot online"></span> Online</td><td>2 vCPU</td><td>4GB</td>
+          <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--neon-purple-light);" id="rvs2-tokens">—</td>
+          <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--gold);" id="rvs2-cost">—</td>
+          <td>Hermes Gateway, MCP</td>
+        </tr>
+        <tr>
+          <td class="vm-name">RVS3</td><td>OpenHuman Platform</td><td>20GB</td>
+          <td><span class="status-dot online"></span> Online</td><td>2 vCPU</td><td>4GB</td>
+          <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--neon-purple-light);" id="rvs3-tokens">—</td>
+          <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--gold);" id="rvs3-cost">—</td>
+          <td>OpenHuman, LiteLLM</td>
+        </tr>
+        <tr>
+          <td class="vm-name">RVS4</td><td>Cursor IDE</td><td>20GB</td>
+          <td><span class="status-dot busy"></span> Busy</td><td>2 vCPU</td><td>4GB</td>
+          <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--neon-purple-light);" id="rvs4-tokens">—</td>
+          <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--gold);" id="rvs4-cost">—</td>
+          <td>Cursor, Codex CLI</td>
+        </tr>
+        <tr>
+          <td class="vm-name">RVS5-14</td><td>Agent Farm (×10)</td><td>5GB each</td>
+          <td><span class="status-dot online"></span> Online</td><td>1 vCPU</td><td>1GB</td>
+          <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--neon-purple-light);" id="rvs5-tokens">—</td>
+          <td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--gold);" id="rvs5-cost">—</td>
+          <td>Ollama, n8n workers</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Token Cost Summary -->
+  <section class="section reveal-4">
+    <div class="section-header">
+      <h2><span class="neon-accent">◈</span> Token Usage <span class="neon-accent">&</span> Runtime</h2>
+      <p>Real-time token tracking and cost estimation per agent. Hover any stat for details.</p>
+    </div>
+    <div id="token-summary" class="glass-card" style="padding:24px;margin-bottom:24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;">
+      <div style="text-align:center;padding:12px;background:rgba(176,38,255,0.05);border:1px solid var(--glass-border);">
+        <div style="font-family:var(--font-mono);font-size:1.4rem;color:var(--neon-purple-light);" id="total-tokens">0</div>
+        <div style="font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Total Tokens</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:rgba(255,215,0,0.05);border:1px solid var(--glass-border);">
+        <div style="font-family:var(--font-mono);font-size:1.4rem;color:var(--gold);" id="total-cost-display">$0.0000</div>
+        <div style="font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Estimated Cost</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:rgba(0,255,200,0.05);border:1px solid var(--glass-border);">
+        <div style="font-family:var(--font-mono);font-size:1.4rem;color:var(--success);" id="total-messages">0</div>
+        <div style="font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Messages</div>
+      </div>
+      <div style="text-align:center;padding:12px;background:rgba(176,38,255,0.03);border:1px solid var(--glass-border);">
+        <div style="font-family:var(--font-mono);font-size:1.4rem;color:var(--text-primary);" id="total-uptime">0m</div>
+        <div style="font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;">Total Uptime</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pixel Agents -->
+  <section class="section reveal-5">
+    <div class="section-header">
+      <h2>Agent Fleet</h2>
+      <p>Click any agent to chat with it directly. Token costs and runtime tracked in real-time.</p>
+    </div>
+    <div class="agent-grid">
+
+      <!-- Cashclaw -->
+      <div class="agent-card glass-card agent-cashclaw">
+        <div class="pixel-agent">
+          <div class="pixel-art">
+            <div class="pixel-body">
+              <div class="pixel-head">
+                <div class="pixel-eyes"><div class="pixel-eye"></div><div class="pixel-eye"></div></div>
+              </div>
+              <div class="pixel-torso">
+                <div class="pixel-arms"><div class="pixel-arm"></div><div class="pixel-arm right"></div></div>
+              </div>
+              <div class="pixel-legs"><div class="pixel-leg"></div><div class="pixel-leg"></div></div>
+            </div>
+          </div>
+          <div class="agent-name">Cashclaw</div>
+          <div class="agent-role">FINANCIAL AGENT / TRADING</div>
+        </div>
+        <div class="token-badge" id="token-badge-cashclaw" title="Token usage tracking">
+          <span class="token-icon">⬡</span>
+          <span>Tokens:</span>
+          <span class="token-value" id="tokens-cashclaw">0</span>
+          <span style="color:var(--text-muted);">·</span>
+          <span class="token-cost" id="cost-cashclaw">$0.0000</span>
+        </div>
+        <div class="agent-stats">
+          <div class="agent-stat"><div class="agent-stat-value" id="stat-uptime-cashclaw">—</div><div class="agent-stat-label">Runtime</div></div>
+          <div class="agent-stat"><div class="agent-stat-value" id="stat-msgs-cashclaw">0</div><div class="agent-stat-label">Msgs</div></div>
+          <div class="agent-stat"><div class="agent-stat-value" id="stat-last-tokens-cashclaw">0</div><div class="agent-stat-label">Last Msg</div></div>
+        </div>
+        <div class="agent-chat">
+          <div class="chat-messages">
+            <div class="chat-msg"><span class="sender">cashclaw&gt;</span><span class="msg-text">Watching BTC/USD — channel holds.</span></div>
+            <div class="chat-msg"><span class="sender">you&gt;</span><span class="msg-text">check positions</span></div>
+            <div class="chat-msg"><span class="sender">cashclaw&gt;</span><span class="msg-text">3 open. +2.4% today. Stop losses set.</span></div>
+          </div>
+          <div class="chat-input-bar">
+            <input type="text" placeholder="Message Cashclaw..." onkeydown="handleAgentChat(this, 'cashclaw', event)">
+            <button onclick="handleAgentChatBtn(this, 'cashclaw')">SEND</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hermes -->
+      <div class="agent-card glass-card agent-hermes">
+        <div class="pixel-agent">
+          <div class="pixel-art">
+            <div class="pixel-body">
+              <div class="pixel-head">
+                <div class="pixel-eyes"><div class="pixel-eye"></div><div class="pixel-eye"></div></div>
+              </div>
+              <div class="pixel-torso">
+                <div class="pixel-arms"><div class="pixel-arm"></div><div class="pixel-arm right"></div></div>
+              </div>
+              <div class="pixel-legs"><div class="pixel-leg"></div><div class="pixel-leg"></div></div>
+            </div>
+          </div>
+          <div class="agent-name">Hermes</div>
+          <div class="agent-role">ORCHESTRATOR / GATEWAY</div>
+        </div>
+        <div class="token-badge" id="token-badge-hermes" title="Token usage tracking">
+          <span class="token-icon">⬡</span>
+          <span>Tokens:</span>
+          <span class="token-value" id="tokens-hermes">0</span>
+          <span style="color:var(--text-muted);">·</span>
+          <span class="token-cost" id="cost-hermes">$0.0000</span>
+        </div>
+        <div class="agent-stats">
+          <div class="agent-stat"><div class="agent-stat-value" id="stat-uptime-hermes">—</div><div class="agent-stat-label">Runtime</div></div>
+          <div class="agent-stat"><div class="agent-stat-value" id="stat-msgs-hermes">0</div><div class="agent-stat-label">Msgs</div></div>
+          <div class="agent-stat"><div class="agent-stat-value" id="stat-last-tokens-hermes">0</div><div class="agent-stat-label">Last Msg</div></div>
+        </div>
+        <div class="agent-chat">
+          <div class="chat-messages">
+            <div class="chat-msg"><span class="sender">hermes&gt;</span><span class="msg-text">All gateways healthy. 12 active routes.</span></div>
+            <div class="chat-msg"><span class="sender">you&gt;</span><span class="msg-text">route cashclaw through premium</span></div>
+            <div class="chat-msg"><span class="sender">hermes&gt;</span><span class="msg-text">Cashclaw → premium tier. Done.</span></div>
+          </div>
+          <div class="chat-input-bar">
+            <input type="text" placeholder="Message Hermes..." onkeydown="handleAgentChat(this, 'hermes', event)">
+            <button onclick="handleAgentChatBtn(this, 'hermes')">SEND</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- OpenHuman -->
+      <div class="agent-card glass-card agent-openhuman">
+        <div class="pixel-agent">
+          <div class="pixel-art">
+            <div class="pixel-body">
+              <div class="pixel-head">
+                <div class="pixel-eyes"><div class="pixel-eye"></div><div class="pixel-eye"></div></div>
+              </div>
+              <div class="pixel-torso">
+                <div class="pixel-arms"><div class="pixel-arm"></div><div class="pixel-arm right"></div></div>
+              </div>
+              <div class="pixel-legs"><div class="pixel-leg"></div><div class="pixel-leg"></div></div>
+            </div>
+          </div>
+          <div class="agent-name">OpenHuman</div>
+          <div class="agent-role">PLATFORM / DEPLOYMENT</div>
+        </div>
+        <div class="token-badge" id="token-badge-openhuman" title="Token usage tracking">
+          <span class="token-icon">⬡</span>
+          <span>Tokens:</span>
+          <span class="token-value" id="tokens-openhuman">0</span>
+          <span style="color:var(--text-muted);">·</span>
+          <span class="token-cost" id="cost-openhuman">$0.0000</span>
+        </div>
+        <div class="agent-stats">
+          <div class="agent-stat"><div class="agent-stat-value" id="stat-uptime-openhuman">—</div><div class="agent-stat-label">Runtime</div></div>
+          <div class="agent-stat"><div class="agent-stat-value" id="stat-msgs-openhuman">0</div><div class="agent-stat-label">Msgs</div></div>
+          <div class="agent-stat"><div class="agent-stat-value" id="stat-last-tokens-openhuman">0</div><div class="agent-stat-label">Last Msg</div></div>
+        </div>
+        <div class="agent-chat">
+          <div class="chat-messages">
+            <div class="chat-msg"><span class="sender">openhuman&gt;</span><span class="msg-text">Platform stable. 8 containers running.</span></div>
+            <div class="chat-msg"><span class="sender">you&gt;</span><span class="msg-text">deploy farm node 6</span></div>
+            <div class="chat-msg"><span class="sender">openhuman&gt;</span><span class="msg-text">Deploying RVS6... 47s ETA. Done.</span></div>
+          </div>
+          <div class="chat-input-bar">
+            <input type="text" placeholder="Message OpenHuman..." onkeydown="handleAgentChat(this, 'openhuman', event)">
+            <button onclick="handleAgentChatBtn(this, 'openhuman')">SEND</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cursor -->
+      <div class="agent-card glass-card agent-cursor">
+        <div class="pixel-agent">
+          <div class="pixel-art">
+            <div class="pixel-body">
+              <div class="pixel-head">
+                <div class="pixel-eyes"><div class="pixel-eye"></div><div class="pixel-eye"></div></div>
+              </div>
+              <div class="pixel-torso">
+                <div class="pixel-arms"><div class="pixel-arm"></div><div class="pixel-arm right"></div></div>
+              </div>
+              <div class="pixel-legs"><div class="pixel-leg"></div><div class="pixel-leg"></div></div>
+            </div>
+          </div>
+          <div class="agent-name">Cursor</div>
+          <div class="agent-role">IDE / DEVELOPMENT</div>
+        </div>
+        <div class="token-badge" id="token-badge-cursor" title="Token usage tracking">
+          <span class="token-icon">⬡</span>
+          <span>Tokens:</span>
+          <span class="token-value" id="tokens-cursor">0</span>
+          <span style="color:var(--text-muted);">·</span>
+          <span class="token-cost" id="cost-cursor">$0.0000</span>
+        </div>
+        <div class="agent-stats">
+          <div class="agent-stat"><div class="agent-stat-value" id="stat-uptime-cursor">—</div><div class="agent-stat-label">Runtime</div></div>
+          <div class="agent-stat"><div class="agent-stat-value" id="stat-msgs-cursor">0</div><div class="agent-stat-label">Msgs</div></div>
+          <div class="agent-stat"><div class="agent-stat-value" id="stat-last-tokens-cursor">0</div><div class="agent-stat-label">Last Msg</div></div>
+        </div>
+        <div class="agent-chat">
+          <div class="chat-messages">
+            <div class="chat-msg"><span class="sender">cursor&gt;</span><span class="msg-text">3 workspaces open. Ready for code.</span></div>
+            <div class="chat-msg"><span class="sender">you&gt;</span><span class="msg-text">run tests on dashboard</span></div>
+            <div class="chat-msg"><span class="sender">cursor&gt;</span><span class="msg-text">Running `npm test`... 12/12 passing.</span></div>
+          </div>
+          <div class="chat-input-bar">
+            <input type="text" placeholder="Message Cursor..." onkeydown="handleAgentChat(this, 'cursor', event)">
+            <button onclick="handleAgentChatBtn(this, 'cursor')">SEND</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Agent Farm -->
+  <section class="section reveal-6">
+    <div class="section-header">
+      <h2>Agent Farm (RVS5 → RVS14)</h2>
+      <p>10 lightweight agent nodes. 5GB each, 1 vCPU, 1GB RAM. Each runs Ollama + n8n workers.</p>
+    </div>
+    <div class="farm-grid">
+      <div class="agent-card glass-card agent-farm" style="padding:14px;text-align:center;">
+        <div class="pixel-agent" style="margin-bottom:6px;">
+          <div class="pixel-art" style="width:64px;height:64px;">
+            <div class="pixel-body" style="width:32px;height:44px;">
+              <div class="pixel-head" style="width:24px;height:24px;">
+                <div class="pixel-eyes" style="gap:4px;padding-top:8px;"><div class="pixel-eye" style="width:4px;height:4px;"></div><div class="pixel-eye" style="width:4px;height:4px;"></div></div>
+              </div>
+              <div class="pixel-torso" style="width:32px;height:16px;">
+                <div class="pixel-arms" style="top:4px;"><div class="pixel-arm" style="width:6px;height:10px;"></div><div class="pixel-arm right" style="width:6px;height:10px;"></div></div>
+              </div>
+              <div class="pixel-legs" style="gap:2px;"><div class="pixel-leg" style="width:8px;height:8px;"></div><div class="pixel-leg" style="width:8px;height:8px;"></div></div>
+            </div>
+          </div>
+          <div class="agent-name" style="font-size:0.85rem;">RVS5</div>
+          <div class="agent-role" style="font-size:0.6rem;">Worker α</div>
+        </div>
+        <span class="status-dot online"></span> Online
+      </div>
+      <div class="agent-card glass-card agent-farm" style="padding:14px;text-align:center;">
+        <div class="pixel-agent" style="margin-bottom:6px;">
+          <div class="pixel-art" style="width:64px;height:64px;">
+            <div class="pixel-body" style="width:32px;height:44px;">
+              <div class="pixel-head" style="width:24px;height:24px;">
+                <div class="pixel-eyes" style="gap:4px;padding-top:8px;"><div class="pixel-eye" style="width:4px;height:4px;"></div><div class="pixel-eye" style="width:4px;height:4px;"></div></div>
+              </div>
+              <div class="pixel-torso" style="width:32px;height:16px;">
+                <div class="pixel-arms" style="top:4px;"><div class="pixel-arm" style="width:6px;height:10px;"></div><div class="pixel-arm right" style="width:6px;height:10px;"></div></div>
+              </div>
+              <div class="pixel-legs" style="gap:2px;"><div class="pixel-leg" style="width:8px;height:8px;"></div><div class="pixel-leg" style="width:8px;height:8px;"></div></div>
+            </div>
+          </div>
+          <div class="agent-name" style="font-size:0.85rem;">RVS6</div>
+          <div class="agent-role" style="font-size:0.6rem;">Worker β</div>
+        </div>
+        <span class="status-dot online"></span> Online
+      </div>
+      <div class="agent-card glass-card agent-farm" style="padding:14px;text-align:center;">
+        <div class="pixel-agent" style="margin-bottom:6px;">
+          <div class="pixel-art" style="width:64px;height:64px;">
+            <div class="pixel-body" style="width:32px;height:44px;">
+              <div class="pixel-head" style="width:24px;height:24px;">
+                <div class="pixel-eyes" style="gap:4px;padding-top:8px;"><div class="pixel-eye" style="width:4px;height:4px;"></div><div class="pixel-eye" style="width:4px;height:4px;"></div></div>
+              </div>
+              <div class="pixel-torso" style="width:32px;height:16px;">
+                <div class="pixel-arms" style="top:4px;"><div class="pixel-arm" style="width:6px;height:10px;"></div><div class="pixel-arm right" style="width:6px;height:10px;"></div></div>
+              </div>
+              <div class="pixel-legs" style="gap:2px;"><div class="pixel-leg" style="width:8px;height:8px;"></div><div class="pixel-leg" style="width:8px;height:8px;"></div></div>
+            </div>
+          </div>
+          <div class="agent-name" style="font-size:0.85rem;">RVS7</div>
+          <div class="agent-role" style="font-size:0.6rem;">Worker γ</div>
+        </div>
+        <span class="status-dot online"></span> Online
+      </div>
+      <div class="agent-card glass-card agent-farm" style="padding:14px;text-align:center;">
+        <div class="pixel-agent" style="margin-bottom:6px;">
+          <div class="pixel-art" style="width:64px;height:64px;">
+            <div class="pixel-body" style="width:32px;height:44px;">
+              <div class="pixel-head" style="width:24px;height:24px;">
+                <div class="pixel-eyes" style="gap:4px;padding-top:8px;"><div class="pixel-eye" style="width:4px;height:4px;"></div><div class="pixel-eye" style="width:4px;height:4px;"></div></div>
+              </div>
+              <div class="pixel-torso" style="width:32px;height:16px;">
+                <div class="pixel-arms" style="top:4px;"><div class="pixel-arm" style="width:6px;height:10px;"></div><div class="pixel-arm right" style="width:6px;height:10px;"></div></div>
+              </div>
+              <div class="pixel-legs" style="gap:2px;"><div class="pixel-leg" style="width:8px;height:8px;"></div><div class="pixel-leg" style="width:8px;height:8px;"></div></div>
+            </div>
+          </div>
+          <div class="agent-name" style="font-size:0.85rem;">RVS8</div>
+          <div class="agent-role" style="font-size:0.6rem;">Worker δ</div>
+        </div>
+        <span class="status-dot online"></span> Online
+      </div>
+      <div class="agent-card glass-card agent-farm" style="padding:14px;text-align:center;">
+        <div class="pixel-agent" style="margin-bottom:6px;">
+          <div class="pixel-art" style="width:64px;height:64px;">
+            <div class="pixel-body" style="width:32px;height:44px;">
+              <div class="pixel-head" style="width:24px;height:24px;">
+                <div class="pixel-eyes" style="gap:4px;padding-top:8px;"><div class="pixel-eye" style="width:4px;height:4px;"></div><div class="pixel-eye" style="width:4px;height:4px;"></div></div>
+              </div>
+              <div class="pixel-torso" style="width:32px;height:16px;">
+                <div class="pixel-arms" style="top:4px;"><div class="pixel-arm" style="width:6px;height:10px;"></div><div class="pixel-arm right" style="width:6px;height:10px;"></div></div>
+              </div>
+              <div class="pixel-legs" style="gap:2px;"><div class="pixel-leg" style="width:8px;height:8px;"></div><div class="pixel-leg" style="width:8px;height:8px;"></div></div>
+            </div>
+          </div>
+          <div class="agent-name" style="font-size:0.85rem;">RVS9</div>
+          <div class="agent-role" style="font-size:0.6rem;">Worker ε</div>
+        </div>
+        <span class="status-dot online"></span> Online
+      </div>
+      <div class="agent-card glass-card agent-farm" style="padding:14px;text-align:center;">
+        <div class="pixel-agent" style="margin-bottom:6px;">
+          <div class="pixel-art" style="width:64px;height:64px;">
+            <div class="pixel-body" style="width:32px;height:44px;">
+              <div class="pixel-head" style="width:24px;height:24px;">
+                <div class="pixel-eyes" style="gap:4px;padding-top:8px;"><div class="pixel-eye" style="width:4px;height:4px;"></div><div class="pixel-eye" style="width:4px;height:4px;"></div></div>
+              </div>
+              <div class="pixel-torso" style="width:32px;height:16px;">
+                <div class="pixel-arms" style="top:4px;"><div class="pixel-arm" style="width:6px;height:10px;"></div><div class="pixel-arm right" style="width:6px;height:10px;"></div></div>
+              </div>
+              <div class="pixel-legs" style="gap:2px;"><div class="pixel-leg" style="width:8px;height:8px;"></div><div class="pixel-leg" style="width:8px;height:8px;"></div></div>
+            </div>
+          </div>
+          <div class="agent-name" style="font-size:0.85rem;">RVS10</div>
+          <div class="agent-role" style="font-size:0.6rem;">Worker ζ</div>
+        </div>
+        <span class="status-dot online"></span> Online
+      </div>
+      <div class="agent-card glass-card agent-farm" style="padding:14px;text-align:center;">
+        <div class="pixel-agent" style="margin-bottom:6px;">
+          <div class="pixel-art" style="width:64px;height:64px;">
+            <div class="pixel-body" style="width:32px;height:44px;">
+              <div class="pixel-head" style="width:24px;height:24px;">
+                <div class="pixel-eyes" style="gap:4px;padding-top:8px;"><div class="pixel-eye" style="width:4px;height:4px;"></div><div class="pixel-eye" style="width:4px;height:4px;"></div></div>
+              </div>
+              <div class="pixel-torso" style="width:32px;height:16px;">
+                <div class="pixel-arms" style="top:4px;"><div class="pixel-arm" style="width:6px;height:10px;"></div><div class="pixel-arm right" style="width:6px;height:10px;"></div></div>
+              </div>
+              <div class="pixel-legs" style="gap:2px;"><div class="pixel-leg" style="width:8px;height:8px;"></div><div class="pixel-leg" style="width:8px;height:8px;"></div></div>
+            </div>
+          </div>
+          <div class="agent-name" style="font-size:0.85rem;">RVS11</div>
+          <div class="agent-role" style="font-size:0.6rem;">Worker η</div>
+        </div>
+        <span class="status-dot online"></span> Online
+      </div>
+      <div class="agent-card glass-card agent-farm" style="padding:14px;text-align:center;">
+        <div class="pixel-agent" style="margin-bottom:6px;">
+          <div class="pixel-art" style="width:64px;height:64px;">
+            <div class="pixel-body" style="width:32px;height:44px;">
+              <div class="pixel-head" style="width:24px;height:24px;">
+                <div class="pixel-eyes" style="gap:4px;padding-top:8px;"><div class="pixel-eye" style="width:4px;height:4px;"></div><div class="pixel-eye" style="width:4px;height:4px;"></div></div>
+              </div>
+              <div class="pixel-torso" style="width:32px;height:16px;">
+                <div class="pixel-arms" style="top:4px;"><div class="pixel-arm" style="width:6px;height:10px;"></div><div class="pixel-arm right" style="width:6px;height:10px;"></div></div>
+              </div>
+              <div class="pixel-legs" style="gap:2px;"><div class="pixel-leg" style="width:8px;height:8px;"></div><div class="pixel-leg" style="width:8px;height:8px;"></div></div>
+            </div>
+          </div>
+          <div class="agent-name" style="font-size:0.85rem;">RVS12</div>
+          <div class="agent-role" style="font-size:0.6rem;">Worker θ</div>
+        </div>
+        <span class="status-dot online"></span> Online
+      </div>
+      <div class="agent-card glass-card agent-farm" style="padding:14px;text-align:center;">
+        <div class="pixel-agent" style="margin-bottom:6px;">
+          <div class="pixel-art" style="width:64px;height:64px;">
+            <div class="pixel-body" style="width:32px;height:44px;">
+              <div class="pixel-head" style="width:24px;height:24px;">
+                <div class="pixel-eyes" style="gap:4px;padding-top:8px;"><div class="pixel-eye" style="width:4px;height:4px;"></div><div class="pixel-eye" style="width:4px;height:4px;"></div></div>
+              </div>
+              <div class="pixel-torso" style="width:32px;height:16px;">
+                <div class="pixel-arms" style="top:4px;"><div class="pixel-arm" style="width:6px;height:10px;"></div><div class="pixel-arm right" style="width:6px;height:10px;"></div></div>
+              </div>
+              <div class="pixel-legs" style="gap:2px;"><div class="pixel-leg" style="width:8px;height:8px;"></div><div class="pixel-leg" style="width:8px;height:8px;"></div></div>
+            </div>
+          </div>
+          <div class="agent-name" style="font-size:0.85rem;">RVS13</div>
+          <div class="agent-role" style="font-size:0.6rem;">Worker ι</div>
+        </div>
+        <span class="status-dot online"></span> Online
+      </div>
+      <div class="agent-card glass-card agent-farm" style="padding:14px;text-align:center;">
+        <div class="pixel-agent" style="margin-bottom:6px;">
+          <div class="pixel-art" style="width:64px;height:64px;">
+            <div class="pixel-body" style="width:32px;height:44px;">
+              <div class="pixel-head" style="width:24px;height:24px;">
+                <div class="pixel-eyes" style="gap:4px;padding-top:8px;"><div class="pixel-eye" style="width:4px;height:4px;"></div><div class="pixel-eye" style="width:4px;height:4px;"></div></div>
+              </div>
+              <div class="pixel-torso" style="width:32px;height:16px;">
+                <div class="pixel-arms" style="top:4px;"><div class="pixel-arm" style="width:6px;height:10px;"></div><div class="pixel-arm right" style="width:6px;height:10px;"></div></div>
+              </div>
+              <div class="pixel-legs" style="gap:2px;"><div class="pixel-leg" style="width:8px;height:8px;"></div><div class="pixel-leg" style="width:8px;height:8px;"></div></div>
+            </div>
+          </div>
+          <div class="agent-name" style="font-size:0.85rem;">RVS14</div>
+          <div class="agent-role" style="font-size:0.6rem;">Worker κ</div>
+        </div>
+        <span class="status-dot online"></span> Online
+      </div>
+    </div>
+  </section>
+
+  <!-- Agent Mesh -->
+  <section class="section reveal-7">
+    <div class="section-header">
+      <h2>◈ Agent Mesh</h2>
+      <p>All 5 agents connected via the orchestrator. Each agent can send messages, share facts, and coordinate on multi-agent tasks through Hermes.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;margin:32px 0;">
+      <!-- Mesh Visualization -->
+      <div class="config-block yaml-block" style="margin:0;">
+        <h4 style="margin:0 0 16px;">Message Flow</h4>
+        <div id="mesh-messages" style="font-size:0.75rem;max-height:280px;overflow-y:auto;">
+          <div style="color:var(--text-muted);padding:8px 0;">Waiting for orchestrator data...</div>
+        </div>
+      </div>
+      <!-- Blackboard -->
+      <div class="config-block yaml-block" style="margin:0;">
+        <h4 style="margin:0 0 16px;">Shared Blackboard</h4>
+        <div id="mesh-blackboard" style="font-size:0.75rem;max-height:280px;overflow-y:auto;">
+          <div style="color:var(--text-muted);padding:8px 0;">No facts shared yet.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mesh Control -->
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:24px;">
+      <input type="text" id="mesh-task-input" placeholder="route a multi-agent task (e.g. deploy the dashboard)" style="flex:1;background:rgba(5,3,15,0.6);backdrop-filter:blur(8px);border:1px solid var(--glass-border);padding:10px 16px;color:var(--text-primary);font-family:var(--font-mono);font-size:0.75rem;outline:none;">
+      <button class="btn" onclick="routeMeshTask()">ROUTE</button>
+      <button class="btn" onclick="refreshMesh()">REFRESH</button>
+    </div>
+
+    <div id="mesh-result" class="config-block yaml-block" style="margin-top:16px;display:none;">
+      <pre id="mesh-result-content"></pre>
+    </div>
+
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;">
+      <div style="flex:1;">
+        <h4 style="margin-bottom:8px;">Agents in Mesh</h4>
+        <div id="mesh-agents" style="display:flex;gap:12px;flex-wrap:wrap;">
+          <span style="background:var(--obsidian-4);padding:4px 12px;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-secondary);">Waiting...</span>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <h4 style="margin-bottom:8px;">Orchestrator Stats</h4>
+        <div id="mesh-stats" style="display:flex;gap:16px;">
+          <span style="background:var(--obsidian-4);padding:4px 12px;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sandbox Playground -->
+  <section class="section reveal-8">
+    <div class="section-header">
+      <h2>⬡ Sandbox Playground</h2>
+      <p>Ephemeral code execution environments. Spawn sandboxes, run code, read output. Docker-backed with filesystem isolation.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;">
+      <div>
+        <h4 style="margin-bottom:8px;">Active Sandboxes</h4>
+        <div id="sandbox-list" class="config-block" style="margin:0;min-height:100px;">
+          <div style="color:var(--text-muted);font-size:0.75rem;">Loading...</div>
+        </div>
+      </div>
+      <div>
+        <h4 style="margin-bottom:8px;">Templates</h4>
+        <div id="sandbox-stats" class="config-block" style="margin:0;min-height:100px;">
+          <div style="color:var(--text-muted);font-size:0.75rem;">Loading...</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+      <select id="sandbox-template" style="background:rgba(5,3,15,0.6);backdrop-filter:blur(8px);border:1px solid var(--glass-border);padding:8px 14px;color:var(--text-primary);font-family:var(--font-mono);font-size:0.75rem;">
+        <option value="python">Python 3.12</option>
+        <option value="node">Node.js 22</option>
+        <option value="shell">Shell (Alpine)</option>
+        <option value="go">Go 1.22</option>
+      </select>
+      <button class="btn" onclick="spawnSandbox()">SPAWN</button>
+      <button class="btn" onclick="refreshSandboxes()">REFRESH</button>
+    </div>
+
+    <div style="margin-top:16px;">
+      <h4 style="margin-bottom:8px;">Run Code</h4>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+        <input type="text" id="sandbox-id-input" placeholder="sandbox ID" style="width:200px;background:rgba(5,3,15,0.6);border:1px solid var(--glass-border);padding:8px 14px;color:var(--text-primary);font-family:var(--font-mono);font-size:0.75rem;">
+        <input type="text" id="sandbox-code-input" placeholder="code to run (e.g. print('hello world'))" style="flex:1;background:rgba(5,3,15,0.6);border:1px solid var(--glass-border);padding:8px 14px;color:var(--text-primary);font-family:var(--font-mono);font-size:0.75rem;">
+        <button class="btn" onclick="runSandboxCode()">RUN</button>
+      </div>
+    </div>
+
+    <div id="sandbox-result" class="config-block" style="margin-top:16px;display:none;">
+      <pre id="sandbox-result-content" style="font-size:0.75rem;"></pre>
+    </div>
+  </section>
+
+  <!-- MCP Tools -->
+  <section class="section reveal-8">
+    <div class="section-header">
+      <h2>▸ MCP Tools</h2>
+      <p>Model Context Protocol — external agents and LLMs can discover and call all agent tools dynamically. LLM Mesh tools included.</p>
+    </div>
+
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px;">
+      <div class="config-block yaml-block" style="flex:2;margin:0;">
+        <h4 style="margin:0 0 12px;">Available Tools (<span id="mcp-tool-count">0</span>)</h4>
+        <div id="mcp-tools-list" style="font-size:0.75rem;">
+          <div style="color:var(--text-muted);">Loading...</div>
+        </div>
+      </div>
+      <div class="config-block yaml-block" style="flex:1;margin:0;">
+        <h4 style="margin:0 0 12px;">Call a Tool</h4>
+        <select id="mcp-tool-select" style="width:100%;background:rgba(2,1,10,0.6);border:1px solid var(--glass-border);padding:8px 12px;color:var(--text-primary);font-family:var(--font-mono);font-size:0.75rem;margin-bottom:8px;">
+          <option>Select a tool...</option>
+        </select>
+        <input type="text" id="mcp-tool-args" placeholder='args JSON (e.g. {"message":"hello"})' style="width:100%;background:rgba(2,1,10,0.6);border:1px solid var(--glass-border);padding:8px 12px;color:var(--text-primary);font-family:var(--font-mono);font-size:0.75rem;margin-bottom:8px;">
+        <button class="btn" onclick="callMcpTool()" style="width:100%;">CALL TOOL</button>
+        <div id="mcp-result" style="margin-top:8px;font-size:0.75rem;color:var(--text-secondary);display:none;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tmux Cheatsheet -->
+  <section class="section animate">
+    <div class="section-header">
+      <h2>tmux Cheatsheet</h2>
+      <p>Master tmux with these essential commands. Prefix: <code style="color:var(--neon-purple-light);background:rgba(176,38,255,0.1);padding:2px 8px;">Ctrl+B</code></p>
+    </div>
+    <table class="cheatsheet-table">
+      <thead><tr><th>Command</th><th>Action</th><th>Category</th></tr></thead>
+      <tbody>
+        <tr><td><span class="key">Ctrl+B c</span></td><td class="desc">Create a new window</td><td><span class="cat cat-window">Window</span></td></tr>
+        <tr><td><span class="key">Ctrl+B ,</span></td><td class="desc">Rename current window</td><td><span class="cat cat-window">Window</span></td></tr>
+        <tr><td><span class="key">Ctrl+B &</span></td><td class="desc">Close current window</td><td><span class="cat cat-window">Window</span></td></tr>
+        <tr><td><span class="key">Ctrl+B w</span></td><td class="desc">List windows / session preview</td><td><span class="cat cat-window">Window</span></td></tr>
+        <tr><td><span class="key">Ctrl+B n / p</span></td><td class="desc">Next / Previous window</td><td><span class="cat cat-window">Window</span></td></tr>
+        <tr><td><span class="key">Ctrl+B 0-9</span></td><td class="desc">Switch to window by number</td><td><span class="cat cat-window">Window</span></td></tr>
+        <tr><td><span class="key">Ctrl+B %</span></td><td class="desc">Split pane vertically</td><td><span class="cat cat-pane">Pane</span></td></tr>
+        <tr><td><span class="key">Ctrl+B "</span></td><td class="desc">Split pane horizontally</td><td><span class="cat cat-pane">Pane</span></td></tr>
+        <tr><td><span class="key">Ctrl+B ←↑↓→</span></td><td class="desc">Navigate to pane in direction</td><td><span class="cat cat-pane">Pane</span></td></tr>
+        <tr><td><span class="key">Ctrl+B o</span></td><td class="desc">Switch to next pane</td><td><span class="cat cat-pane">Pane</span></td></tr>
+        <tr><td><span class="key">Ctrl+B q</span></td><td class="desc">Show pane numbers</td><td><span class="cat cat-pane">Pane</span></td></tr>
+        <tr><td><span class="key">Ctrl+B z</span></td><td class="desc">Toggle pane zoom (fullscreen)</td><td><span class="cat cat-pane">Pane</span></td></tr>
+        <tr><td><span class="key">Ctrl+B Space</span></td><td class="desc">Cycle through pane layouts</td><td><span class="cat cat-pane">Pane</span></td></tr>
+        <tr><td><span class="key">Ctrl+B !</span></td><td class="desc">Break pane into new window</td><td><span class="cat cat-pane">Pane</span></td></tr>
+        <tr><td><span class="key">Ctrl+B x</span></td><td class="desc">Close current pane</td><td><span class="cat cat-pane">Pane</span></td></tr>
+        <tr><td><span class="key">Ctrl+B { / }</span></td><td class="desc">Swap pane left / right</td><td><span class="cat cat-pane">Pane</span></td></tr>
+        <tr><td><span class="key">Ctrl+B d</span></td><td class="desc">Detach from session</td><td><span class="cat cat-session">Session</span></td></tr>
+        <tr><td><span class="key">Ctrl+B s</span></td><td class="desc">Show all sessions</td><td><span class="cat cat-session">Session</span></td></tr>
+        <tr><td><span class="key">Ctrl+B $</span></td><td class="desc">Rename session</td><td><span class="cat cat-session">Session</span></td></tr>
+        <tr><td><span class="key">Ctrl+B ( / )</span></td><td class="desc">Previous / Next session</td><td><span class="cat cat-session">Session</span></td></tr>
+        <tr><td><span class="key">Ctrl+B [</span></td><td class="desc">Enter copy mode (scrollback)</td><td><span class="cat cat-misc">Misc</span></td></tr>
+        <tr><td><span class="key">Ctrl+B ]</span></td><td class="desc">Paste buffer contents</td><td><span class="cat cat-misc">Misc</span></td></tr>
+        <tr><td><span class="key">Ctrl+B ?</span></td><td class="desc">List all key bindings</td><td><span class="cat cat-misc">Misc</span></td></tr>
+        <tr><td><span class="key">Ctrl+B :</span></td><td class="desc">Enter command mode</td><td><span class="cat cat-misc">Misc</span></td></tr>
+        <tr><td><span class="key">Ctrl+B Ctrl+B</span></td><td class="desc">Send Ctrl+B to application</td><td><span class="cat cat-misc">Misc</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Integrations -->
+  <section class="section animate">
+    <div class="section-header">
+      <h2>Integrations</h2>
+      <p>Every agent action is recorded. Memory persists across sessions.</p>
+    </div>
+    <div class="integration-grid">
+      <div class="integration-card" onclick="scrollToSection('obsidian-setup')">
+        <div class="integration-icon int-obsidian">◆</div>
+        <h4>Obsidian Vault</h4>
+        <p>All agent activities, decisions, and logs are recorded to your Obsidian vault. Full audit trail.</p>
+      </div>
+      <div class="integration-card" onclick="scrollToSection('tencentdb-setup')">
+        <div class="integration-icon int-tencent">◈</div>
+        <h4>TencentDB Memory</h4>
+        <p>Agent Memory with symbolic short-term + layered long-term memory. Cuts tokens 61%, boosts pass rate 51%.</p>
+      </div>
+      <div class="integration-card" onclick="scrollToSection('feedhive-setup')">
+        <div class="integration-icon int-feedhive">♢</div>
+        <h4>FeedHive · Naledi</h4>
+        <p>Naledi content agent posts daily across 6 platforms. Studex brand voice, gold aesthetic.</p>
+      </div>
+      <div class="integration-card" onclick="scrollToSection('openclaw-setup')">
+        <div class="integration-icon int-openclaw">⬡</div>
+        <h4>OpenClaw Gateway</h4>
+        <p>API gateway routing all agent requests. Plugin system for memory, tools, and MCP servers.</p>
+      </div>
+    </div>
+
+    <!-- Obsidian Setup -->
+    <div id="obsidian-setup" class="config-block" style="margin-top:32px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h4 style="margin:0;">◆ Obsidian Agent Logging</h4>
+        <button class="copy-btn" onclick="copyConfig(this)">COPY</button>
+      </div>
+      <pre># Install Obsidian Skills in your vault
+# From obsidian-skills repo (kepano/obsidian-skills):
+
+cd /path/to/your/obsidian-vault
+git clone https://github.com/kepano/obsidian-skills.git .claude
+
+# Agents write to: /Agent-Logs/{agent-name}/YYYY-MM-DD.md
+# Template for each agent log:
+
+<span class="comment">---</span>
+<span class="code">agent</span>: <span class="string">cashclaw</span>
+<span class="code">date</span>: <span class="string">2026-06-01</span>
+<span class="code">session</span>: <span class="string">RVS1</span>
+<span class="code">status</span>: <span class="string">active</span>
+<span class="comment">---</span>
+
+<span class="comment">## Decisions</span>
+- <span class="string">Deployed v1.3 trading model</span>
+- <span class="string">Opened 3 new positions (BTC, ETH, SOL)</span>
+
+<span class="comment">## Memory Sync (TencentDB)</span>
+- <span class="string">L1 Atoms extracted: 12</span>
+- <span class="string">L2 Scenarios updated: 3</span>
+- <span class="string">L3 Persona refined: aggressive-conservative</span>
+
+<span class="comment">## Commands Executed</span>
+- <span class="string">./orbit --deploy cashclaw v1.3</span>
+- <span class="string">cashclaw --check-positions</span></pre>
+    </div>
+
+    <!-- TencentDB Setup -->
+    <div id="tencentdb-setup" class="config-block">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h4 style="margin:0;">◈ TencentDB Agent Memory</h4>
+        <button class="copy-btn" onclick="copyConfig(this)">COPY</button>
+      </div>
+      <pre><span class="comment"># Install TencentDB Agent Memory plugin for OpenClaw</span>
+openclaw plugins install @tencentdb-agent-memory/memory-tencentdb
+openclaw gateway restart
+
+<span class="comment"># Enable in ~/.openclaw/openclaw.json:</span>
+{
+  <span class="string">"memory-tencentdb"</span>: {
+    <span class="string">"enabled"</span>: <span class="string">true</span>,
+    <span class="string">"config"</span>: {
+      <span class="string">"offload"</span>: { <span class="string">"enabled"</span>: <span class="string">true</span> },
+      <span class="string">"recall"</span>: { <span class="string">"strategy"</span>: <span class="string">"hybrid"</span> }
+    }
+  }
+}
+
+<span class="comment"># Results: 61% fewer tokens · 51% better pass rate</span>
+<span class="comment"># Memory lives at: ~/.openclaw/memory-tdai/</span></pre>
+    </div>
+
+    <!-- FeedHive Naledi Setup -->
+    <div id="feedhive-setup" class="config-block">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h4 style="margin:0;">♢ Naledi · FeedHive Content Agent</h4>
+        <button class="copy-btn" onclick="copyConfig(this)">COPY</button>
+      </div>
+      <pre><span class="comment"># 1. Sign up at feedhive.com — free plan</span>
+<span class="comment"># Get your API key from feedhive.com/app</span>
+
+<span class="comment"># 2. Install the FeedHive skill for OpenClaw</span>
+npx @feedhive/setup-openclaw YOUR_FEEDHIVE_API_KEY
+
+<span class="comment"># 3. Connect your social accounts in FeedHive:</span>
+<span class="comment">#   Twitter/X · LinkedIn · Instagram · Facebook</span>
+
+<span class="comment"># 4. Configure Naledi content agent via OpenClaw API:</span>
+curl http://localhost:3000/message -d '{
+  <span class="string">"message"</span>: <span class="string">"You are Naledi, the Studex content agent.</span>
+<span class="string">Post daily about: founder building AI agents in SA,</span>
+<span class="string">10 years blockchain experience, product demos,</span>
+<span class="string">Harari philosophy applied to AI business.</span>
+<span class="string">Tone: confident, visionary, authentic.</span>
+<span class="string">Always include stud.exchange link."</span>
+}'</pre>
+    </div>
+
+    <!-- OpenClaw Setup -->
+    <div id="openclaw-setup" class="config-block">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h4 style="margin:0;">⬡ OpenClaw Gateway</h4>
+        <button class="copy-btn" onclick="copyConfig(this)">COPY</button>
+      </div>
+      <pre><span class="comment"># OpenClaw is the API gateway routing all agent requests.</span>
+<span class="comment"># Each VM has its own OpenClaw instance:</span>
+
+RVS1  cashclaw   → localhost:3000
+RVS2  hermes     → localhost:3001
+RVS3  openhuman  → localhost:3002
+RVS4  cursor     → localhost:3003
+RVS5  farm-α     → localhost:3004
+RVS14 farm-κ     → localhost:3013
+
+<span class="comment"># Plugins installed:</span>
+- <span class="string">@tencentdb-agent-memory/memory-tencentdb</span>  <span class="comment"># Memory layer</span>
+- <span class="string">@feedhive/setup-openclaw</span>                   <span class="comment"># Content posting</span>
+- <span class="string">obsidian-skills</span>                              <span class="comment"># Agent logging</span>
+
+<span class="comment"># Start:</span>
+openclaw gateway start --port 3000</pre>
+    </div>
+  </section>
+
+  <!-- Quick Start -->
+  <section class="section animate">
+    <div class="section-header">
+      <h2>Quick Start</h2>
+      <p>Get your Agent OS running in minutes.</p>
+    </div>
+    <div class="config-block">
+      <pre><span class="comment"># 1. Install tmux (already installed: v3.6a)</span>
+<span class="comment"># 2. Configure tmux for agent monitoring:</span>
+cp .tmux.conf ~/.tmux.conf
+tmux source ~/.tmux.conf
+
+<span class="comment"># 3. Start the master session:</span>
+tmux new -s linux-studex
+
+<span class="comment"># 4. Create windows for each agent:</span>
+tmux new-window -t linux-studex:1 -n cashclaw
+tmux new-window -t linux-studex:2 -n hermes
+tmux new-window -t linux-studex:3 -n openhuman
+tmux new-window -t linux-studex:4 -n cursor
+tmux new-window -t linux-studex:5 -n farm
+
+<span class="comment"># 5. Deploy agent VMs:</span>
+./orbit --deploy all
+
+<span class="comment"># 6. Open the dashboard:</span>
+open dashboard.html</pre>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div style="font-family:var(--font-heading);font-size:1.4rem;color:var(--gold);letter-spacing:2px;margin-bottom:8px;">Linux StudEx</div>
+    <p>Agent Operating System — Studex Group, Johannesburg SA</p>
+    <p style="font-size:0.7rem;">14 VMs · QEMU/UTM · Ollama · n8n · OpenClaw · Obsidian</p>
+    <p style="font-size:0.65rem;margin-top:12px;">Auto-pushes every 30 min · <span class="gold">#goldandobsidian</span> · <span style="color:var(--neon-purple-light);">⬡ LLM Mesh ready</span></p>
+  </div>
+</footer>
+
+<script>
+// ── Configuration ──────────────────────────────────────────────────────────
+const API_BASE = window.location.origin;
+
+// ── Theme Toggle ────────────────────────────────────────────────────────────
+const PREFS_KEY = 'studex-theme';
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('theme-btn');
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    html.removeAttribute('data-theme');
+    btn.textContent = '🌙 Dark';
+    localStorage.setItem(PREFS_KEY, 'light');
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀ Light';
+    localStorage.setItem(PREFS_KEY, 'dark');
+  }
+}
+
+// Restore saved theme (default: light/cream)
+(function restoreTheme() {
+  const saved = localStorage.getItem(PREFS_KEY);
+  const btn = document.getElementById('theme-btn');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀ Light';
+  } else {
+    // Default to light mode (no data-theme attribute)
+    document.documentElement.removeAttribute('data-theme');
+    btn.textContent = '🌙 Dark';
+  }
+})();
+
+// ── Internet Speed Test ─────────────────────────────────────────────────────
+let speedTestRunning = false;
+
+async function runSpeedTest() {
+  if (speedTestRunning) return;
+  speedTestRunning = true;
+
+  const dot = document.getElementById('net-dot');
+  const text = document.getElementById('net-text');
+
+  dot.className = 'mesh-dot disconnected';
+  dot.style.animation = 'blink 0.5s infinite';
+  text.textContent = 'Testing...';
+
+  try {
+    // Single speedtest call — includes latency + download
+    const speedData = await api('/network/speedtest');
+    const latency = speedData.latency.averageMs;
+    const dlSpeed = speedData.download.speedMbps;
+    const quality = speedData.quality;
+
+    dot.style.animation = '';
+    if (quality === 'excellent' || quality === 'good') {
+      dot.className = 'mesh-dot connected';
+      dot.style.background = 'var(--success)';
+      dot.style.boxShadow = '0 0 6px var(--success)';
+    } else {
+      dot.className = 'mesh-dot disconnected';
+      dot.style.background = 'var(--warning)';
+      dot.style.boxShadow = '0 0 6px var(--warning)';
+    }
+
+    text.textContent = `${dlSpeed} Mbps · ${latency}ms ping`;
+    text.style.color = dlSpeed >= 20 ? 'var(--success)' : dlSpeed >= 5 ? 'var(--warning)' : 'var(--error)';
+  } catch (e) {
+    dot.style.animation = '';
+    dot.className = 'mesh-dot disconnected';
+    text.textContent = 'Offline';
+    text.style.color = 'var(--error)';
+  }
+
+  speedTestRunning = false;
+}
+
+// Auto-run speed test on load (once only)
+let speedTestLoaded = false;
+setTimeout(() => {
+  if (!speedTestRunning) {
+    speedTestLoaded = true;
+    runSpeedTest().finally(() => { speedTestLoaded = false; });
+  }
+}, 5000);
+
+// ── Connection Status ──────────────────────────────────────────────────────
+const connEl = document.getElementById('conn-status');
+
+function setConn(state) {
+  if (state === 'connected') {
+    connEl.className = 'connection-status connected';
+    connEl.innerHTML = '<span class="dot"></span> Live';
+    if (typeof refreshMesh === 'function') refreshMesh();
+  } else if (state === 'connecting') {
+    connEl.className = 'connection-status connecting';
+    connEl.innerHTML = '<span class="dot"></span> Connecting';
+  } else {
+    connEl.className = 'connection-status disconnected';
+    connEl.innerHTML = '<span class="dot"></span> Offline';
+  }
+}
+
+// ── Live Clock ─────────────────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const saast = new Intl.DateTimeFormat('en-ZA', {
+    timeZone: 'Africa/Johannesburg',
+    hour: '2-digit', minute: '2-digit',
+    hour12: false
+  }).format(now);
+  document.getElementById('clock').textContent = saast + ' SAST';
+  document.getElementById('tmux-clock').textContent = '"Linux-StudEx" ' + saast + ' 01-Jun-26';
+}
+updateClock();
+setInterval(updateClock, 10000);
+
+// ── API Helper ─────────────────────────────────────────────────────────────
+async function api(path, options = {}) {
+  const url = API_BASE + '/api' + path;
+  const res = await fetch(url, {
+    headers: { 'Content-Type': 'application/json', ...options.headers },
+    ...options,
+  });
+  if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`);
+  return res.json();
+}
+
+// ── LLM Mesh ───────────────────────────────────────────────────────────────
+async function refreshLlmMesh() {
+  try {
+    const data = await api('/llm-mesh');
+    const dot = document.getElementById('mesh-dot');
+    const statusText = document.getElementById('mesh-status-text');
+    const modelName = document.getElementById('mesh-model-name');
+    const providerName = document.getElementById('mesh-provider-name');
+
+    if (data.status === 'connected') {
+      dot.className = 'mesh-dot connected';
+      statusText.textContent = 'Connected';
+      statusText.className = '';
+      modelName.textContent = data.currentModel || '—';
+      providerName.textContent = data.activeProvider || 'lm-studio';
+    } else {
+      dot.className = 'mesh-dot disconnected';
+      statusText.textContent = 'Disconnected';
+      statusText.className = '';
+      modelName.textContent = '—';
+      providerName.textContent = data.activeProvider || 'lm-studio';
+    }
+  } catch (e) {
+    document.getElementById('mesh-status-text').textContent = 'Offline';
+    document.getElementById('mesh-dot').className = 'mesh-dot disconnected';
+  }
+}
+
+async function switchMeshProvider(provider) {
+  try {
+    await api('/llm-mesh/switch', {
+      method: 'POST',
+      body: JSON.stringify({ provider }),
+    });
+    await refreshLlmMesh();
+  } catch (e) {
+    console.warn('Provider switch failed:', e);
+  }
+}
+
+// ── SSE Live Status ────────────────────────────────────────────────────────
+function subscribeStatus() {
+  const evtSource = new EventSource(API_BASE + '/api/status/events');
+
+  evtSource.onopen = () => setConn('connected');
+  evtSource.onerror = () => setConn('disconnected');
+
+  evtSource.onmessage = (event) => {
+    try {
+      const agents = JSON.parse(event.data);
+      updateHeaderStatus(agents);
+      updateTmuxWithStatus(agents);
+      updateTokenUsage(agents);
+    } catch (e) {
+      console.error('SSE parse error:', e);
+    }
+  };
+
+  setTimeout(() => {
+    if (connEl.classList.contains('disconnected')) {
+      setConn('connecting');
+      fetchStatus();
+    }
+  }, 3000);
+}
+
+// ── Token Usage Update ─────────────────────────────────────────────────────
+function updateTokenUsage(agentList) {
+  let totalTokens = 0;
+  let totalCost = 0;
+  let totalMessages = 0;
+  let minStart = Infinity;
+
+  const rvsIds = ['rvs1', 'rvs2', 'rvs3', 'rvs4', 'rvs5'];
+
+  agentList.forEach((a, idx) => {
+    const name = a.name;
+    if (!name) return;
+
+    const tokens = a.tokenUsage || {};
+    const inputTk = tokens.inputTokens || 0;
+    const outputTk = tokens.outputTokens || 0;
+    const totalTk = tokens.totalTokens || 0;
+    const cost = tokens.estimatedCost || 0;
+    const lastMsg = tokens.lastMessageTokens || 0;
+
+    totalTokens += totalTk;
+    totalCost += cost;
+    totalMessages += a.messages || 0;
+
+    // Update token badges
+    const tkEl = document.getElementById('tokens-' + name);
+    const costEl = document.getElementById('cost-' + name);
+    if (tkEl) tkEl.textContent = formatTokens(totalTk);
+    if (costEl) costEl.textContent = '$' + cost.toFixed(4);
+
+    // Update stat rows
+    const uptimeEl = document.getElementById('stat-uptime-' + name);
+    const msgsEl = document.getElementById('stat-msgs-' + name);
+    const lastTkEl = document.getElementById('stat-last-tokens-' + name);
+    if (uptimeEl) uptimeEl.textContent = (a.uptime || 0) + 'm';
+    if (msgsEl) msgsEl.textContent = a.messages || 0;
+    if (lastTkEl) lastTkEl.textContent = lastMsg;
+
+    // Update RVS table
+    if (idx < rvsIds.length) {
+      const tkCell = document.getElementById(rvsIds[idx] + '-tokens');
+      const costCell = document.getElementById(rvsIds[idx] + '-cost');
+      if (tkCell) tkCell.textContent = formatTokens(totalTk);
+      if (costCell) costCell.textContent = '$' + cost.toFixed(4);
+    }
+  });
+
+  // Update summary section
+  document.getElementById('total-tokens').textContent = formatTokens(totalTokens);
+  document.getElementById('total-cost-display').textContent = '$' + totalCost.toFixed(4);
+  document.getElementById('total-messages').textContent = totalMessages;
+  document.getElementById('total-cost').textContent = '$' + totalCost.toFixed(3);
+
+  // Total uptime (min of all start times)
+  if (agentList.length > 0 && agentList[0].uptime !== undefined) {
+    const maxUptime = Math.max(...agentList.map(a => a.uptime || 0));
+    document.getElementById('total-uptime').textContent = maxUptime + 'm';
+  }
+}
+
+function formatTokens(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+  return String(n);
+}
+
+// ── Update Header Status ───────────────────────────────────────────────────
+function updateHeaderStatus(agentList) {
+  const vmEl = document.getElementById('vm-count');
+  const agentEl = document.getElementById('agent-count');
+  const msgEl = document.getElementById('msg-count');
+
+  const online = agentList.filter(a => a.status === 'online').length;
+  const totalMsgs = agentList.reduce((s, a) => s + (a.messages || 0), 0);
+
+  vmEl.innerHTML = `<span class="status-dot ${online > 0 ? 'online' : 'offline'}"></span>14 VMs Online`;
+  agentEl.innerHTML = `<span class="status-dot ${online > 0 ? 'online' : 'offline'}"></span>${online} Agents Active`;
+  msgEl.textContent = `${totalMsgs} msgs`;
+}
+
+// ── Update Tmux Terminal ───────────────────────────────────────────────────
+function updateTmuxWithStatus(agentList) {
+  const cursor = document.getElementById('tmux-cursor');
+  if (!cursor) return;
+
+  const lines = agentList.map(a => {
+    const dot = a.status === 'online' ? '●' : '○';
+    const uptimeH = Math.floor((a.uptime || 0) / 60);
+    const uptimeM = (a.uptime || 0) % 60;
+    const tk = a.tokenUsage?.totalTokens || 0;
+    return `${dot} ${(a.rvs || '').padEnd(7)} ${(a.name || '').padEnd(10)} ${(a.status || '').padEnd(8)} ${uptimeH}h${String(uptimeM).padStart(2, '0')}m  ${String(a.messages || 0).padStart(4, ' ')} msgs  ${formatTokens(tk).padStart(6)} tk`;
+  });
+
+  cursor.textContent = '\\n' + lines.join('\\n') + '\\n';
+}
+
+// ── Fetch Status (fallback) ────────────────────────────────────────────────
+async function fetchStatus() {
+  try {
+    const data = await api('/status');
+    setConn('connected');
+    const agentList = (data.agents || []).map(a => ({
+      name: a.name,
+      rvs: a.rvs,
+      status: a.status,
+      uptime: a.uptime,
+      messages: a.messages,
+      tokenUsage: a.tokenUsage || {},
+    }));
+    updateHeaderStatus(agentList);
+    updateTmuxWithStatus(agentList);
+    updateTokenUsage(agentList);
+  } catch (err) {
+    setConn('disconnected');
+    console.warn('Status fetch failed:', err);
+  }
+}
+
+// ── Tmux Window Switching ──────────────────────────────────────────────────
+function switchTmuxWindow(el, name) {
+  document.querySelectorAll('.tmux-win').forEach(w => w.classList.remove('active'));
+  el.classList.add('active');
+  const cursor = document.getElementById('tmux-cursor');
+  if (cursor) cursor.textContent = 'switching to window: ' + name;
+}
+
+// ── Tmux Input ─────────────────────────────────────────────────────────────
+function handleTmuxInput(e) {
+  if (e.key === 'Enter') {
+    const input = e.target;
+    const cmd = input.value.trim();
+    if (!cmd) return;
+
+    const output = document.getElementById('tmux-output');
+    const inputLine = output.querySelector('.tmux-input');
+
+    const newLine = document.createElement('div');
+    newLine.className = 'tmux-line';
+    newLine.innerHTML = '<span class="prompt">studex@agent-os:~$</span> <span class="cmd">' + cmd.replace(/</g,'&lt;') + '</span>';
+    output.insertBefore(newLine, inputLine);
+    input.value = '';
+    output.scrollTop = output.scrollHeight;
+
+    api('/tmux', {
+      method: 'POST',
+      body: JSON.stringify({ command: cmd }),
+    }).then(data => {
+      const respLine = document.createElement('div');
+      respLine.className = 'tmux-line';
+      respLine.innerHTML = '<span class="output">' + (data.output || data.note || '✓ Sent').replace(/</g,'&lt;') + '</span>';
+      output.insertBefore(respLine, inputLine);
+      output.scrollTop = output.scrollHeight;
+    }).catch(err => {
+      const errLine = document.createElement('div');
+      errLine.className = 'tmux-line';
+      errLine.innerHTML = '<span class="output" style="color:var(--error);">✗ ' + err.message + '</span>';
+      output.insertBefore(errLine, inputLine);
+      output.scrollTop = output.scrollHeight;
+    });
+  }
+}
+
+// ── Agent Chat ─────────────────────────────────────────────────────────────
+function handleAgentChat(input, agent, e) {
+  if (e.key === 'Enter') {
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    const chatContainer = input.closest('.agent-chat').querySelector('.chat-messages');
+
+    const youMsg = document.createElement('div');
+    youMsg.className = 'chat-msg';
+    youMsg.innerHTML = '<span class="sender">you&gt;</span><span class="msg-text">' + msg.replace(/</g,'&lt;') + '</span>';
+    chatContainer.appendChild(youMsg);
+    input.value = '';
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    const thinkMsg = document.createElement('div');
+    thinkMsg.className = 'chat-msg';
+    thinkMsg.id = 'thinking-' + agent;
+    thinkMsg.innerHTML = '<span class="sender">' + agent + '&gt;</span><span class="msg-text" style="color:var(--text-muted);">...</span>';
+    chatContainer.appendChild(thinkMsg);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    api('/agents/' + agent + '/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message: msg }),
+    }).then(data => {
+      const thinkEl = document.getElementById('thinking-' + agent);
+      if (thinkEl) {
+        thinkEl.innerHTML = '<span class="sender">' + agent + '&gt;</span><span class="msg-text">' + (data.response || '').replace(/</g,'&lt;').replace(/\\n/g, '<br>') + '</span>';
+      }
+    }).catch(err => {
+      const thinkEl = document.getElementById('thinking-' + agent);
+      if (thinkEl) {
+        thinkEl.innerHTML = '<span class="sender">' + agent + '&gt;</span><span class="msg-text" style="color:var(--error);">Error: ' + err.message + '</span>';
+      }
+    });
+  }
+}
+
+function handleAgentChatBtn(btn, agent) {
+  const input = btn.closest('.chat-input-bar').querySelector('input');
+  const event = new KeyboardEvent('keydown', { key: 'Enter' });
+  input.dispatchEvent(event);
+}
+
+// ── Copy Config Blocks ─────────────────────────────────────────────────────
+function copyConfig(btn) {
+  const block = btn.closest('.config-block');
+  const code = block.querySelector('pre').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'COPIED!';
+    setTimeout(() => { btn.textContent = 'COPY'; }, 2000);
+  });
+}
+
+// ── Scroll to Section ──────────────────────────────────────────────────────
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Agent Mesh ─────────────────────────────────────────────────────────────
+async function refreshMesh() {
+  if (connEl.classList.contains('disconnected')) return;
+
+  const msgEl = document.getElementById('mesh-messages');
+  const boardEl = document.getElementById('mesh-blackboard');
+  const agentsEl = document.getElementById('mesh-agents');
+  const statsEl = document.getElementById('mesh-stats');
+
+  try {
+    const orch = await api('/orchestrate');
+    statsEl.innerHTML = [
+      '<span style="background:rgba(176,38,255,0.08);border:1px solid var(--glass-border);padding:4px 12px;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-secondary);">' + orch.agents + ' agents</span>',
+      '<span style="background:rgba(176,38,255,0.08);border:1px solid var(--glass-border);padding:4px 12px;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-secondary);">' + orch.messagesLogged + ' msgs</span>',
+      '<span style="background:rgba(176,38,255,0.08);border:1px solid var(--glass-border);padding:4px 12px;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-secondary);">' + orch.blackboardKeys + ' facts</span>',
+      '<span style="background:rgba(176,38,255,0.08);border:1px solid var(--glass-border);padding:4px 12px;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-secondary);">' + orch.activeWorkflows + ' workflows</span>',
+    ].join('');
+  } catch (e) {
+    statsEl.innerHTML = '<span style="color:var(--error);font-size:0.75rem;">Orchestrator offline</span>';
+  }
+
+  try {
+    const agentList = await api('/orchestrate/agents');
+    agentsEl.innerHTML = agentList.map(a =>
+      '<span style="background:rgba(176,38,255,0.08);border:1px solid var(--glass-border);padding:4px 12px;font-family:var(--font-mono);font-size:0.75rem;border-left:2px solid ' + getAgentColor(a.name) + ';color:var(--text-primary);">' + a.name + ' <span style="color:var(--text-muted);">' + a.rvs + '</span></span>'
+    ).join('');
+  } catch (e) {}
+
+  try {
+    const log = await api('/orchestrate/log?count=20');
+    if (log.messages && log.messages.length > 0) {
+      msgEl.innerHTML = log.messages.slice().reverse().map(m => {
+        const ts = new Date(m.timestamp).toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        const arrow = m.to === '__blackboard__' ? '◆' : m.to === '__self__' ? '→' : '→';
+        return '<div style="padding:4px 0;border-bottom:1px solid var(--glass-border);display:flex;gap:8px;font-size:0.7rem;">' +
+          '<span style="color:var(--text-muted);flex-shrink:0;">' + ts + '</span>' +
+          '<span style="color:' + getAgentColor(m.from) + ';font-weight:600;flex-shrink:0;">' + m.from + '</span>' +
+          '<span style="color:var(--text-muted);">' + arrow + '</span>' +
+          '<span style="color:' + getAgentColor(m.to === '__blackboard__' ? 'hermes' : m.to === '__self__' ? 'system' : m.to) + ';font-weight:600;flex-shrink:0;">' + (m.to === '__blackboard__' ? 'blackboard' : m.to === '__self__' ? 'self' : m.to) + '</span>' +
+          '<span style="color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(m.message.substring(0, 60)) + '</span>' +
+          '</div>';
+      }).join('');
+    } else {
+      msgEl.innerHTML = '<div style="color:var(--text-muted);padding:8px 0;font-size:0.75rem;">No inter-agent messages yet. Try routing a task below.</div>';
+    }
+  } catch (e) {
+    msgEl.innerHTML = '<div style="color:var(--error);padding:8px 0;font-size:0.75rem;">Could not fetch message log</div>';
+  }
+
+  try {
+    const facts = await api('/orchestrate/blackboard');
+    const keys = Object.keys(facts);
+    if (keys.length > 0) {
+      boardEl.innerHTML = keys.map(k => {
+        const f = facts[k];
+        const val = typeof f.value === 'object' ? JSON.stringify(f.value) : f.value;
+        return '<div style="padding:6px 0;border-bottom:1px solid var(--glass-border);font-size:0.7rem;">' +
+          '<span style="color:var(--neon-purple-light);font-weight:600;">' + k + '</span>' +
+          '<span style="color:var(--text-muted);margin:0 8px;">=</span>' +
+          '<span style="color:var(--text-secondary);">' + escapeHtml(String(val).substring(0, 80)) + '</span>' +
+          '<span style="color:var(--text-muted);float:right;font-size:0.6rem;">by ' + f.source + '</span>' +
+          '</div>';
+      }).join('');
+    } else {
+      boardEl.innerHTML = '<div style="color:var(--text-muted);padding:8px 0;font-size:0.75rem;">No facts shared yet. Agents will post facts as they work together.</div>';
+    }
+  } catch (e) {
+    boardEl.innerHTML = '<div style="color:var(--error);padding:8px 0;font-size:0.75rem;">Could not fetch blackboard</div>';
+  }
+}
+
+function getAgentColor(name) {
+  const colors = { cashclaw: '#FF6B35', hermes: '#7B61FF', openhuman: '#00C9A7', cursor: '#00A3FF', farm: '#888888', system: '#C9A84C', workflow: '#C9A84C', user: '#F0EDE8' };
+  return colors[name] || '#C9A84C';
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+async function routeMeshTask() {
+  const input = document.getElementById('mesh-task-input');
+  const resultEl = document.getElementById('mesh-result');
+  const contentEl = document.getElementById('mesh-result-content');
+  const task = input.value.trim();
+  if (!task) return;
+
+  resultEl.style.display = 'block';
+  contentEl.textContent = 'Routing task through Hermes...';
+
+  try {
+    const data = await api('/orchestrate/task', {
+      method: 'POST',
+      body: JSON.stringify({ from: 'user', task }),
+    });
+    contentEl.innerHTML = '';
+    if (data.plan) {
+      contentEl.textContent += 'Plan: ' + data.plan + '\\n';
+    }
+    if (data.assignments) {
+      data.assignments.forEach(a => {
+        contentEl.textContent += '  → ' + a.agent + ': ' + a.task + '\\n';
+      });
+    }
+    if (data.results) {
+      contentEl.textContent += '\\nResults:\\n';
+      Object.entries(data.results).forEach(([agent, r]) => {
+        contentEl.textContent += '  ' + agent + ': ' + r.response.substring(0, 100) + '\\n';
+      });
+    }
+    setTimeout(refreshMesh, 500);
+  } catch (err) {
+    contentEl.textContent = 'Error: ' + err.message;
+  }
+}
+
+// ── Sandbox ────────────────────────────────────────────────────────────────
+async function refreshSandboxes() {
+  try {
+    const data = await api('/sandbox');
+    const listEl = document.getElementById('sandbox-list');
+    const statsEl = document.getElementById('sandbox-stats');
+
+    if (data.sandboxes && data.sandboxes.length > 0) {
+      listEl.innerHTML = data.sandboxes.map(sb => {
+        const remaining = Math.round(sb.remainingMs / 1000);
+        return '<div style="padding:6px 0;border-bottom:1px solid var(--glass-border);font-size:0.75rem;display:flex;gap:8px;">' +
+          '<span style="color:var(--neon-cyan);font-family:var(--font-mono);">' + sb.id.slice(-12) + '</span>' +
+          '<span style="color:var(--neon-purple-light);">' + sb.template + '</span>' +
+          '<span style="color:var(--text-muted);">' + sb.commands + 'cmds</span>' +
+          '<span style="color:var(--text-muted);">' + remaining + 's</span>' +
+          '</div>';
+      }).join('');
+    } else {
+      listEl.innerHTML = '<div style="color:var(--text-muted);font-size:0.75rem;">No active sandboxes. Spawn one above.</div>';
+    }
+
+    if (data.stats) {
+      statsEl.innerHTML =
+        '<div style="margin-bottom:8px;"><span style="color:var(--text-muted);">Docker:</span> ' + (data.stats.dockerAvailable ? '<span style="color:var(--success);">✓ Available</span>' : '<span style="color:var(--warning);">Fallback mode</span>') + '</div>' +
+        '<div style="margin-bottom:8px;"><span style="color:var(--text-muted);">Active:</span> ' + data.stats.active + '/' + data.stats.max + '</div>' +
+        '<div><span style="color:var(--text-muted);">Templates:</span> ' + data.stats.templates + '</div>';
+    }
+  } catch (e) {
+    document.getElementById('sandbox-list').innerHTML = '<div style="color:var(--error);font-size:0.75rem;">Sandbox offline</div>';
+  }
+}
+
+async function spawnSandbox() {
+  const template = document.getElementById('sandbox-template').value;
+  try {
+    const result = await api('/sandbox/spawn', {
+      method: 'POST',
+      body: JSON.stringify({ template }),
+    });
+    document.getElementById('sandbox-id-input').value = result.id;
+    document.getElementById('sandbox-result').style.display = 'block';
+    document.getElementById('sandbox-result-content').textContent = 'Spawned ' + result.id + ' (' + template + ')';
+    refreshSandboxes();
+  } catch (err) {
+    document.getElementById('sandbox-result').style.display = 'block';
+    document.getElementById('sandbox-result-content').textContent = 'Error: ' + err.message;
+  }
+}
+
+async function runSandboxCode() {
+  const id = document.getElementById('sandbox-id-input').value.trim();
+  const code = document.getElementById('sandbox-code-input').value.trim();
+  if (!id || !code) { alert('Enter sandbox ID and code'); return; }
+
+  const resultEl = document.getElementById('sandbox-result');
+  const contentEl = document.getElementById('sandbox-result-content');
+  resultEl.style.display = 'block';
+  contentEl.textContent = 'Running...';
+
+  try {
+    const result = await api('/sandbox/' + id + '/run', {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+    });
+    let text = 'Exit code: ' + result.exitCode + '\\n';
+    if (result.stdout) text += '\\n--- STDOUT ---\\n' + result.stdout;
+    if (result.stderr) text += '\\n--- STDERR ---\\n' + result.stderr;
+    if (result.files && result.files.length) text += '\\n--- FILES ---\\n' + result.files.join('\\n');
+    contentEl.textContent = text;
+    refreshSandboxes();
+  } catch (err) {
+    contentEl.textContent = 'Error: ' + err.message;
+  }
+}
+
+// ── MCP Tools ──────────────────────────────────────────────────────────────
+async function refreshMcpTools() {
+  try {
+    const data = await api('/mcp/tools');
+    document.getElementById('mcp-tool-count').textContent = data.count;
+
+    const listEl = document.getElementById('mcp-tools-list');
+    listEl.innerHTML = data.tools.map(t => {
+      const params = t.inputSchema?.properties ? Object.keys(t.inputSchema.properties).join(', ') : '—';
+      return '<div style="padding:8px 0;border-bottom:1px solid var(--glass-border);">' +
+        '<div style="color:var(--neon-purple-light);font-weight:600;font-family:var(--font-mono);font-size:0.8rem;">' + t.name + '</div>' +
+        '<div style="color:var(--text-secondary);font-size:0.7rem;margin:2px 0;">' + t.description + '</div>' +
+        '<div style="color:var(--text-muted);font-size:0.6rem;font-family:var(--font-mono);">params: ' + params + '</div>' +
+        '</div>';
+    }).join('');
+
+    const select = document.getElementById('mcp-tool-select');
+    select.innerHTML = '<option value="">Select a tool...</option>' +
+      data.tools.map(t => '<option value="' + t.name + '">' + t.name + '</option>').join('');
+  } catch (e) {
+    document.getElementById('mcp-tools-list').innerHTML = '<div style="color:var(--error);font-size:0.75rem;">MCP offline</div>';
+  }
+}
+
+async function callMcpTool() {
+  const name = document.getElementById('mcp-tool-select').value;
+  const argsText = document.getElementById('mcp-tool-args').value.trim();
+  if (!name) { alert('Select a tool'); return; }
+
+  let args = {};
+  if (argsText) {
+    try { args = JSON.parse(argsText); }
+    catch { alert('Invalid JSON in args'); return; }
+  }
+
+  const resultEl = document.getElementById('mcp-result');
+  resultEl.style.display = 'block';
+  resultEl.textContent = 'Calling ' + name + '...';
+
+  try {
+    const result = await api('/mcp/call', {
+      method: 'POST',
+      body: JSON.stringify({ name, arguments: args }),
+    });
+    resultEl.textContent = JSON.stringify(result, null, 2);
+  } catch (err) {
+    resultEl.textContent = 'Error: ' + err.message;
+  }
+}
+
+// ── Initialise ─────────────────────────────────────────────────────────────
+setConn('connecting');
+subscribeStatus();
+refreshLlmMesh();
+setTimeout(refreshMesh, 1000);
+setTimeout(refreshSandboxes, 2000);
+setTimeout(refreshMcpTools, 3000);
+setInterval(refreshLlmMesh, 30000);
+setInterval(refreshMesh, 15000);
+setInterval(refreshSandboxes, 20000);
+setInterval(refreshMcpTools, 30000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+{
+  "version": "1.0",
+  "system": "StudeX OS",
+  "last_updated": "2025-08-19",
+  "primary_vm": "daytona",
+  "backup_vm": "macbook",
+  "design": {
+    "primary": "StudEx OS Cyberpunk",
+    "secondary": "Renaissance",
+    "colors": {
+      "bg": "#070a0c",
+      "ink": "#39ffaa",
+      "pink": "#ff2ec4",
+      "border": "rgba(57,255,170,0.22)",
+      "gold": "#C9A962"
+    },
+    "fonts": {
+      "primary": "JetBrains Mono",
+      "secondary": "Space Grotesk",
+      "renaissance": "Cinzel + Cormorant Garamond"
+    }
+  },
+  "agents": [
+    {
+      "id": "hermes",
+      "name": "Hermes Orchestrator",
+      "platform": "miniMax",
+      "status": "ACTIVE",
+      "role": "orchestrator",
+      "location": "here"
+    },
+    {
+      "id": "sentinel",
+      "name": "Sentinel Discord",
+      "platform": "Discord",
+      "status": "NOT_CONNECTED",
+      "role": "communication",
+      "oauth_url": "https://discord.com/oauth2/authorize?client_id=1530551927979511838&permissions=8&scope=bot"
+    },
+    {
+      "id": "metal",
+      "name": "Metal WhatsApp",
+      "platform": "WhatsApp",
+      "status": "ACTIVE",
+      "role": "client-facing"
+    },
+    {
+      "id": "buzz",
+      "name": "Buzz Agents",
+      "platform": "Daytona",
+      "status": "ACTIVE",
+      "role": "per-client",
+      "agents": [
+        "dench-client",
+        "hourly-reporter",
+        "huly-client",
+        "openclaw-client",
+        "whatsapp-client"
+      ]
+    },
+    {
+      "id": "orgo",
+      "name": "Orgo VMs",
+      "platform": "Orgo AI",
+      "status": "ACTIVE",
+      "role": "execution",
+      "count": 10,
+      "mcp_status": "BROKEN"
+    },
+    {
+      "id": "openclaw",
+      "name": "OpenClaw",
+      "platform": "Daytona",
+      "status": "READY",
+      "role": "coding"
+    },
+    {
+      "id": "deerflow",
+      "name": "DeerFlow",
+      "platform": "Daytona",
+      "status": "READY",
+      "role": "agent-framework"
+    }
+  ],
+  "apis": [
+    {
+      "id": "stitch",
+      "name": "Stitch",
+      "status": "WORKING",
+      "type": "payments"
+    },
+    {
+      "id": "orgo",
+      "name": "Orgo AI",
+      "status": "WORKING_REST",
+      "type": "infrastructure",
+      "mcp": "BROKEN"
+    },
+    {
+      "id": "discord-sentinel",
+      "name": "Discord Sentinel",
+      "status": "NOT_CONNECTED",
+      "type": "bot"
+    },
+    {
+      "id": "composio",
+      "name": "Composio",
+      "status": "BROKEN_410",
+      "type": "ai-tools"
+    },
+    {
+      "id": "whatsapp",
+      "name": "WhatsApp",
+      "status": "PENDING",
+      "type": "messaging"
+    },
+    {
+      "id": "queen",
+      "name": "Queen API",
+      "status": "NO_KEYS",
+      "type": "unknown"
+    },
+    {
+      "id": "croc",
+      "name": "Croc API",
+      "status": "NO_KEYS",
+      "type": "unknown"
+    },
+    {
+      "id": "cashclaw",
+      "name": "CashClaw",
+      "status": "NO_KEYS",
+      "type": "unknown"
+    }
+  ],
+  "projects": [
+    {
+      "id": "studex-os",
+      "name": "StudeX OS",
+      "status": "IN_PROGRESS",
+      "priority": "HIGH"
+    },
+    {
+      "id": "website-redesign",
+      "name": "Website Redesign",
+      "status": "IN_PROGRESS",
+      "priority": "HIGH"
+    },
+    {
+      "id": "chat-widget",
+      "name": "Chat Widget",
+      "status": "IN_PROGRESS",
+      "priority": "HIGH"
+    },
+    {
+      "id": "sentinel-connect",
+      "name": "Sentinel Discord Connect",
+      "status": "PENDING",
+      "priority": "HIGH"
+    },
+    {
+      "id": "vm-panel",
+      "name": "VM Deployment Panel",
+      "status": "PLANNED",
+      "priority": "MEDIUM"
+    }
+  ],
+  "clients": [
+    {
+      "id": "studexmeat",
+      "name": "StudexMeat",
+      "status": "PILOT",
+      "industry": "Meat/Retail"
+    },
+    {
+      "id": "law-firm",
+      "name": "Law Firm",
+      "status": "INTAKE",
+      "industry": "Legal"
+    },
+    {
+      "id": "restaurant",
+      "name": "Restaurant",
+      "status": "INTAKE",
+      "industry": "Food"
+    }
+  ],
+  "key_dates": {
+    "aug_24_pilots": "3 pilot customers deadline",
+    "aug_26_rwanda": "Rwanda Women in AI event"
+  }
+}

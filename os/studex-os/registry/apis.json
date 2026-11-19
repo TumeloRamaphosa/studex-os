@@ -1,0 +1,15 @@
+[
+  {"id": "stitch",    "name": "Stitch Direct",   "status": "WORKING",        "type": "payments"},
+  {"id": "orgo",      "name": "Orgo AI",         "status": "WORKING_REST",   "type": "infrastructure", "mcp": "BROKEN"},
+  {"id": "discord",   "name": "Discord Sentinel","status": "WORKING_BOT",     "type": "bot", "gateway": "OK"},
+  {"id": "composio",  "name": "Composio",         "status": "BROKEN_410",     "type": "ai-tools"},
+  {"id": "whatsapp",  "name": "WhatsApp",         "status": "PENDING_KEYS",  "type": "messaging"},
+  {"id": "queen",      "name": "Queen API",        "status": "NO_KEYS",       "type": "discord-integration"},
+  {"id": "croc",       "name": "Croc API",         "status": "NO_KEYS",       "type": "discord-integration"},
+  {"id": "cashclaw",   "name": "CashClaw",          "status": "NO_KEYS",       "type": "finance-agent"},
+  {"id": "vercel",     "name": "Vercel Deploy",     "status": "PENDING_TOKEN", "type": "hosting"},
+  {"id": "daytona",    "name": "Daytona",           "status": "CLONED_LOCAL",  "type": "workspace"},
+  {"id": "ollama",     "name": "Ollama (local LLMs)","status": "NO_KEYS",      "type": "llm"},
+  {"id": "superagents","name": "Super Agents SaaS","status": "LIVE",           "type": "platform"},
+  {"id": "darkfactory","name": "Dark Factory",      "status": "LIVE",          "type": "platform"}
+]

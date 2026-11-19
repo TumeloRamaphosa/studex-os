@@ -1,0 +1,86 @@
+{
+  "Robusca Prime": {
+    "name": "Robusca Prime",
+    "role": "Executive AI Chief of Staff",
+    "email": "president-robusca@studex-group.com",
+    "track": "Command",
+    "npub": "npub1ve2n8jh8ta5mdrf6fzmeqtwsnlmknj24lrctskpr0e2v9s50wnrsrutjx4",
+    "nsec": "nsec1z6l52yewevlajxhpv7u2c9nvdy659fjdcvumar9kw429lpnxvucq0ugs0h",
+    "buzz_relay": "wss://studex-agents.communities.buzz.xyz",
+    "buzz_relay_id": "0977dd97-4003-47ee-a94c-fd44387f8587",
+    "color": "gold",
+    "status": "LIVE"
+  },
+  "OpenClaw": {
+    "name": "OpenClaw",
+    "role": "Execution Agent",
+    "email": "openclaw@studex-group.com",
+    "track": "Execution",
+    "npub": "npub1ny0nlgvp20ke2n79c6c7yc9safv6gpf2ytgnjjtcrtr4jungjyesskm7yf",
+    "nsec": "nsec1fw83aandhf54m5p58nvedh0vn2jperamx2072f8d322yyxz0vwpqt2t63x",
+    "buzz_relay": "wss://studex-agents.communities.buzz.xyz",
+    "buzz_relay_id": "0977dd97-4003-47ee-a94c-fd44387f8587",
+    "color": "red",
+    "status": "LIVE"
+  },
+  "Goose": {
+    "name": "Goose",
+    "role": "Developer / Builder",
+    "email": "goose@studex-group.com",
+    "track": "Development",
+    "npub": "npub1lmytj4m5rknjd5xkmtnw5gl7esjgejtgt3z0v00a76dy7aysghyselddld",
+    "nsec": "nsec1v4vl79agf93240fkp7axc40ttt8zhp54q05f7h4ujq6thsfuza3qsa2xhp",
+    "buzz_relay": "wss://studex-agents.communities.buzz.xyz",
+    "buzz_relay_id": "0977dd97-4003-47ee-a94c-fd44387f8587",
+    "color": "blue",
+    "status": "LIVE"
+  },
+  "Naledi": {
+    "name": "Naledi",
+    "role": "CMO / Marketing",
+    "email": "naledi-cmo@studex-group.com",
+    "track": "Marketing",
+    "npub": "npub1gafyheugruunf9q7l5e6uzjeeffw78ecx9t39f02j9jy7d3e9ayqvdewak",
+    "nsec": "nsec1ullcrmzx7w77ukqvjcytce3eg5nesmkefd09pvw3c2t36qx2upfqe0dlte",
+    "buzz_relay": "wss://studex-agents.communities.buzz.xyz",
+    "buzz_relay_id": "0977dd97-4003-47ee-a94c-fd44387f8587",
+    "color": "green",
+    "status": "LIVE"
+  },
+  "CashClaw": {
+    "name": "CashClaw",
+    "role": "Payments & Invoicing",
+    "email": "cashclaw@studex-group.com",
+    "track": "Finance",
+    "npub": "npub1mkncwcl3s0m7y0vathgj9g8rawwt3l0dl7t6ms5az2wya3furcustkmaee",
+    "nsec": "nsec1p647qrtu46279stmnxzh2h607j6qhzel84dc6mxz7uf5algzslzqn2vrqn",
+    "buzz_relay": "wss://studex-agents.communities.buzz.xyz",
+    "buzz_relay_id": "0977dd97-4003-47ee-a94c-fd44387f8587",
+    "color": "purple",
+    "status": "LIVE"
+  },
+  "Auto-Meat": {
+    "name": "Auto-Meat",
+    "role": "Meat Business Ops",
+    "email": "auto-meat@studex-group.com",
+    "track": "Operations",
+    "npub": "npub1ka7y3k93dyd60nuhudu4t6qamdy6gypdlag3wlgh3m0ruvt2fw0qunax6a",
+    "nsec": "nsec19tt9fpclq3w6rg45lg00vjchyly90yvm86k4f7gus8twav9m7x0sc5nuye",
+    "buzz_relay": "wss://studex-agents.communities.buzz.xyz",
+    "buzz_relay_id": "0977dd97-4003-47ee-a94c-fd44387f8587",
+    "color": "orange",
+    "status": "LIVE"
+  },
+  "Cypher Trace": {
+    "name": "Cypher Trace",
+    "role": "CTO / Super Agents",
+    "email": "cypher-trace-cto-superagents@studex-group.com",
+    "track": "Technical",
+    "npub": "npub14l0zxuq0v49hhs4uru4t8kjxyhtm3lzkmx7v4e32dwe4jtknd8nse7cg38",
+    "nsec": "nsec1rt683athwmyfhqdg7gyy3ssq9fy5rzf2ucye2lxjmr4ucc9qzwvqcn40c3",
+    "buzz_relay": "wss://studex-agents.communities.buzz.xyz",
+    "buzz_relay_id": "0977dd97-4003-47ee-a94c-fd44387f8587",
+    "color": "cyan",
+    "status": "LIVE"
+  }
+}

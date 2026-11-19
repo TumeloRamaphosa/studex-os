@@ -1,0 +1,29 @@
+name: dev-naledi
+version: "1.0"
+description: >
+  Write/creative agent — handles documentation, content, creative copy.
+  Part of the StudeX OS fleet, coordinates with dev-owner for implementation.
+
+defaults:
+  runtime: claude-code
+
+profiles:
+  default:
+    uses:
+      skills: [development-team]
+      guidance: []
+      subagents: []
+      plugins: []
+      runtime_resources: [openrig-core]
+
+resources:
+  guidance:
+    - id: role
+      path: guidance/role.md
+
+startup:
+  files:
+    - path: guidance/role.md
+      delivery_hint: send_text
+      required: true
+  actions: []

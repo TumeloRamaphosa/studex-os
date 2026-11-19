@@ -1,0 +1,110 @@
+version: "0.2"
+name: studex-dev
+culture_file: CULTURE.md
+summary: >
+  StudeX OS development rig — orchestrates coding agents across the fleet.
+  dev-owner (Claude Code) drives implementation; dev-naledi (Claude Code) handles
+  write/creative; dev-kev (Codex) gates quality. LangChain connector dispatches
+  tasks via OpenRig MCP tools (rig_up, rig_send, rig_capture). Herdr fleet
+  manages non-Claude/Codex agents across 9 Orgo VMs + handhelds.
+docs:
+  - path: AGENTS.md
+
+pods:
+  - id: orch
+    label: Orchestration
+    members:
+      - id: lead
+        agent_ref: "local:agents/dev-lead"
+        runtime: claude-code
+        model: claude-sonnet-4
+        profile: default
+        cwd: .
+        restore_policy: resume_if_possible
+
+  - id: coding
+    label: Development
+    members:
+      - id: owner
+        agent_ref: "local:agents/dev-owner"
+        runtime: claude-code
+        model: claude-sonnet-4
+        profile: default
+        cwd: /workspace/studex-os
+        restore_policy: resume_if_possible
+      - id: naledi
+        agent_ref: "local:agents/dev-naledi"
+        runtime: claude-code
+        model: claude-sonnet-4
+        profile: default
+        cwd: /workspace/studex-os
+        restore_policy: resume_if_possible
+    edges:
+      - kind: delegates_to
+        from: owner
+        to: naledi
+
+  - id: gate
+    label: Quality Gate
+    members:
+      - id: kev
+        agent_ref: "local:agents/dev-kev"
+        runtime: codex
+        model: gpt-6-astra
+        profile: default
+        cwd: /workspace/studex-os
+        restore_policy: resume_if_possible
+    edges:
+      - kind: delegates_to
+        from: coding.owner
+        to: gate.kev
+      - kind: can_observe
+        from: gate.kev
+        to: coding.owner
+
+  - id: infra
+    label: Infrastructure
+    members:
+      - id: herdr
+        agent_ref: "builtin:terminal"
+        runtime: terminal
+        cwd: /workspace/.herdr
+        profile: "none"
+        startup:
+          files: []
+          actions:
+            - type: send_text
+              value: "rig status"
+              phase: after_ready
+              idempotent: true
+              applies_on: [fresh_start]
+      - id: langchain
+        agent_ref: "builtin:terminal"
+        runtime: terminal
+        cwd: /workspace/.herdr
+        profile: "none"
+        startup:
+          files: []
+          actions:
+            - type: send_text
+              value: "cd /workspace && python .herdr/agents/langchain_connector.py"
+              phase: after_ready
+              idempotent: true
+              applies_on: [fresh_start]
+
+edges:
+  - kind: delegates_to
+    from: orch.lead
+    to: coding.owner
+  - kind: delegates_to
+    from: orch.lead
+    to: coding.naledi
+  - kind: can_observe
+    from: gate.kev
+    to: coding.naledi
+  - kind: escalates_to
+    from: coding.owner
+    to: orch.lead
+  - kind: escalates_to
+    from: gate.kev
+    to: orch.lead

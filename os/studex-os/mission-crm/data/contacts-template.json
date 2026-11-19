@@ -1,0 +1,48 @@
+{
+  "mandatory_fields": [
+    "contact_name",
+    "organisation",
+    "country",
+    "role",
+    "email",
+    "phone",
+    "opportunity_type",
+    "estimated_value_zAR",
+    "deal_stage",
+    "owner",
+    "next_action",
+    "deadline",
+    "source_meeting",
+    "consent_status",
+    "notes"
+  ],
+  "deal_stages": [
+    "Initial Contact",
+    "Qualified",
+    "Meeting Done",
+    "Proposal",
+    "Negotiation",
+    "Closed Won",
+    "Closed Lost"
+  ],
+  "opportunity_types": [
+    "Coffee purchase",
+    "Coffee distribution",
+    "Coffee franchise",
+    "Biltong Gold purchase",
+    "Biltong Gold distribution",
+    "Mobile data centre pilot",
+    "Data centre investment",
+    "Agentic Rise cohort",
+    "Gaming partnership",
+    "Coding education",
+    "Women in AI programme",
+    "Lake Kivu partnership",
+    "Statix Coffee location",
+    "Nigeria partnership",
+    "Russia partnership",
+    "Switzerland investment",
+    "Timbuktoo engagement",
+    "Other"
+  ]
+}

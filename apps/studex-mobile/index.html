@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Studex OS" />
+  <meta name="description" content="Studex AI OS — Tumelo Ramaphosa, CEO" />
+  <title>Studex OS</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23D4AF37' width='100' height='100' rx='20'/><text y='.9em' x='50' text-anchor='middle' font-size='70' font-weight='900' font-family='Arial' fill='%23000'>S</text></svg>" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23D4AF37' width='180' height='180' rx='40'/><text y='.9em' x='90' text-anchor='middle' font-size='120' font-weight='900' font-family='Arial' fill='%23000'>S</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ══════════════════════════════════════════════
+       STUDEX OS — Black & Gold · Empire Builder
+       ══════════════════════════════════════════════ */
+    :root {
+      --black: #000; --near-black: #0a0a0a; --dark: #111; --dark-card: #1a1a1a;
+      --dark-border: #2a2a2a; --gold: #D4AF37; --gold-light: #F4D03F;
+      --gold-dark: #B8960C; --white: #fff; --gray-100: #f5f5f5;
+      --gray-200: #e5e5e5; --gray-300: #d4d4d4; --gray-400: #9a9a9a;
+      --gray-500: #6b6b6b; --red: #ef4444; --green: #22c55e; --orange: #f97316;
+      --font-sans: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius-sm: 6px; --radius: 10px; --radius-lg: 16px; --radius-xl: 24px;
+      --shadow: 0 4px 12px rgba(0,0,0,.5);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,.6);
+      --shadow-gold: 0 0 20px rgba(212,175,55,.15);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: var(--font-sans);
+      background: var(--black); color: var(--white);
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+      height: 100%; overflow: hidden;
+      --sat: 100%; --blur: 0px;
+    }
+    body { display: flex; justify-content: center; }
+    .app-shell {
+      display: flex; flex-direction: column;
+      height: 100vh; height: 100dvh;
+      width: 100%; max-width: 480px;
+      background: var(--black);
+      border-left: 1px solid var(--dark-border);
+      border-right: 1px solid var(--dark-border);
+      position: relative;
+    }
+    .app-content {
+      flex: 1; overflow-y: auto; overflow-x: hidden;
+      padding: 16px; padding-bottom: calc(72px + var(--safe-bottom));
+      -webkit-overflow-scrolling: touch;
+    }
+    .app-content::-webkit-scrollbar { width: 0; }
+
+    /* Header */
+    .app-header {
+      background: var(--black);
+      border-bottom: 1px solid var(--dark-border);
+      padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .header-logo { display: flex; align-items: center; gap: 10px; }
+    .header-logo-mark {
+      width: 32px; height: 32px;
+      background: var(--gold); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 16px; color: var(--black);
+      flex-shrink: 0;
+    }
+    .header-title { font-size: 15px; font-weight: 800; letter-spacing: -0.3px; }
+    .header-subtitle { font-size: 9px; color: var(--gold); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 1px; }
+    .header-right { display: flex; align-items: center; gap: 8px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); flex-shrink: 0; }
+    .status-dot.orange { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+    .status-dot.red { background: var(--red); box-shadow: 0 0 8px var(--red); }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px;
+      background: rgba(10,10,10,.95); backdrop-filter: blur(20px);
+      border-top: 1px solid var(--dark-border);
+      display: flex; padding: 8px 8px calc(8px + var(--safe-bottom));
+      z-index: 100;
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      gap: 3px; padding: 6px 4px;
+      border: none; background: none; color: var(--gray-500);
+      cursor: pointer; transition: color .2s;
+      border-radius: var(--radius-sm);
+    }
+    .nav-item:hover { color: var(--gray-300); }
+    .nav-item.active { color: var(--gold); }
+    .nav-item span { font-size: 9px; font-weight: 700; letter-spacing: .3px; }
+
+    /* Cards */
+    .card {
+      background: var(--dark-card); border: 1px solid var(--dark-border);
+      border-radius: var(--radius); padding: 14px; margin-bottom: 10px;
+      transition: border-color .2s;
+    }
+    .card:hover { border-color: rgba(212,175,55,.3); }
+    .card-title { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .card-subtitle { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+
+    /* Fleet Grid */
+    .fleet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .fleet-card {
+      background: var(--dark-card); border: 1px solid var(--dark-border);
+      border-radius: var(--radius); padding: 12px; cursor: pointer;
+      transition: all .2s;
+    }
+    .fleet-card:hover { border-color: var(--gold); transform: translateY(-1px); }
+    .fleet-card.online { border-color: rgba(34,197,94,.3); }
+    .fleet-card.frozen { border-color: rgba(249,115,22,.2); }
+    .fleet-card.error { border-color: rgba(239,68,68,.3); }
+    .fleet-name { font-size: 11px; font-weight: 700; color: var(--white); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fleet-status { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--gray-500); }
+    .fleet-card.online .fleet-status { color: var(--green); }
+    .fleet-card.frozen .fleet-status { color: var(--orange); }
+    .fleet-card.error .fleet-status { color: var(--red); }
+    .fleet-meta { font-size: 9px; color: var(--gray-500); margin-top: 3px; font-family: var(--font-mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Stats */
+    .stats-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .stat-card {
+      flex: 1; background: var(--dark-card); border: 1px solid var(--dark-border);
+      border-radius: var(--radius); padding: 12px; text-align: center;
+    }
+    .stat-value { font-size: 22px; font-weight: 800; font-family: var(--font-mono); color: var(--gold); }
+    .stat-label { font-size: 9px; color: var(--gray-500); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+
+    /* Quick Actions */
+    .quick-actions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+    .quick-actions::-webkit-scrollbar { display: none; }
+    .quick-action {
+      flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
+      gap: 6px; padding: 12px 14px;
+      background: var(--dark-card); border: 1px solid var(--dark-border);
+      border-radius: var(--radius); cursor: pointer; transition: all .2s; min-width: 72px;
+    }
+    .quick-action:hover { border-color: var(--gold); transform: translateY(-1px); }
+    .quick-action:active { transform: scale(.96); }
+    .quick-action-label { font-size: 9px; font-weight: 700; color: var(--gray-400); text-align: center; white-space: nowrap; }
+
+    /* Section */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin: 20px 0 10px; }
+    .section-title { font-size: 10px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 1.5px; }
+    .section-action { font-size: 11px; color: var(--gold); cursor: pointer; font-weight: 600; }
+
+    /* Chat */
+    .chat-messages { flex: 1; overflow-y: auto; padding-bottom: 12px; display: flex; flex-direction: column; gap: 12px; }
+    .chat-container { display: flex; flex-direction: column; height: calc(100vh - 56px - 72px - var(--safe-bottom)); }
+    .chat-message { max-width: 90%; animation: fadeIn .3s ease; }
+    .chat-message.user { align-self: flex-end; }
+    .chat-message.hermes { align-self: flex-start; }
+    .chat-bubble { padding: 12px 14px; border-radius: var(--radius-lg); font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+    .chat-message.user .chat-bubble { background: var(--gold); color: var(--black); border-bottom-right-radius: 4px; font-weight: 500; }
+    .chat-message.hermes .chat-bubble { background: var(--dark-card); border: 1px solid var(--dark-border); border-bottom-left-radius: 4px; color: var(--gray-100); }
+    .chat-sender { font-size: 9px; font-weight: 800; color: var(--gold); margin-bottom: 4px; padding-left: 4px; letter-spacing: 1px; }
+    .chat-time { font-size: 9px; color: var(--gray-500); margin-top: 3px; padding-left: 4px; }
+    .chat-input-area { padding: 12px 0; border-top: 1px solid var(--dark-border); flex-shrink: 0; }
+    .chat-input-row { display: flex; gap: 8px; align-items: flex-end; }
+    .chat-input {
+      flex: 1; background: var(--dark-card); border: 1px solid var(--dark-border);
+      border-radius: var(--radius-lg); padding: 12px 16px; font-size: 14px;
+      font-family: var(--font-sans); color: var(--white); resize: none;
+      min-height: 44px; max-height: 120px; outline: none; transition: border-color .2s;
+    }
+    .chat-input:focus { border-color: var(--gold); }
+    .chat-input::placeholder { color: var(--gray-500); }
+    .chat-send-btn {
+      width: 44px; height: 44px; background: var(--gold); border: none;
+      border-radius: var(--radius); display: flex; align-items: center;
+      justify-content: center; cursor: pointer; transition: all .2s; flex-shrink: 0;
+    }
+    .chat-send-btn:hover { background: var(--gold-light); transform: scale(1.05); }
+    .chat-send-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+    .typing-dots { display: flex; gap: 3px; align-items: center; margin-right: 8px; }
+    .typing-dots span { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; animation: bounce 1.2s infinite; }
+    .typing-dots span:nth-child(2) { animation-delay: .2s; }
+    .typing-dots span:nth-child(3) { animation-delay: .4s; }
+    .chat-thinking { display: flex; align-items: center; color: var(--gray-400); font-size: 12px; padding: 4px 0; }
+
+    /* Agents */
+    .agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .agent-card {
+      background: var(--dark-card); border: 1px solid var(--dark-border);
+      border-radius: var(--radius); padding: 14px; cursor: pointer;
+      transition: all .2s; text-align: left; width: 100%;
+    }
+    .agent-card:hover, .agent-card.active { border-color: var(--gold); }
+    .agent-avatar { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 8px; }
+    .agent-name { font-size: 12px; font-weight: 700; color: var(--white); }
+    .agent-role { font-size: 9px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin: 2px 0 5px; }
+    .agent-desc { font-size: 10px; color: var(--gray-500); line-height: 1.4; }
+
+    /* Deals */
+    .deal-item {
+      background: var(--dark-card); border: 1px solid var(--dark-border);
+      border-radius: var(--radius); padding: 14px; margin-bottom: 8px;
+      cursor: pointer; transition: all .2s;
+    }
+    .deal-item:hover { border-color: var(--gold); }
+    .deal-item.hot { border-left: 3px solid var(--gold); }
+    .deal-item.warm { border-left: 3px solid var(--orange); }
+    .deal-item.cold { border-left: 3px solid var(--gray-500); }
+    .deal-company { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 2px; }
+    .deal-contact { font-size: 11px; color: var(--gray-400); margin-bottom: 6px; }
+    .deal-subject { font-size: 12px; color: var(--gray-300); margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
+    .deal-expand { margin-top: 12px; }
+    .deal-expand textarea { width: 100%; background: var(--dark); border: 1px solid var(--dark-border); border-radius: var(--radius); padding: 10px; font-size: 13px; font-family: var(--font-sans); color: var(--white); resize: vertical; min-height: 80px; outline: none; }
+    .deal-expand textarea:focus { border-color: var(--gold); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 16px; border-radius: var(--radius); font-size: 13px;
+      font-weight: 700; cursor: pointer; transition: all .2s; border: none;
+      font-family: var(--font-sans);
+    }
+    .btn-gold { background: var(--gold); color: var(--black); }
+    .btn-gold:hover { background: var(--gold-light); }
+    .btn-gold:active { transform: scale(.97); }
+    .btn-gold:disabled { opacity: .4; cursor: not-allowed; }
+    .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+    .btn-outline:hover { background: rgba(212,175,55,.1); }
+    .btn-sm { padding: 6px 10px; font-size: 11px; }
+    .btn-full { width: 100%; }
+
+    /* Badges */
+    .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; }
+    .badge.gold { background: rgba(212,175,55,.15); color: var(--gold); }
+    .badge.green { background: rgba(34,197,94,.15); color: var(--green); }
+    .badge.orange { background: rgba(249,115,22,.15); color: var(--orange); }
+    .badge.red { background: rgba(239,68,68,.15); color: var(--red); }
+
+    /* Deal tags */
+    .deal-tag { display: inline-flex; align-items: center; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 600; background: var(--dark-border); color: var(--gray-400); text-transform: uppercase; letter-spacing: .5px; margin-right: 4px; }
+    .deal-tag.gold { background: rgba(212,175,55,.15); color: var(--gold); }
+
+    /* Settings */
+    .settings-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--dark-border); cursor: pointer; }
+    .settings-item:last-child { border-bottom: none; }
+    .settings-label { font-size: 14px; font-weight: 500; color: var(--white); }
+    .settings-desc { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+    .toggle { width: 40px; height: 22px; background: var(--dark-border); border-radius: 11px; position: relative; cursor: pointer; transition: background .2s; flex-shrink: 0; }
+    .toggle.on { background: var(--gold); }
+    .toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: left .2s; }
+    .toggle.on::after { left: 21px; }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-4px); } }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--dark-border); border-radius: 2px; }
+
+    /* Utilities */
+    .gold { color: var(--gold); }
+    .mono { font-family: var(--font-mono); }
+    .text-xs { font-size: 11px; }
+    .text-sm { font-size: 13px; }
+    .divider { height: 1px; background: var(--dark-border); margin: 12px 0; }
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--gray-500); }
+    .empty-state p { font-size: 13px; }
+    .mb { margin-bottom: 10px; }
+    .mt { margin-top: 10px; }
+
+    /* Back btn */
+    .back-btn { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--gray-400); cursor: pointer; margin-bottom: 16px; padding: 4px 0; border: none; background: none; transition: color .2s; }
+    .back-btn:hover { color: var(--gold); }
+
+    /* Toast */
+    .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+    .toast { background: var(--dark-card); border: 1px solid var(--gold); border-radius: var(--radius); padding: 10px 16px; font-size: 13px; font-weight: 600; color: var(--white); box-shadow: var(--shadow-lg); animation: fadeIn .3s ease; display: flex; align-items: center; gap: 8px; pointer-events: auto; }
+
+    /* VM Detail */
+    .vm-detail-icon { width: 48px; height: 48px; background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; }
+    .vm-metric-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .vm-metric { flex: 1; background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: var(--radius-sm); padding: 10px; text-align: center; }
+    .vm-metric-label { font-size: 9px; color: var(--gray-500); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .vm-metric-value { font-size: 16px; font-weight: 700; font-family: var(--font-mono); color: var(--white); }
+    .vm-metric-value.warning { color: var(--orange); }
+    .vm-metric-value.danger { color: var(--red); }
+    .vm-metric-value.good { color: var(--green); }
+
+    /* Alert */
+    .alert-card { background: rgba(249,115,22,.05); border: 1px solid rgba(249,115,22,.3); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; }
+    .alert-title { font-size: 13px; font-weight: 700; color: var(--orange); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .alert-body { font-size: 12px; color: var(--gray-300); }
+
+    /* Resume button */
+    .resume-btn { width: 100%; margin-top: 8px; }
+    .spinning { animation: spin 1s linear infinite; }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <header class="app-header">
+    <div class="header-logo">
+      <div class="header-logo-mark">S</div>
+      <div>
+        <div class="header-title" id="header-title">STUDEX OS</div>
+        <div class="header-subtitle">CEO Dashboard</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-dot" id="status-dot"></div>
+      <span style="font-size:11px;color:var(--gray-400);font-weight:600" id="status-text">ONLINE</span>
+    </div>
+  </header>
+
+  <div class="app-content" id="app-content">
+    <!-- Views injected by JS -->
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-view="home" onclick="navigate('home')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-item" data-view="chat" onclick="navigate('chat')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Chat</span>
+    </button>
+    <button class="nav-item" data-view="fleet" onclick="navigate('fleet')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+      <span>Fleet</span>
+    </button>
+    <button class="nav-item" data-view="deals" onclick="navigate('deals')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span>Deals</span>
+    </button>
+    <button class="nav-item" data-view="agents" onclick="navigate('agents')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>Agents</span>
+    </button>
+  </nav>
+
+  <div class="toast-container" id="toast-container"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// STUDEX OS — App Logic
+// ═══════════════════════════════════════════════════════════
+
+const API_BASE = '/api';
+const HERMES_SERVER = 'http://localhost:3001';
+
+// ── State ──────────────────────────────────────────────────────
+let state = {
+  view: 'home',
+  fleetVM: null,
+  messages: [
+    { role: 'hermes', content: `Good morning, Emperor.
+
+I am Hermes — your AI CTO. Fleet is at your command.
+
+9 of 10 VMs are frozen. D@RK F@CT0Ry has an ERROR_STATE. Your AgentMail has 18 deal drafts waiting.
+
+What are we building today?`, timestamp: Date.now() }
+  ],
+  isThinking: false,
+  deals: [],
+  dealsLoading: false,
+  dealsExpanded: null,
+  fleetData: [
+    { id: '1', name: 'Super Agents Command', uuid: '333de3f8-0801-430b-a541-aad458e896b5', status: 'frozen', ip: '69.67.149.85', apiPort: 22937, os: 'Ubuntu 24', ram: '8 GB', cpu: 4, disk: '100 GB', lastSeen: '5 days ago', services: ['Discord bot', 'WhatsApp', 'AgentMail', 'Buzz agents'] },
+    { id: '2', name: 'Global Markets', uuid: '0f28f3a2-2b26-4260-bff7-262885c86c28', status: 'frozen', ip: '185.209.179.145', apiPort: 23931, os: 'Ubuntu 24', ram: '8 GB', cpu: 4, disk: '100 GB', lastSeen: '5 days ago', services: ['Gitea', 'OpenMausBot', 'Global Markets API'] },
+    { id: '3', name: 'D@RK F@CT0Ry', uuid: '44991831-da7d-4a5b-8cf6-9347ef638712', status: 'error', ip: '160.202.128.157', apiPort: 22222, os: 'Ubuntu 24', ram: '16 GB', cpu: 8, disk: '100 GB', lastSeen: 'unknown', services: ['11 local models', 'Dark Factory'] },
+    { id: '4', name: 'Auto - Meat', uuid: '7ad0c1e7-ccf0-4d9c-9f7c-e2e5a3b7f9d2', status: 'frozen', ip: '160.202.128.162', apiPort: 22737, os: 'Ubuntu 22', ram: '32 GB', cpu: 8, disk: '100 GB', lastSeen: '7 days ago', services: ['Auto agents'] },
+    { id: '5', name: 'Auto - Africa', uuid: '9e8f2c1a-3b5d-4e7f-8a9b-0c1d2e3f4a5b', status: 'frozen', ip: '160.202.128.163', apiPort: 22738, os: 'Ubuntu 22', ram: '8 GB', cpu: 4, disk: '100 GB', lastSeen: '7 days ago', services: ['Africa operations'] },
+    { id: '6', name: 'Auto - Trade', uuid: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f', status: 'frozen', ip: '160.202.128.164', apiPort: 22739, os: 'Ubuntu 22', ram: '8 GB', cpu: 4, disk: '100 GB', lastSeen: '7 days ago', services: ['Trade finance'] },
+    { id: '7', name: 'Auto - Commodity', uuid: '2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e', status: 'frozen', ip: '160.202.128.165', apiPort: 22740, os: 'Ubuntu 22', ram: '8 GB', cpu: 4, disk: '100 GB', lastSeen: '7 days ago', services: ['Commodity trading'] },
+    { id: '8', name: 'Auto - Coffee', uuid: '8e9f0a1b-2c3d-4e5f-6a7b-8c9d0e1f2a3b', status: 'frozen', ip: '160.202.128.166', apiPort: 22741, os: 'Ubuntu 22', ram: '8 GB', cpu: 4, disk: '100 GB', lastSeen: '7 days ago', services: ['Agrifood ops'] },
+    { id: '9', name: 'Auto - Finance', uuid: '4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d', status: 'frozen', ip: '160.202.128.167', apiPort: 22742, os: 'Ubuntu 22', ram: '8 GB', cpu: 4, disk: '100 GB', lastSeen: '7 days ago', services: ['Finance ops'] },
+    { id: '10', name: 'Auto - Logistics', uuid: '0e1f2a3b-4c5d-6e7f-8a9b-0c1d2e3f4a5b', status: 'frozen', ip: '160.202.128.168', apiPort: 22743, os: 'Ubuntu 22', ram: '8 GB', cpu: 4, disk: '100 GB', lastSeen: '7 days ago', services: ['Logistics'] },
+  ],
+  resuming: null,
+  agents: [
+    { id: 'hermes', name: 'Hermes', role: 'AI CTO', emoji: '⚡', color: 'rgba(212,175,55,.15)', status: 'online', desc: 'Executive command layer — speaks to Tumelo, routes to all agents', vm: 'SA Command' },
+    { id: 'comms', name: 'CommsAgent', role: 'Chief Comms', emoji: '📧', color: 'rgba(34,197,94,.1)', status: 'paused', desc: 'Email, Discord, Lark — client comms automation', vm: 'SA Command' },
+    { id: 'deals', name: 'DealsAgent', role: 'Deals', emoji: '💰', color: 'rgba(0,200,100,.1)', status: 'paused', desc: 'Deal pipeline, proposals, negotiations', vm: 'SA Command' },
+    { id: 'markets', name: 'MarketsAgent', role: 'Markets', emoji: '📊', color: 'rgba(100,100,255,.1)', status: 'paused', desc: 'Trade finance, commodity markets, Africa operations', vm: 'Global Markets' },
+    { id: 'research', name: 'ResearchAgent', role: 'Research', emoji: '🔬', color: 'rgba(180,0,255,.1)', status: 'paused', desc: 'GitHub trending, competitive intelligence, AI tools', vm: 'SA Command' },
+    { id: 'ops', name: 'OpsAgent', role: 'Operations', emoji: '⚙️', color: 'rgba(249,115,22,.1)', status: 'paused', desc: 'Fleet management, VM health, cron jobs, deploys', vm: 'SA Command' },
+    { id: 'cash', name: 'CashClaw', role: 'Finance', emoji: '🦞', color: 'rgba(255,200,0,.1)', status: 'offline', desc: 'HYRVE revenue, client billing, financial dashboards', vm: 'SA Command' },
+    { id: 'deer', name: 'DeerFlow', role: 'Deep Research', emoji: '🦌', color: 'rgba(0,200,200,.1)', status: 'offline', desc: 'ByteDance LangGraph deep research harness', vm: 'SA Command' },
+  ],
+};
+
+// ── API Calls ───────────────────────────────────────────────────
+async function apiFetch(path, options = {}) {
+  try {
+    const res = await fetch(HERMES_SERVER + path, {
+      headers: { 'Content-Type': 'application/json', ...options.headers },
+      ...options,
+    });
+    return await res.json();
+  } catch (e) {
+    console.warn('API call failed:', e.message);
+    return { error: e.message };
+  }
+}
+
+async function sendToHermes(messages) {
+  const res = await apiFetch('/hermes', {
+    method: 'POST',
+    body: JSON.stringify({ messages }),
+  });
+  return res.reply || 'Error: no response from Hermes.';
+}
+
+async function loadFleetStatus() {
+  const res = await apiFetch('/fleet');
+  if (res.vms) {
+    state.fleetData = res.vms;
+    render();
+  }
+}
+
+async function resumeVM(uuid) {
+  state.resuming = uuid;
+  render();
+  const res = await apiFetch('/fleet/resume', {
+    method: 'POST',
+    body: JSON.stringify({ uuid }),
+  });
+  state.resuming = null;
+  showToast(res.success ? 'Resume signal sent to VM' : (res.error || 'Resume request sent'));
+  render();
+}
+
+async function loadDeals() {
+  state.dealsLoading = true;
+  render();
+  const res = await apiFetch('/deals');
+  state.deals = res.deals || [];
+  state.dealsLoading = false;
+  render();
+}
+
+async function sendDeal(dealId, body) {
+  const res = await apiFetch('/deals/send', {
+    method: 'POST',
+    body: JSON.stringify({ dealId, body }),
+  });
+  if (res.error && res.error.includes('paid plan')) {
+    showToast('AgentMail FREE plan — cannot send. Need paid plan.', 'error');
+  } else if (res.success) {
+    showToast('Email sent successfully!');
+    loadDeals();
+  } else {
+    showToast(res.error || 'Failed to send');
+  }
+}
+
+// ── Toast ──────────────────────────────────────────────────────
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = type === 'error'
+    ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ' + message
+    : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ' + message;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// ── Navigation ──────────────────────────────────────────────────
+function navigate(view, subView = null) {
+  state.view = view;
+  state.fleetVM = subView;
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.dataset.view === view);
+  });
+  const titles = { home: 'STUDEX OS', chat: 'HERMES', fleet: 'FLEET', deals: 'DEALS', agents: 'AGENTS', settings: 'SETTINGS' };
+  document.getElementById('header-title').textContent = titles[view] || 'STUDEX OS';
+  if (view === 'deals' && state.deals.length === 0) loadDeals();
+  if (view === 'fleet') loadFleetStatus().catch(() => {});
+  render();
+}
+
+// ── Render ──────────────────────────────────────────────────────
+function render() {
+  const el = document.getElementById('app-content');
+  switch (state.view) {
+    case 'home': el.innerHTML = renderHome(); break;
+    case 'chat': el.innerHTML = renderChat(); bindChat(); break;
+    case 'fleet': el.innerHTML = state.fleetVM ? renderFleetDetail() : renderFleet(); break;
+    case 'deals': el.innerHTML = renderDeals(); break;
+    case 'agents': el.innerHTML = renderAgents(); break;
+    case 'settings': el.innerHTML = renderSettings(); bindSettings(); break;
+    default: el.innerHTML = renderHome();
+  }
+  el.scrollTop = 0;
+}
+
+// ── HOME ────────────────────────────────────────────────────────
+function renderHome() {
+  const online = state.fleetData.filter(v => v.status === 'online').length;
+  const frozen = state.fleetData.filter(v => v.status === 'frozen').length;
+  const error = state.fleetData.filter(v => v.status === 'error').length;
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' }) + ' SAST';
+  const dateStr = now.toLocaleDateString('en-ZA', { weekday: 'long', day: 'numeric', month: 'long' });
+
+  return `
+    <h1 style="font-size:24px;margin-bottom:4px;">Good morning, <span class="gold">Emperor.</span></h1>
+    <p style="font-size:13px;color:var(--gray-400);margin-bottom:16px;">${dateStr} · <span class="gold mono" style="font-size:12px">${timeStr}</span></p>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value">${online}</div><div class="stat-label">Online</div></div>
+      <div class="stat-card" style="border-color:rgba(249,115,22,.3)"><div class="stat-value" style="color:var(--orange)">${frozen}</div><div class="stat-label">Frozen</div></div>
+      <div class="stat-card" style="border-color:rgba(239,68,68,.3)"><div class="stat-value" style="color:var(--red)">${error}</div><div class="stat-label">Error</div></div>
+    </div>
+
+    <div class="section-header"><span class="section-title">Quick Actions</span></div>
+    <div class="quick-actions">
+      <button class="quick-action" onclick="navigate('chat')">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(212,175,55,.15);display:flex;align-items:center;justify-content:center;font-size:20px;">⚡</div>
+        <span class="quick-action-label">Chat Hermes</span>
+      </button>
+      <button class="quick-action" onclick="navigate('deals')">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,.1);display:flex;align-items:center;justify-content:center;font-size:20px;">💰</div>
+        <span class="quick-action-label">18 Deals</span>
+      </button>
+      <button class="quick-action" onclick="navigate('fleet')">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(100,100,255,.1);display:flex;align-items:center;justify-content:center;font-size:20px;">🖥️</div>
+        <span class="quick-action-label">Fleet</span>
+      </button>
+      <button class="quick-action" onclick="navigate('agents')">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(180,0,255,.1);display:flex;align-items:center;justify-content:center;font-size:20px;">🤖</div>
+        <span class="quick-action-label">Agents</span>
+      </button>
+      <button class="quick-action" onclick="navigate('settings')">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(100,100,100,.1);display:flex;align-items:center;justify-content:center;font-size:20px;">⚙️</div>
+        <span class="quick-action-label">Settings</span>
+      </button>
+    </div>
+
+    <div class="section-header">
+      <span class="section-title">Fleet Status</span>
+      <span class="section-action" onclick="navigate('fleet')">View All →</span>
+    </div>
+    ${state.fleetData.slice(0, 3).map(vm => `
+      <div class="card" style="cursor:pointer" onclick="navigate('fleet','${vm.id}')">
+        <div class="card-title">
+          ${vm.name}
+          <span class="badge ${vm.status === 'online' ? 'green' : vm.status === 'frozen' ? 'orange' : 'red'}">${vm.status.toUpperCase()}</span>
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;">
+          ${(vm.services||[]).map(s => `<span class="deal-tag">${s}</span>`).join('')}
+        </div>
+        <div class="card-subtitle mono" style="margin-top:6px;">${vm.ip}:${vm.apiPort} · ${vm.ram} · ${vm.lastSeen}</div>
+      </div>
+    `).join('')}
+
+    ${(frozen > 0 || error > 0) ? `
+    <div class="alert-card">
+      <div class="alert-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Fleet Alert
+      </div>
+      <div class="alert-body">${frozen} VMs frozen, ${error} in error state. Resume needed to restore operations.</div>
+      <button class="btn btn-outline btn-sm" style="margin-top:10px" onclick="navigate('fleet')">Resume All VMs →</button>
+    </div>
+    ` : ''}
+  `;
+}
+
+// ── CHAT ───────────────────────────────────────────────────────
+function renderChat() {
+  const msgs = state.messages.map((m, i) => `
+    <div class="chat-message ${m.role}">
+      <div class="chat-sender">${m.role === 'hermes' ? '⚡ HERMES' : 'YOU'}</div>
+      <div class="chat-bubble">${escapeHtml(m.content)}</div>
+      <div class="chat-time">${new Date(m.timestamp).toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit'})}</div>
+    </div>
+  `).join('');
+
+  const thinking = state.isThinking ? `
+    <div class="chat-message hermes">
+      <div class="chat-sender">⚡ HERMES</div>
+      <div class="chat-bubble">
+        <div class="chat-thinking">
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+          Thinking...
+        </div>
+      </div>
+    </div>
+  ` : '';
+
+  return `
+    <div class="chat-container">
+      <div class="chat-messages" id="chat-messages" style="flex:1;overflow-y:auto;">
+        ${msgs}${thinking}
+      </div>
+      <div class="chat-input-area">
+        <div class="chat-input-row">
+          <textarea id="chat-input" class="chat-input" placeholder="Message Hermes..." rows="1" onkeydown="handleChatKey(event)"></textarea>
+          <button class="chat-send-btn" id="chat-send" onclick="sendChat()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function bindChat() {
+  const input = document.getElementById('chat-input');
+  if (input) {
+    input.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+    setTimeout(() => { input.focus(); scrollChat(); }, 50);
+  }
+}
+
+function scrollChat() {
+  const el = document.getElementById('chat-messages');
+  if (el) el.scrollTop = el.scrollHeight;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  if (!input || !input.value.trim() || state.isThinking) return;
+  const text = input.value.trim();
+  input.value = '';
+  input.style.height = 'auto';
+
+  state.messages.push({ role: 'user', content: text, timestamp: Date.now() });
+  state.isThinking = true;
+  render();
+  scrollChat();
+
+  try {
+    const reply = await sendToHermes(state.messages.slice(0, -1).concat([{ role: 'user', content: text }]));
+    state.messages.push({ role: 'hermes', content: reply, timestamp: Date.now() });
+  } catch (e) {
+    state.messages.push({ role: 'hermes', content: 'Error: Could not reach Hermes. Make sure the server is running.', timestamp: Date.now() });
+  }
+  state.isThinking = false;
+  render();
+  scrollChat();
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChat();
+  }
+}
+
+// ── FLEET ───────────────────────────────────────────────────────
+function renderFleet() {
+  const online = state.fleetData.filter(v => v.status === 'online').length;
+  return `
+    <h2 style="margin-bottom:4px;">Orgo AI Fleet</h2>
+    <p style="margin-bottom:16px;">${state.fleetData.length} desktops · ${online} online</p>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value">${online}</div><div class="stat-label">Online</div></div>
+      <div class="stat-card" style="border-color:rgba(249,115,22,.3)"><div class="stat-value" style="color:var(--orange)">${state.fleetData.filter(v=>v.status==='frozen').length}</div><div class="stat-label">Frozen</div></div>
+      <div class="stat-card" style="border-color:rgba(239,68,68,.3)"><div class="stat-value" style="color:var(--red)">${state.fleetData.filter(v=>v.status==='error').length}</div><div class="stat-label">Error</div></div>
+    </div>
+
+    <div class="fleet-grid">
+      ${state.fleetData.map(vm => `
+        <div class="fleet-card ${vm.status}" onclick="navigate('fleet','${vm.id}')">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+            <div class="fleet-name">${vm.name}</div>
+            <div class="status-dot ${vm.status==='frozen'?'orange':vm.status==='error'?'red':''}"></div>
+          </div>
+          <div class="fleet-status">${vm.status.toUpperCase()}</div>
+          <div class="fleet-meta">${vm.ram} · ${vm.cpu}C · ${vm.os}</div>
+          <div class="fleet-meta" style="margin-top:2px;">${vm.ip}:${vm.apiPort}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderFleetDetail() {
+  const vm = state.fleetData.find(v => v.id === state.fleetVM);
+  if (!vm) return '<p class="empty-state">VM not found</p>';
+  const isResuming = state.resuming === vm.uuid;
+
+  return `
+    <button class="back-btn" onclick="navigate('fleet')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Fleet
+    </button>
+
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <div class="vm-detail-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+      </div>
+      <div>
+        <div style="font-size:18px;font-weight:800;">${vm.name}</div>
+        <div class="mono text-xs" style="color:var(--gray-500);margin-top:2px;">${vm.uuid}</div>
+        <span class="badge ${vm.status==='online'?'green':vm.status==='frozen'?'orange':'red'}" style="margin-top:4px;">${vm.status.toUpperCase()}</span>
+      </div>
+    </div>
+
+    <div class="vm-metric-row">
+      <div class="vm-metric"><div class="vm-metric-label">RAM</div><div class="vm-metric-value">${vm.ram}</div></div>
+      <div class="vm-metric"><div class="vm-metric-label">CPU</div><div class="vm-metric-value">${vm.cpu}C</div></div>
+      <div class="vm-metric"><div class="vm-metric-label">Disk</div><div class="vm-metric-value">${vm.disk}</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Connection</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;"><span class="text-xs" style="color:var(--gray-500)">IP Address</span><span class="mono gold">${vm.ip}</span></div>
+        <div style="display:flex;justify-content:space-between;"><span class="text-xs" style="color:var(--gray-500)">API Port</span><span class="mono">${vm.apiPort}</span></div>
+        <div style="display:flex;justify-content:space-between;"><span class="text-xs" style="color:var(--gray-500)">Last Seen</span><span class="mono">${vm.lastSeen}</span></div>
+        <div style="display:flex;justify-content:space-between;"><span class="text-xs" style="color:var(--gray-500)">OS</span><span class="mono">${vm.os}</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Services</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        ${(vm.services||[]).map(s => `<span class="deal-tag gold">${s}</span>`).join('')}
+      </div>
+    </div>
+
+    ${vm.status !== 'online' ? `
+      <button class="btn btn-gold btn-full resume-btn" onclick="resumeVM('${vm.uuid}')" ${isResuming ? 'disabled' : ''}>
+        ${isResuming ? `
+          <svg class="spinning" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Sending resume signal...
+        ` : `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Resume This VM
+        `}
+      </button>
+    ` : `
+      <button class="btn btn-outline btn-full resume-btn" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        VM Online
+      </button>
+    `}
+  `;
+}
+
+// ── DEALS ───────────────────────────────────────────────────────
+function renderDeals() {
+  if (state.dealsLoading) {
+    return `
+      <h2 style="margin-bottom:16px;">Deals Pipeline</h2>
+      ${[1,2,3].map(() => `
+        <div class="card">
+          <div style="height:12px;background:var(--dark-border);border-radius:4px;margin-bottom:8px;animation:opacity 1.5s infinite;opacity:.5"></div>
+          <div style="height:12px;background:var(--dark-border);border-radius:4px;width:70%;opacity:.3"></div>
+        </div>
+      `).join('')}
+    `;
+  }
+
+  if (state.deals.length === 0) {
+    return `
+      <h2 style="margin-bottom:4px;">Deals Pipeline</h2>
+      <p style="margin-bottom:16px;">Loading deal drafts from AgentMail...</p>
+      <div class="empty-state">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <p>No deals loaded</p>
+        <button class="btn btn-outline btn-sm" style="margin-top:12px" onclick="loadDeals()">Reload</button>
+      </div>
+    `;
+  }
+
+  const hot = state.deals.filter(d => d.status === 'hot');
+  const warm = state.deals.filter(d => d.status === 'warm');
+  const cold = state.deals.filter(d => d.status === 'cold');
+
+  const section = (label, deals, cls) => deals.length ? `
+    <div class="section-header"><span class="section-title" style="${cls ? 'color:var(--' + cls + ')' : ''}">${label}</span></div>
+    ${deals.map(deal => renderDealCard(deal)).join('')}
+  ` : '';
+
+  return `
+    <h2 style="margin-bottom:4px;">Deals Pipeline</h2>
+    <p style="margin-bottom:16px;">${state.deals.length} drafts waiting · <span class="gold">0 sent today</span></p>
+    ${section('🔥 Hot Deals', hot, 'gold')}
+    ${section('⚡ Warm Leads', warm, 'orange')}
+    ${section('❄️ Follow-up', cold, '')}
+  `;
+}
+
+function renderDealCard(deal) {
+  const expanded = state.dealsExpanded === deal.id;
+  return `
+    <div class="deal-item ${deal.status}" onclick="toggleDeal('${deal.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div class="deal-company">${escapeHtml(deal.company)}</div>
+          <div class="deal-contact">${escapeHtml(deal.email || '')}</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-500)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="deal-subject">${escapeHtml(deal.subject)}</div>
+      <div>
+        <span class="deal-tag gold">${deal.inbox}</span>
+        <span class="deal-tag">${deal.status}</span>
+      </div>
+      ${expanded ? `
+        <div class="deal-expand" onclick="event.stopPropagation()">
+          <textarea id="deal-reply-${deal.id}" placeholder="Write your reply to ${escapeHtml(deal.company)}..."></textarea>
+          <button class="btn btn-gold btn-full" style="margin-top:8px" onclick="sendDealFromUI('${deal.id}')">
+            Send Email
+          </button>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function toggleDeal(id) {
+  state.dealsExpanded = state.dealsExpanded === id ? null : id;
+  render();
+}
+
+async function sendDealFromUI(dealId) {
+  const ta = document.getElementById('deal-reply-' + dealId);
+  if (!ta || !ta.value.trim()) return;
+  await sendDeal(dealId, ta.value);
+}
+
+// ── AGENTS ──────────────────────────────────────────────────────
+function renderAgents() {
+  const online = state.agents.filter(a => a.status === 'online').length;
+  const paused = state.agents.filter(a => a.status === 'paused').length;
+  return `
+    <h2 style="margin-bottom:4px;">Studex Agents</h2>
+    <p style="margin-bottom:16px;">${state.agents.length} agents · <span class="gold">${online} online</span> · ${paused} paused</p>
+
+    <div class="agent-grid">
+      ${state.agents.map(a => `
+        <div class="agent-card ${a.status === 'online' ? 'active' : ''}" onclick="navigate('chat')">
+          <div class="agent-avatar" style="background:${a.color}">${a.emoji}</div>
+          <div class="agent-name">${a.name}</div>
+          <div class="agent-role">${a.role}</div>
+          <div class="agent-desc">${a.desc}</div>
+          <div style="margin-top:8px;display:flex;align-items:center;justify-content:space-between;">
+            <span class="badge ${a.status==='online'?'green':a.status==='paused'?'orange':'red'}">${a.status.toUpperCase()}</span>
+            <span class="text-xs" style="color:var(--gray-500)">${a.vm}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="section-header"><span class="section-title">Quick Chat</span></div>
+    <div class="card" style="cursor:pointer" onclick="navigate('chat')">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="font-size:28px;">⚡</div>
+        <div style="flex:1;">
+          <div class="agent-name">Chat Hermes</div>
+          <div class="agent-desc">AI CTO — Executive command layer</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-500)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+  `;
+}
+
+// ── SETTINGS ────────────────────────────────────────────────────
+function renderSettings() {
+  return `
+    <div class="section-header"><span class="section-title">Connection</span></div>
+    <div class="card">
+      <div class="settings-item" style="padding:10px 0;border-bottom:1px solid var(--dark-border)">
+        <div>
+          <div class="settings-label">Hermes Server</div>
+          <div class="settings-desc">localhost:3001 · API proxy</div>
+        </div>
+        <span class="badge green">CONNECTED</span>
+      </div>
+      <div class="settings-item" style="padding:10px 0;border-bottom:1px solid var(--dark-border)">
+        <div>
+          <div class="settings-label">AgentMail</div>
+          <div class="settings-desc">t.ramaphosa@agentmail.to · FREE plan (receive only)</div>
+        </div>
+        <span class="badge orange">LIMITED</span>
+      </div>
+      <div class="settings-item" style="padding:10px 0">
+        <div>
+          <div class="settings-label">Orgo Fleet API</div>
+          <div class="settings-desc">sk_live_e76f...fb64cf · VMs frozen</div>
+        </div>
+        <span class="badge orange">FROZEN</span>
+      </div>
+    </div>
+
+    <div class="section-header"><span class="section-title">Preferences</span></div>
+    <div class="card">
+      <div class="settings-item" onclick="toggleSetting(this)">
+        <div>
+          <div class="settings-label">Dark Mode</div>
+          <div class="settings-desc">Black & Gold theme · always on</div>
+        </div>
+        <div class="toggle on" id="toggle-dark"></div>
+      </div>
+      <div class="settings-item" onclick="toggleSetting(this)">
+        <div>
+          <div class="settings-label">Push Notifications</div>
+          <div class="settings-desc">Deal alerts, fleet alerts, Hermes replies</div>
+        </div>
+        <div class="toggle on" id="toggle-push"></div>
+      </div>
+      <div class="settings-item" onclick="toggleSetting(this)" style="border-bottom:none">
+        <div>
+          <div class="settings-label">Auto-resume VMs</div>
+          <div class="settings-desc">Automatically resume frozen VMs on open</div>
+        </div>
+        <div class="toggle" id="toggle-resume"></div>
+      </div>
+    </div>
+
+    <div class="section-header"><span class="section-title">About</span></div>
+    <div class="card" style="margin-bottom:20px">
+      <div class="settings-item" style="border-bottom:none;padding:0">
+        <div>
+          <div class="settings-label">Studex OS</div>
+          <div class="settings-desc">v1.0.0 · Hermes AI CTO · Black & Gold Edition</div>
+          <div class="settings-desc" style="margin-top:4px">Empire Builder · 2026</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function bindSettings() {
+  // Toggles already rendered with correct state
+}
+
+function toggleSetting(el) {
+  const toggle = el.querySelector('.toggle');
+  if (toggle) toggle.classList.toggle('on');
+}
+
+// ── Utilities ───────────────────────────────────────────────────
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ── Init ────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

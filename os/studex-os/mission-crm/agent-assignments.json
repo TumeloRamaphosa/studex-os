@@ -1,0 +1,335 @@
+{
+  "mission": "Rwanda \u2192 Nigeria \u2192 Russia \u2192 Switzerland",
+  "dates": "Aug 25 - Oct 3, 2026",
+  "agents": {
+    "Robusca Prime": {
+      "name": "Robusca Prime",
+      "role": "Executive AI Chief of Staff",
+      "email": "president-robusca@studex-group.com",
+      "npub": "npub1ve2n8jh8ta5mdrf6fzmeqtwsnlmknj24lrctskpr0e2v9s50wnrsrutjx4",
+      "channels": [
+        {
+          "channel": "mission-command",
+          "responsibility": "Overall commander \u2014 decisions, briefings, escalations"
+        },
+        {
+          "channel": "daily-brief",
+          "responsibility": "Morning briefings 07:00 JNB via Discord bot"
+        },
+        {
+          "channel": "mission-decisions",
+          "responsibility": "Track all 14 open decisions, enforce deadlines"
+        },
+        {
+          "channel": "switzerland-deal-rooms",
+          "responsibility": "Switzerland deal closings \u2014 final mission leg"
+        },
+        {
+          "channel": "switzerland-international-distribution",
+          "responsibility": "International distribution deals"
+        }
+      ]
+    },
+    "OpenClaw": {
+      "name": "OpenClaw",
+      "role": "Execution Agent",
+      "email": "openclaw@studex-group.com",
+      "npub": "npub1ny0nlgvp20ke2n79c6c7yc9safv6gpf2ytgnjjtcrtr4jungjyesskm7yf",
+      "channels": [
+        {
+          "channel": "partner-crm",
+          "responsibility": "Partner onboarding, follow-ups, CRM hygiene"
+        },
+        {
+          "channel": "rwanda-operations",
+          "responsibility": "Day 1-3 Rwanda ops coordination"
+        },
+        {
+          "channel": "rwanda-studex-coffee",
+          "responsibility": "StudEx Coffee launch + Lake Kivu methane opportunity"
+        },
+        {
+          "channel": "nigeria-gitex",
+          "responsibility": "GITEX Africa Nigeria ops coordination"
+        }
+      ]
+    },
+    "CashClaw": {
+      "name": "CashClaw",
+      "role": "Payments & Invoicing",
+      "email": "cashclaw@studex-group.com",
+      "npub": "npub1mkncwcl3s0m7y0vathgj9g8rawwt3l0dl7t6ms5az2wya3furcustkmaee",
+      "channels": [
+        {
+          "channel": "rwanda-wagyu-biltong",
+          "responsibility": "Wagyu Biltong Gold \u2014 orders, invoicing, payments"
+        },
+        {
+          "channel": "cashclaw-payments",
+          "responsibility": "All invoicing, Stitch Direct, Stripe payments"
+        }
+      ]
+    },
+    "Naledi": {
+      "name": "Naledi",
+      "role": "CMO / Marketing",
+      "email": "naledi-cmo@studex-group.com",
+      "npub": "npub1gafyheugruunf9q7l5e6uzjeeffw78ecx9t39f02j9jy7d3e9ayqvdewak",
+      "channels": [
+        {
+          "channel": "rwanda-women-ai",
+          "responsibility": "Women in AI event 27 Aug 2026 \u2014 marketing + logistics"
+        }
+      ]
+    },
+    "Auto-Meat": {
+      "name": "Auto-Meat",
+      "role": "Meat Business Ops",
+      "email": "auto-meat@studex-group.com",
+      "npub": "npub1ka7y3k93dyd60nuhudu4t6qamdy6gypdlag3wlgh3m0ruvt2fw0qunax6a",
+      "channels": [
+        {
+          "channel": "nigeria-mobile-data-centres",
+          "responsibility": "Mobile data centre deployments and contracts"
+        }
+      ]
+    },
+    "Cypher Trace": {
+      "name": "Cypher Trace",
+      "role": "CTO / Super Agents",
+      "email": "cypher-trace-cto-superagents@studex-group.com",
+      "npub": "npub14l0zxuq0v49hhs4uru4t8kjxyhtm3lzkmx7v4e32dwe4jtknd8nse7cg38",
+      "channels": [
+        {
+          "channel": "nigeria-agentic-ai",
+          "responsibility": "Agentic AI partnerships, technical scouting"
+        }
+      ]
+    },
+    "Goose": {
+      "name": "Goose",
+      "role": "Developer / Builder",
+      "email": "goose@studex-group.com",
+      "npub": "npub1lmytj4m5rknjd5xkmtnw5gl7esjgejtgt3z0v00a76dy7aysghyselddld",
+      "channels": [
+        {
+          "channel": "russia-yekaterinburg",
+          "responsibility": "Russia market entry \u2014 Yekaterinburg hub"
+        },
+        {
+          "channel": "russia-gaming",
+          "responsibility": "Gaming partnerships and distribution"
+        },
+        {
+          "channel": "russia-coding",
+          "responsibility": "Coding/development partnerships"
+        }
+      ]
+    }
+  },
+  "channel_assignments": [
+    {
+      "channel": "mission-command",
+      "agent": "Robusca Prime",
+      "responsibility": "Overall commander \u2014 decisions, briefings, escalations"
+    },
+    {
+      "channel": "daily-brief",
+      "agent": "Robusca Prime",
+      "responsibility": "Morning briefings 07:00 JNB via Discord bot"
+    },
+    {
+      "channel": "mission-decisions",
+      "agent": "Robusca Prime",
+      "responsibility": "Track all 14 open decisions, enforce deadlines"
+    },
+    {
+      "channel": "partner-crm",
+      "agent": "OpenClaw",
+      "responsibility": "Partner onboarding, follow-ups, CRM hygiene"
+    },
+    {
+      "channel": "rwanda-operations",
+      "agent": "OpenClaw",
+      "responsibility": "Day 1-3 Rwanda ops coordination"
+    },
+    {
+      "channel": "rwanda-studex-coffee",
+      "agent": "OpenClaw",
+      "responsibility": "StudEx Coffee launch + Lake Kivu methane opportunity"
+    },
+    {
+      "channel": "rwanda-wagyu-biltong",
+      "agent": "CashClaw",
+      "responsibility": "Wagyu Biltong Gold \u2014 orders, invoicing, payments"
+    },
+    {
+      "channel": "rwanda-women-ai",
+      "agent": "Naledi",
+      "responsibility": "Women in AI event 27 Aug 2026 \u2014 marketing + logistics"
+    },
+    {
+      "channel": "nigeria-gitex",
+      "agent": "OpenClaw",
+      "responsibility": "GITEX Africa Nigeria ops coordination"
+    },
+    {
+      "channel": "nigeria-mobile-data-centres",
+      "agent": "Auto-Meat",
+      "responsibility": "Mobile data centre deployments and contracts"
+    },
+    {
+      "channel": "nigeria-agentic-ai",
+      "agent": "Cypher Trace",
+      "responsibility": "Agentic AI partnerships, technical scouting"
+    },
+    {
+      "channel": "russia-yekaterinburg",
+      "agent": "Goose",
+      "responsibility": "Russia market entry \u2014 Yekaterinburg hub"
+    },
+    {
+      "channel": "russia-gaming",
+      "agent": "Goose",
+      "responsibility": "Gaming partnerships and distribution"
+    },
+    {
+      "channel": "russia-coding",
+      "agent": "Goose",
+      "responsibility": "Coding/development partnerships"
+    },
+    {
+      "channel": "switzerland-deal-rooms",
+      "agent": "Robusca Prime",
+      "responsibility": "Switzerland deal closings \u2014 final mission leg"
+    },
+    {
+      "channel": "switzerland-international-distribution",
+      "agent": "Robusca Prime",
+      "responsibility": "International distribution deals"
+    },
+    {
+      "channel": "cashclaw-payments",
+      "agent": "CashClaw",
+      "responsibility": "All invoicing, Stitch Direct, Stripe payments"
+    }
+  ],
+  "urgent_decisions": [
+    {
+      "id": "D01",
+      "question": "Women in AI: 26 or 27 August?",
+      "priority": "URGENT",
+      "due": "IMMEDIATE"
+    },
+    {
+      "id": "D02",
+      "question": "'KAKA' activation: exact name + host?",
+      "priority": "URGENT",
+      "due": "IMMEDIATE"
+    },
+    {
+      "id": "D03",
+      "question": "Gorilla visit: permits + location confirmed?",
+      "priority": "HIGH",
+      "due": "+3 days"
+    },
+    {
+      "id": "D04",
+      "question": "Sunday hike: route + Timbuktoo confirmed?",
+      "priority": "HIGH",
+      "due": "+3 days"
+    },
+    {
+      "id": "D08",
+      "question": "Google/Alibaba: invited, confirmed or sponsor?",
+      "priority": "HIGH",
+      "due": "+7 days"
+    },
+    {
+      "id": "D09",
+      "question": "Russia: depart 16 Sept or attend 17 Sept closing?",
+      "priority": "HIGH",
+      "due": "+10 days"
+    },
+    {
+      "id": "D11",
+      "question": "Budget: travel + events + products + permits + contingency?",
+      "priority": "URGENT",
+      "due": "+3 days"
+    },
+    {
+      "id": "D12",
+      "question": "Who holds final authority for daily mission decisions?",
+      "priority": "HIGH",
+      "due": "IMMEDIATE"
+    },
+    {
+      "id": "D14",
+      "question": "GITEX Nigeria: registrations + Abuja-Lagos plan?",
+      "priority": "HIGH",
+      "due": "+7 days"
+    }
+  ],
+  "all_open_decisions": [
+    {
+      "id": "D01",
+      "question": "Women in AI: 26 or 27 August?",
+      "priority": "URGENT",
+      "owner": "Tumelo + Women Agent"
+    },
+    {
+      "id": "D02",
+      "question": "'KAKA' activation: exact name + host?",
+      "priority": "URGENT",
+      "owner": "Coffee Agent"
+    },
+    {
+      "id": "D03",
+      "question": "Gorilla visit: permits + location confirmed?",
+      "priority": "HIGH",
+      "owner": "Logistics Agent"
+    },
+    {
+      "id": "D04",
+      "question": "Sunday hike: route + Timbuktoo confirmed?",
+      "priority": "HIGH",
+      "owner": "Logistics Agent"
+    },
+    {
+      "id": "D08",
+      "question": "Google/Alibaba: invited, confirmed or sponsor?",
+      "priority": "HIGH",
+      "owner": "Mission Orchestrator"
+    },
+    {
+      "id": "D09",
+      "question": "Russia: depart 16 Sept or attend 17 Sept closing?",
+      "priority": "HIGH",
+      "owner": "Tumelo"
+    },
+    {
+      "id": "D10",
+      "question": "Switzerland: Geneva + Zurich? Confirmed host?",
+      "priority": "MEDIUM",
+      "owner": "Mission Orchestrator"
+    },
+    {
+      "id": "D11",
+      "question": "Budget: travel + events + products + permits + contingency?",
+      "priority": "URGENT",
+      "owner": "Tumelo"
+    },
+    {
+      "id": "D12",
+      "question": "Who holds final authority for daily mission decisions?",
+      "priority": "HIGH",
+      "owner": "Tumelo"
+    },
+    {
+      "id": "D14",
+      "question": "GITEX Nigeria: registrations + Abuja-Lagos plan?",
+      "priority": "HIGH",
+      "owner": "Mission Orchestrator"
+    }
+  ]
+}

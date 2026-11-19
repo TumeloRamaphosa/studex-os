@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STUDEX OS — V.A.U.L.T. COMMAND CENTER</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #D4AF37;
+    --gold-light: #F5D76E;
+    --gold-dark: #9A7B0A;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --panel: #181818;
+    --border: rgba(212,175,55,0.3);
+    --success: #00FF88;
+    --warning: #FFAA00;
+    --danger: #FF0044;
+    --cyan: #00F5FF;
+    --blue: #0066FF;
+    --purple: #7B2CBF;
+  }
+
+  body {
+    background: var(--black);
+    color: #E8E8E8;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #0A0A0A 0%, #1A1200 50%, #0A0A0A 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 30px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-left h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .header-left p {
+    color: rgba(212,175,55,0.6);
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-top: 4px;
+  }
+
+  .header-right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .live-badge {
+    background: #FF0000;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    letter-spacing: 2px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .time-display {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+
+  .container { max-width: 1600px; margin: 0 auto; padding: 40px; }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: var(--gold);
+    display: block;
+  }
+
+  /* KPI STRIP */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+
+  .kpi {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--gold);
+    padding: 20px;
+    text-align: center;
+    border-radius: 2px;
+    transition: transform 0.2s;
+  }
+
+  .kpi:hover { transform: translateY(-2px); }
+
+  .kpi-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--gold);
+  }
+
+  .kpi-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1px;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  /* SERVICE STATUS GRID */
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .service-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold-dark);
+    padding: 20px;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .service-card:hover { border-left-color: var(--gold); }
+  .service-card.online { border-left-color: var(--success); }
+  .service-card.offline { border-left-color: var(--danger); }
+  .service-card.degraded { border-left-color: var(--warning); }
+
+  .service-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .service-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .service-status {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .status-online { background: rgba(0,255,136,0.15); color: var(--success); }
+  .status-offline { background: rgba(255,0,68,0.15); color: var(--danger); }
+  .status-degraded { background: rgba(255,170,0,0.15); color: var(--warning); }
+
+  .service-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .metric {
+    background: #0D0D0D;
+    padding: 8px;
+    border-radius: 2px;
+    text-align: center;
+  }
+
+  .metric-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .metric-label {
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* AGENT SWARM */
+  .agent-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .agent-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .agent-header {
+    background: linear-gradient(135deg, #1A1500, #0A0A0A);
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .agent-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .agent-role {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .agent-body {
+    padding: 20px;
+  }
+
+  .agent-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    animation: pulse-dot 2s infinite;
+  }
+
+  .status-dot.offline { background: var(--danger); }
+  .status-dot.busy { background: var(--warning); }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .agent-email {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+    font-family: monospace;
+  }
+
+  .agent-tasks {
+    background: #0D0D0D;
+    border: 1px solid rgba(212,175,55,0.15);
+    border-radius: 3px;
+    padding: 12px;
+  }
+
+  .task-item {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .task-item:last-child { margin-bottom: 0; }
+
+  .task-checkbox {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--gold-dark);
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  .task-checkbox.done {
+    background: var(--success);
+    border-color: var(--success);
+  }
+
+  /* MISSION TRACKER */
+  .mission-list {
+    margin-bottom: 48px;
+  }
+
+  .mission-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .mission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .mission-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .mission-deadline {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1px;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: #0D0D0D;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+
+  .mission-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .mission-metric {
+    text-align: center;
+    padding: 12px;
+    background: #0D0D0D;
+    border-radius: 3px;
+  }
+
+  .mission-metric-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 18px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .mission-metric-label {
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  /* SCHEDULE TIMELINE */
+  .timeline {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 48px;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 200px;
+    gap: 20px;
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+
+  .timeline-item:last-child { border-bottom: none; }
+
+  .timeline-time {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .timeline-task {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .timeline-agent {
+    text-align: right;
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    font-family: monospace;
+  }
+
+  /* QUICK ACTIONS */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .action-btn {
+    background: linear-gradient(135deg, #1A1500, #0A0A0A);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .action-btn:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .action-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .action-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    text-align: center;
+    color: rgba(212,175,55,0.4);
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1200px) {
+    .kpi-strip { grid-template-columns: repeat(4, 1fr); }
+    .mission-metrics { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .header { flex-direction: column; gap: 16px; }
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .timeline-item { grid-template-columns: 1fr; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>🧠 V.A.U.L.T. — STUDEX OS COMMAND CENTER</h1>
+    <p>VOICE • AGENTS • UPTIME • LOGS • TASKS</p>
+  </div>
+  <div class="header-right">
+    <div class="live-badge">● LIVE</div>
+    <div class="time-display" id="timeDisplay">--:--:-- SAST</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip">
+    <div class="kpi">
+      <div class="kpi-num">60%</div>
+      <div class="kpi-label">Uptime</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">5</div>
+      <div class="kpi-label">Services</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">24</div>
+      <div class="kpi-label">Agents</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">3</div>
+      <div class="kpi-label">Missions</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">48</div>
+      <div class="kpi-label">Posts/Day</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">R0</div>
+      <div class="kpi-label">Revenue Today</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">847</div>
+      <div class="kpi-label">Social Reach</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">0%</div>
+      <div class="kpi-label">L1 Deflection</div>
+    </div>
+  </div>
+
+  <!-- SERVICE STATUS -->
+  <div class="section-title">🔧 SERVICE STATUS</div>
+  <div class="service-grid">
+    
+    <div class="service-card online">
+      <div class="service-header">
+        <div class="service-name">studexmeat.com</div>
+        <div class="service-status status-online">ONLINE</div>
+      </div>
+      <div class="service-metrics">
+        <div class="metric">
+          <div class="metric-val">200</div>
+          <div class="metric-label">HTTP</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val">45ms</div>
+          <div class="metric-label">Latency</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="service-card online">
+      <div class="service-header">
+        <div class="service-name">studex-group.com</div>
+        <div class="service-status status-online">ONLINE</div>
+      </div>
+      <div class="service-metrics">
+        <div class="metric">
+          <div class="metric-val">200</div>
+          <div class="metric-label">HTTP</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val">52ms</div>
+          <div class="metric-label">Latency</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="service-card online">
+      <div class="service-header">
+        <div class="service-name">Control Hub</div>
+        <div class="service-status status-online">ONLINE</div>
+      </div>
+      <div class="service-metrics">
+        <div class="metric">
+          <div class="metric-val">200</div>
+          <div class="metric-label">HTTP</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val">12ms</div>
+          <div class="metric-label">Local:42069</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="service-card online">
+      <div class="service-header">
+        <div class="service-name">Ollama</div>
+        <div class="service-status status-online">ONLINE</div>
+      </div>
+      <div class="service-metrics">
+        <div class="metric">
+          <div class="metric-val">8</div>
+          <div class="metric-label">Models</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val">14B</div>
+          <div class="metric-label">qwen2.5</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="service-card offline">
+      <div class="service-header">
+        <div class="service-name">Paperclip OS</div>
+        <div class="service-status status-offline">OFFLINE</div>
+      </div>
+      <div class="service-metrics">
+        <div class="metric">
+          <div class="metric-val">000</div>
+          <div class="metric-label">HTTP</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val">18h</div>
+          <div class="metric-label">Down</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="service-card offline">
+      <div class="service-header">
+        <div class="service-name">OpenMausBot</div>
+        <div class="service-status status-offline">OFFLINE</div>
+      </div>
+      <div class="service-metrics">
+        <div class="metric">
+          <div class="metric-val">000</div>
+          <div class="metric-label">HTTP</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val">18h</div>
+          <div class="metric-label">Down</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- AGENT SWARM -->
+  <div class="section-title">🤖 AGENT SWARM</div>
+  <div class="agent-grid">
+    
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-name">HERMES</div>
+        <div class="agent-role">Orchestrator</div>
+      </div>
+      <div class="agent-body">
+        <div class="agent-status">
+          <div class="status-dot"></div>
+          <span style="font-size:12px; color:rgba(255,255,255,0.6);">Online • qwen3.5:cloud</span>
+        </div>
+        <div class="agent-email">📧 hermes@agent.studexmeat.com</div>
+        <div class="agent-tasks">
+          <div class="task-item">
+            <span class="task-checkbox done"></span>
+            Master Build Plan created
+          </div>
+          <div class="task-item">
+            <span class="task-checkbox done"></span>
+            Collaboration protocol written
+          </div>
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            Hourly email setup (pending Resend API)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-name">OPENCLAW</div>
+        <div class="agent-role">Browser + Terminal</div>
+      </div>
+      <div class="agent-body">
+        <div class="agent-status">
+          <div class="status-dot busy"></div>
+          <span style="font-size:12px; color:rgba(255,255,255,0.6);">Busy • Claude Code</span>
+        </div>
+        <div class="agent-email">📧 openclaw@agent.studexmeat.com</div>
+        <div class="agent-tasks">
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            Fix Paperclip OS (SSH Orgo VM)
+          </div>
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            Fix OpenMausBot (restart service)
+          </div>
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            Site monitoring active
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-name">ROBUSCA-PRIME</div>
+        <div class="agent-role">CEO / Fleet Health</div>
+      </div>
+      <div class="agent-body">
+        <div class="agent-status">
+          <div class="status-dot"></div>
+          <span style="font-size:12px; color:rgba(255,255,255,0.6);">Online</span>
+        </div>
+        <div class="agent-email">📧 ceo@agent.studexmeat.com</div>
+        <div class="agent-tasks">
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            Daily CO @ 17:00 SAST
+          </div>
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            Hourly status reports
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-name">NALEDI CMO</div>
+        <div class="agent-role">Marketing + Content</div>
+      </div>
+      <div class="agent-body">
+        <div class="agent-status">
+          <div class="status-dot"></div>
+          <span style="font-size:12px; color:rgba(255,255,255,0.6);">Online</span>
+        </div>
+        <div class="agent-email">📧 naledi@agent.studexmeat.com</div>
+        <div class="agent-tasks">
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            Content War Room deployed
+          </div>
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            Blotato posts @ 12:00
+          </div>
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            Voice agent integration
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-name">MAVIS</div>
+        <div class="agent-role">Skunk Works VM Sync</div>
+      </div>
+      <div class="agent-body">
+        <div class="agent-status">
+          <div class="status-dot"></div>
+          <span style="font-size:12px; color:rgba(255,255,255,0.6);">Online • Scheduled 06:00</span>
+        </div>
+        <div class="agent-email">📧 mavis@agent.studexmeat.com</div>
+        <div class="agent-tasks">
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            Daily sync @ 06:00 SAST
+          </div>
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            VM changelog verification
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-name">CASHCLAW</div>
+        <div class="agent-role">Revenue + Payments</div>
+      </div>
+      <div class="agent-body">
+        <div class="agent-status">
+          <div class="status-dot offline"></div>
+          <span style="font-size:12px; color:rgba(255,255,255,0.6);">Offline • Not Installed</span>
+        </div>
+        <div class="agent-email">📧 cashclaw@agent.studexmeat.com</div>
+        <div class="agent-tasks">
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            npm install -g cashclaw
+          </div>
+          <div class="task-item">
+            <span class="task-checkbox"></span>
+            11 skills activation
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ACTIVE MISSIONS -->
+  <div class="section-title">🎯 ACTIVE MISSIONS</div>
+  <div class="mission-list">
+    
+    <div class="mission-item">
+      <div class="mission-header">
+        <div class="mission-name">Stud-Bot Launch Campaign</div>
+        <div class="mission-deadline">DEADLINE: Sep 15, 2026 (3 days)</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 67%;"></div>
+      </div>
+      <div class="mission-metrics">
+        <div class="mission-metric">
+          <div class="mission-metric-val">67%</div>
+          <div class="mission-metric-label">Complete</div>
+        </div>
+        <div class="mission-metric">
+          <div class="mission-metric-val">2</div>
+          <div class="mission-metric-label">Sites Live</div>
+        </div>
+        <div class="mission-metric">
+          <div class="mission-metric-val">1</div>
+          <div class="mission-metric-label">Post Published</div>
+        </div>
+        <div class="mission-metric">
+          <div class="mission-metric-val">R0</div>
+          <div class="mission-metric-label">Revenue</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mission-item">
+      <div class="mission-header">
+        <div class="mission-name">Rwanda POC Validation</div>
+        <div class="mission-deadline">DEADLINE: Sep 2026 Trip</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 35%;"></div>
+      </div>
+      <div class="mission-metrics">
+        <div class="mission-metric">
+          <div class="mission-metric-val">35%</div>
+          <div class="mission-metric-label">Complete</div>
+        </div>
+        <div class="mission-metric">
+          <div class="mission-metric-val">$505</div>
+          <div class="mission-metric-label">Budget/Mo</div>
+        </div>
+        <div class="mission-metric">
+          <div class="mission-metric-val">0</div>
+          <div class="mission-metric-label">Partners Confirmed</div>
+        </div>
+        <div class="mission-metric">
+          <div class="mission-metric-val">67%</div>
+          <div class="mission-metric-label">Target Deflection</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mission-item">
+      <div class="mission-header">
+        <div class="mission-name">PwC White-Label Pitch</div>
+        <div class="mission-deadline">DEADLINE: Q4 2026</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 80%;"></div>
+      </div>
+      <div class="mission-metrics">
+        <div class="mission-metric">
+          <div class="mission-metric-val">80%</div>
+          <div class="mission-metric-label">Complete</div>
+        </div>
+        <div class="mission-metric">
+          <div class="mission-metric-val">1</div>
+          <div class="mission-metric-label">Flowchart Ready</div>
+        </div>
+        <div class="mission-metric">
+          <div class="mission-metric-val">0</div>
+          <div class="mission-metric-label">Meetings Booked</div>
+        </div>
+        <div class="mission-metric">
+          <div class="mission-metric-val">TBD</div>
+          <div class="mission-metric-label">Deal Size</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TODAY'S SCHEDULE -->
+  <div class="section-title">📅 TODAY'S SCHEDULE (HOURLY)</div>
+  <div class="timeline">
+    
+    <div class="timeline-item">
+      <div class="timeline-time">06:00</div>
+      <div class="timeline-task">Skunk Works VM Sync — All repos synced, changelog verified</div>
+      <div class="timeline-agent">MAVIS</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-time">08:00</div>
+      <div class="timeline-task">Fleet Health Check — Hermes prompt-size + status report</div>
+      <div class="timeline-agent">ROBUSCA</div>
+    </div>
+
+    <div class="timeline-time">12:00</div>
+    <div class="timeline-task">Social Media Post — Blotato automation (IG, LinkedIn, X, TikTok)</div>
+    <div class="timeline-agent">NALEDI</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-time">17:00</div>
+      <div class="timeline-task">Daily CO Reports — All agents submit end-of-day status</div>
+      <div class="timeline-agent">ALL AGENTS</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-time">21:00</div>
+      <div class="timeline-task">Backup to Google Cloud — ~/.hermes, ~/.openclaw, Obsidian Vault</div>
+      <div class="timeline-agent">AUTO-BACKUP</div>
+    </div>
+
+    <div class="timeline-item" style="background: rgba(212,175,55,0.1); border-radius: 4px;">
+      <div class="timeline-time">HOURLY</div>
+      <div class="timeline-task">Email Status Report → t.ramaphosa@studex-group.com</div>
+      <div class="timeline-agent">HERMES</div>
+    </div>
+
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="section-title">⚡ QUICK ACTIONS</div>
+  <div class="quick-actions">
+    
+    <div class="action-btn" onclick="alert('Running hourly status check...')">
+      <span class="action-icon">📊</span>
+      <span class="action-label">Run Status Check</span>
+    </div>
+
+    <div class="action-btn" onclick="alert('Opening Blotato Composer...')">
+      <span class="action-icon">📱</span>
+      <span class="action-label">Blotato Composer</span>
+    </div>
+
+    <div class="action-btn" onclick="alert('Opening Obsidian Vault...')">
+      <span class="action-icon">🧠</span>
+      <span class="action-label">Obsidian Vault</span>
+    </div>
+
+    <div class="action-btn" onclick="alert('Opening Control Hub...')">
+      <span class="action-icon">🎮</span>
+      <span class="action-label">Control Hub</span>
+    </div>
+
+    <div class="action-btn" onclick="alert('Opening War Room...')">
+      <span class="action-icon">🥩</span>
+      <span class="action-label">Content War Room</span>
+    </div>
+
+    <div class="action-btn" onclick="alert('Testing Voice Agent...')">
+      <span class="action-icon">🎤</span>
+      <span class="action-label">Test Voice</span>
+    </div>
+
+    <div class="action-btn" onclick="alert('Opening Notion OS...')">
+      <span class="action-icon">📋</span>
+      <span class="action-label">Notion OS</span>
+    </div>
+
+    <div class="action-btn" onclick="alert('Opening Buzz Relay...')">
+      <span class="action-icon">🐝</span>
+      <span class="action-label">Buzz Relay</span>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  STUDEX OS • V.A.U.L.T. COMMAND CENTER • VOICE • AGENTS • UPTIME • LOGS • TASKS<br>
+  Built by Studex Group AI Systems • Execute. Dominate. Expand. 🔱
+</footer>
+
+<script>
+  // Live clock (SAST)
+  function updateTime() {
+    const now = new Date();
+    const sast = new Date(now.getTime() + (2 * 60 * 60 * 1000)); // UTC+2
+    const timeStr = sast.toLocaleTimeString('en-ZA', { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit',
+      hour12: false 
+    });
+    document.getElementById('timeDisplay').textContent = timeStr + ' SAST';
+  }
+  setInterval(updateTime, 1000);
+  updateTime();
+
+  // Auto-refresh service status every 60s
+  setInterval(() => {
+    console.log('🔄 Auto-refreshing service status...');
+    // In production: fetch('/api/status') and update DOM
+  }, 60000);
+</script>
+
+</body>
+</html>

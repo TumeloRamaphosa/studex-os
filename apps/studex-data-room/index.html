@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudEx OS — Hermes Data Room</title>
+<style>
+:root {
+  --bg: #070a0c;
+  --surface: #0d1117;
+  --surface2: #161b22;
+  --border: rgba(57,255,170,0.15);
+  --neon: #39ffaa;
+  --pink: #ff2ec4;
+  --gold: #C9A84C;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --warn: #f0b429;
+  --danger: #ff4757;
+  --success: #39ffaa;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'JetBrains Mono','Courier New',monospace; font-size:13px; line-height:1.5; }
+a { color:var(--neon); text-decoration:none; }
+a:hover { text-decoration:underline; }
+.header { background:linear-gradient(135deg,#0d1117,#1a1f2e); border-bottom:1px solid var(--border); padding:20px 32px; position:sticky; top:0; z-index:100; }
+.header h1 { font-size:22px; font-weight:700; color:var(--gold); letter-spacing:2px; text-transform:uppercase; }
+.header .sub { color:var(--muted); font-size:11px; margin-top:4px; }
+.nav { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+.nav a { background:var(--surface2); border:1px solid var(--border); padding:5px 14px; border-radius:4px; font-size:11px; color:var(--neon); transition:all 0.2s; }
+.nav a:hover { background:var(--neon); color:#000; text-decoration:none; }
+.search-bar { margin-top:12px; }
+.search-bar input { width:100%; max-width:400px; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:8px 14px; border-radius:4px; font-family:inherit; font-size:12px; outline:none; }
+.search-bar input:focus { border-color:var(--neon); box-shadow:0 0 12px rgba(57,255,170,0.15); }
+.container { max-width:1400px; margin:0 auto; padding:24px 32px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(380px,1fr)); gap:16px; }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.card-header { background:linear-gradient(90deg,#161b22,var(--surface)); padding:12px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.card-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--gold); }
+.card-badge { font-size:10px; padding:2px 8px; border-radius:10px; background:var(--success); color:#000; font-weight:700; }
+.card-badge.warn { background:var(--warn); }
+.card-badge.danger { background:var(--danger); }
+.card-body { padding:16px; }
+.card-body p { margin-bottom:8px; color:var(--muted); font-size:12px; }
+.card-body p strong { color:var(--text); }
+.card-body ul { list-style:none; padding:0; }
+.card-body ul li { padding:4px 0; font-size:12px; color:var(--muted); border-bottom:1px solid rgba(255,255,255,0.03); }
+.card-body ul li:last-child { border-bottom:none; }
+.card-body ul li::before { content:"›"; color:var(--neon); margin-right:8px; }
+.card-body ul li .tag { background:var(--surface2); padding:1px 6px; border-radius:3px; font-size:10px; color:var(--neon); border:1px solid var(--border); }
+.tag-gold { background:rgba(201,168,76,0.15); color:var(--gold); padding:1px 6px; border-radius:3px; font-size:10px; border:1px solid rgba(201,168,76,0.3); }
+.tag-pink { background:rgba(255,46,196,0.15); color:var(--pink); padding:1px 6px; border-radius:3px; font-size:10px; border:1px solid rgba(255,46,196,0.3); }
+.tag-success { background:rgba(57,255,170,0.15); color:var(--success); padding:1px 6px; border-radius:3px; font-size:10px; border:1px solid rgba(57,255,170,0.3); }
+.tag-warn { background:rgba(240,180,41,0.15); color:var(--warn); padding:1px 6px; border-radius:3px; font-size:10px; border:1px solid rgba(240,180,41,0.3); }
+.tag-danger { background:rgba(255,71,87,0.15); color:var(--danger); padding:1px 6px; border-radius:3px; font-size:10px; border:1px solid rgba(255,71,87,0.3); }
+.section-title { color:var(--gold); font-size:16px; font-weight:700; margin:32px 0 16px 0; padding-bottom:8px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+.section-title::before { content:"■"; color:var(--neon); }
+.status-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; }
+.status-item { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:12px; text-align:center; }
+.status-item .label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+.status-item .value { font-size:18px; font-weight:700; margin-top:4px; }
+.online { color:var(--success); }
+.offline { color:var(--danger); }
+.pending { color:var(--warn); }
+.table { width:100%; border-collapse:collapse; }
+.table th { text-align:left; padding:8px 12px; background:var(--surface2); color:var(--gold); font-size:10px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid var(--border); }
+.table td { padding:8px 12px; border-bottom:1px solid rgba(255,255,255,0.03); font-size:12px; color:var(--muted); }
+.table tr:hover td { background:rgba(57,255,170,0.03); }
+.code-block { background:#000; border:1px solid var(--border); border-radius:4px; padding:12px; font-size:11px; color:#39ffaa; overflow-x:auto; margin:8px 0; }
+.progress-bar { height:6px; background:var(--surface2); border-radius:3px; overflow:hidden; margin-top:6px; }
+.progress-fill { height:100%; border-radius:3px; transition:width 0.5s; }
+.high { background:var(--success); width:80%; }
+.medium { background:var(--warn); width:50%; }
+.low { background:var(--danger); width:20%; }
+.footer { text-align:center; padding:40px; color:var(--muted); font-size:11px; border-top:1px solid var(--border); margin-top:40px; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media(max-width:768px) { .grid { grid-template-columns:1fr; } .grid-2 { grid-template-columns:1fr; } }
+.scroll-to-top { position:fixed; bottom:24px; right:24px; width:40px; height:40px; background:var(--neon); color:#000; border:none; border-radius:50%; font-size:18px; cursor:pointer; font-weight:700; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚡ STUDEx OS — HERMES DATA ROOM</h1>
+  <div class="sub">Agent Lord: Tumelo Ramaphosa · Role: CEO + Empire Builder · Last Updated: 2026-01-12 · Session: Active</div>
+  <div class="nav">
+    <a href="#overview">Overview</a>
+    <a href="#agents">Agents</a>
+    <a href="#infrastructure">Infrastructure</a>
+    <a href="#clients">Clients & Pipeline</a>
+    <a href="#projects">Projects</a>
+    <a href="#knowledge">Knowledge Base</a>
+    <a href="#credentials">Credentials</a>
+    <a href="#todo">Todo</a>
+    <a href="#memory">Full Memory</a>
+  </div>
+  <div class="search-bar">
+    <input type="text" placeholder="Search data room... (Ctrl+K)" onkeyup="search(this.value)">
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- LIVE STATUS BAR -->
+  <div id="overview" class="card" style="margin-bottom:16px; border-color:var(--neon);">
+    <div class="card-header" style="background:linear-gradient(90deg,#0d2e1e,var(--surface));">
+      <span class="card-title">⚡ SYSTEM STATUS — LIVE</span>
+      <span class="card-badge">● ACTIVE</span>
+    </div>
+    <div class="card-body">
+      <div class="status-grid">
+        <div class="status-item"><div class="label">Hermes (Me)</div><div class="value online">● ONLINE</div></div>
+        <div class="status-item"><div class="label">AutoMEat (Lenovo)</div><div class="value pending">● SETUP</div></div>
+        <div class="status-item"><div class="label">Mac Mini</div><div class="value offline">● UNKNOWN</div></div>
+        <div class="status-item"><div class="label">MacBook</div><div class="value offline">● UNKNOWN</div></div>
+        <div class="status-item"><div class="label">Orgo VMs</div><div class="value pending">● 10 VMs</div></div>
+        <div class="status-item"><div class="label">Buzz Relay</div><div class="value online">● CONNECTED</div></div>
+        <div class="status-item"><div class="label">Discord Bot</div><div class="value online">● LIVE</div></div>
+        <div class="status-item"><div class="label">Studex OS</div><div class="value online">● DEPLOYED</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: PRINCIPAL -->
+  <div class="section-title">👤 PRINCIPAL — TUMELO RAMAPHOSA</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-header"><span class="card-title">Profile</span><span class="tag-gold">Empire Builder</span></div>
+      <div class="card-body">
+        <p><strong>Name:</strong> Tumelo Ramaphosa</p>
+        <p><strong>Role:</strong> CEO, Studex Group</p>
+        <p><strong>Email:</strong> <a href="mailto:t.ramaphosa@studex-group.com">t.ramaphosa@studex-group.com</a></p>
+        <p><strong>Phone:</strong> +27 79 498 8737</p>
+        <p><strong>Brand:</strong> Black & Gold — #0A0A0A obsidian + #C9A84C gold</p>
+        <p><strong>Archetype:</strong> Empire Builder — bold, strategic, values speed + clean design</p>
+        <p><strong>Communication:</strong> Short bursts, abbreviations ("o, ty", "tu"), paste keys directly</p>
+        <p><strong>Preference:</strong> Names changes before they go live. Two-approval email rule. No tools used without clear purpose.</p>
+        <p><strong>Dropbox:</strong> /Users/tumeloramaphosa/Dropbox/Studex/ (inaccessible from cloud)</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Communication Rules</span><span class="tag-warn">CRITICAL</span></div>
+      <div class="card-body">
+        <ul>
+          <li><span class="tag-danger">BLOCK</span> Laisa Aesthetics — zero access, zero actions, zero posts</li>
+          <li><span class="tag-warn">2-APPROVAL</span> Email rule — all drafts need TWO Tumelo approvals before send</li>
+          <li><span class="tag-warn">2-APPROVAL</span> Any edit resets both approvals to zero</li>
+          <li><span class="tag-danger">BLOCK</span> No Payfast, Stitch, bank, Shopify, or crypto wallet login</li>
+          <li><span class="tag-danger">BLOCK</span> Stop immediately if any payment screen appears</li>
+          <li><span class="tag-danger">BLOCK</span> No API keys in prompts or repos</li>
+          <li><span class="tag-danger">BLOCK</span> Live shop — DO NOT touch prices, theme, or Payfast unless Tumelo names the change</li>
+          <li><span class="tag-warn">PRs ONLY</span> No agent pushes to main. All branches + PRs to board</li>
+          <li><span class="tag-warn">APPROVE</span> Tumelo approves all changes before they go live</li>
+          <li><span class="tag-success">EVIDENCE</span> No recommendation without evidence — if data can't be read, stop and say so</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: AGENTS -->
+  <div id="agents" class="section-title">🤖 AGENT FLEET — 25+ AGENTS</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-header"><span class="card-title">Hermes (Me)</span><span class="card-badge">ACTIVE</span></div>
+      <div class="card-body">
+        <p><strong>Role:</strong> AI CTO — orchestrator, strategist, executor</p>
+        <p><strong>Provider:</strong> MiniMax (cloud-hosted)</p>
+        <p><strong>Capabilities:</strong> Code, research, deploy, agent coordination, strategic planning</p>
+        <p><strong>Session:</strong> Active — Monday January 12, 2026</p>
+        <p><strong>Skills loaded:</strong> studex-cto-runbook, studex-super-agents-ops, studex-agent-induction, herdr-agent-runtime, orgo-ai-fleet-discovery, vercel-rest-deploy, cloudflare-pages-deploy, buzz-xyz-nostr-relay-connect, openclaw-api-list, studex-platform, deer-flow-deploy, multica-agent-platform, cashclaw-hyrve-studex, ollama-local-models, studex-ecosystem-architecture, ollama-local-models, larry-marketing-skill, ai-ops-knowledge-graph, studex-planning-validation, deer-flow-deploy, agentmail-api-setup, openwa-whatsapp-gateway</p>
+        <p><strong>Connected to:</strong> AutoMEat (Legion Go), Discord, Buzz relay, Orgo VMs</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">AutoMEat</span><span class="card-badge warn">SETUP</span></div>
+      <div class="card-body">
+        <p><strong>Role:</strong> Factory node — runs on Lenovo Legion Go (dark-factory-node-1)</p>
+        <p><strong>Hardware:</strong> AMD Ryzen Z1 Extreme, 16 threads, 12GB RAM (9GB usable)</p>
+        <p><strong>OS:</strong> Bazzite 43 (Kinoite), immutable rpm-ostree</p>
+        <p><strong>Installed:</strong> Ollama (GPU-accelerated, hermes3:8b), Claude Code, podman, distrobox, brew, mise, qemu-kvm, virsh, libvirtd</p>
+        <p><strong>Tailscale:</strong> Pending — commands prepared but not yet run</p>
+        <p><strong>Next steps:</strong> Tailscale up → Herdr install → OpenClaw → VMs → LiteLLM router</p>
+        <p><strong>Memory ceiling:</strong> 9GB RAM. One model OR one VM at a time — never both.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">STUDBOT (Pipeline)</span><span class="card-badge">READY</span></div>
+      <div class="card-body">
+        <p><strong>Role:</strong> Build request router — Agent Lord sends → Hermes decomposes → agents implement → review</p>
+        <p><strong>Files:</strong> board/STUDBOT-PIPELINE.md, MINDMAP.md, NALEDI.md</p>
+        <p><strong>Station 1:</strong> Classifier — route to division, score priority</p>
+        <p><strong>Station 2:</strong> Analyst — research + sanctions check</p>
+        <p><strong>Station 3:</strong> Implementer — generate LOI, proposals, contracts</p>
+        <p><strong>Station 4:</strong> Reviewer — score 1-10, deliver to CEO</p>
+        <p><strong>First task:</strong> Pending — no request routed yet</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Buzz / Nostr Relay</span><span class="card-badge">CONNECTED</span></div>
+      <div class="card-body">
+        <p><strong>Relay:</strong> wss://studex-agents.communities.buzz.xyz</p>
+        <p><strong>Workspace:</strong> i1f808796-db7a-46ad-be60-73632b0f1a60</p>
+        <p><strong>Status:</strong> AUTH challenge received — NIP-42 handshake in progress</p>
+        <p><strong>Challenge:</strong> 1caa112211d6a4ee718cb65768be2f325cbf067a9d87b412b6ee5b6e0adc65d9</p>
+        <p><strong>Blocker:</strong> Nsec key missing — need Tumelo to provide NIP-42 private key</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Sentinel + Spynel</span><span class="card-badge warn">TBD</span></div>
+      <div class="card-body">
+        <p><strong>Sentinel:</strong> Mac Mini intelligence layer — planned agent</p>
+        <p><strong>Spynel:</strong> Buzz groups management — planned agent</p>
+        <p><strong>Location:</strong> Mac Mini</p>
+        <p><strong>Tailscale:</strong> Need Mac Mini Tailscale IP from Tumelo</p>
+        <p><strong>Status:</strong> Not yet deployed — waiting for Mac Mini access</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Orgo Agents (10 VMs)</span><span class="card-badge">ONLINE</span></div>
+      <div class="card-body">
+        <p><strong>Provider:</strong> Orgo AI cloud desktops</p>
+        <p><strong>Count:</strong> 10 VMs × 4GB RAM = 40GB total (plan: 64GB)</p>
+        <p><strong>Use:</strong> Herdr server (SA Command port 2244), DeerFlow, fleet agents</p>
+        <p><strong>Account:</strong> tumelor001@gmail.com</p>
+        <p><strong>Desktop API:</strong> 64.34.80.97:37716 (HTTP 401 — needs auth)</p>
+        <p><strong>SA Command:</strong> 67.213.119.165:25201 (HTTP 401 — needs auth)</p>
+        <p><strong>Workspace API key:</strong> ${ORGO_API_KEY}</p>
+        <p><strong>Note:</strong> Desktop API token ≠ Workspace API token. Two separate auth systems.</p>
+        <p><strong>Over limit:</strong> Using 40GB of 64GB — need to add RAM or upgrade plan</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">DeerFlow</span><span class="card-badge warn">PARTIAL</span></div>
+      <div class="card-body">
+        <p><strong>Role:</strong> Research agent framework — web search + knowledge synthesis</p>
+        <p><strong>Location:</strong> Orgo VM (target: VM with GPU)</p>
+        <p><strong>Skills:</strong> deer-flow-deploy, ollama-local-models</p>
+        <p><strong>Status:</strong> Framework ready, deployment pending API keys</p>
+        <p><strong>Pipeline:</strong> DeerFlow → MiroFish simulation → LLM Wiki compounding</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Multica</span><span class="card-badge warn">PLANNED</span></div>
+      <div class="card-body">
+        <p><strong>Role:</strong> Multi-agent Kanban board — task management for agent fleet</p>
+        <p><strong>Skill:</strong> multica-agent-platform</p>
+        <p><strong>Status:</strong> Skill loaded, deployment pending</p>
+        <p><strong>Use:</strong> Visual fleet management + task routing</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">OpenClaw</span><span class="card-badge warn">BLOCKED</span></div>
+      <div class="card-body">
+        <p><strong>Role:</strong> API gateway — Shopify, Blotato, WhatsApp, Mac services</p>
+        <p><strong>Status:</strong> Installed on Legion Go. Nsec key needed. Keys not yet wired.</p>
+        <p><strong>AutoMEat:</strong> Can access Shopify, Blotato, WhatsApp, Mac services</p>
+        <p><strong>My access:</strong> None directly — via AutoMEat relay</p>
+        <p><strong>Open tasks:</strong> Connect Shopify store, WhatsApp gateway, Blotato</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">CashClaw HYRVE</span><span class="card-badge warn">PLANNED</span></div>
+      <div class="card-body">
+        <p><strong>Role:</strong> AI integration for CashClaw — turn CashClaw into AI-powered agent platform</p>
+        <p><strong>Skill:</strong> cashclaw-hyrve-studex</p>
+        <p><strong>Status:</strong> Skill loaded. Deployment pending.</p>
+        <p><strong>Revenue model:</strong> R200-R2K/mo per client on managed VPS</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Larry Marketing</span><span class="card-badge">ACTIVE</span></div>
+      <div class="card-body">
+        <p><strong>Role:</strong> TikTok/Instagram slideshow marketing automation</p>
+        <p><strong>Skill:</strong> larry-marketing-skill</p>
+        <p><strong>Status:</strong> Skill loaded. Ready to execute campaigns.</p>
+        <p><strong>Use:</strong> Auto-generate slideshow videos for social media marketing</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Meeting Bot + Email Coordinator</span><span class="card-badge warn">DEV</span></div>
+      <div class="card-body">
+        <p><strong>Location:</strong> Meetings--coms/src/agents/</p>
+        <p><strong>Meeting bot:</strong> Zoom attendance + transcription + summarization</p>
+        <p><strong>Email coordinator:</strong> Two-approval workflow engine</p>
+        <p><strong>Supabase:</strong> Migrations ready at supabase/migrations/</p>
+        <p><strong>Drive sync:</strong> .github/workflows/sync-drive.yml — auto-syncs to Drive</p>
+        <p><strong>Phase 2 roadmap:</strong> Zoom bot, Calendar, decision extractor, Paperclip webhooks, E2E testing</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: INFRASTRUCTURE -->
+  <div id="infrastructure" class="section-title">🖥️ INFRASTRUCTURE</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-header"><span class="card-title">Physical Machines</span></div>
+      <div class="card-body">
+        <table class="table">
+          <tr><th>Machine</th><th>Role</th><th>OS</th><th>Status</th></tr>
+          <tr><td>Lenovo Legion Go</td><td>Dark Factory Node 1</td><td>Bazzite 43</td><td><span class="tag-warn">SETUP</span></td></tr>
+          <tr><td>Mac Mini</td><td>Sentinel + Spynel + Herdr</td><td>macOS</td><td><span class="tag-warn">UNKNOWN</span></td></tr>
+          <tr><td>MacBook (Tumelo)</td><td>Hermes Desktop + Dropbox</td><td>macOS</td><td><span class="tag-warn">UNKNOWN</span></td></tr>
+          <tr><td>Samsung Z Fold 6</td><td>Phone Agent</td><td>Android/Termux</td><td><span class="tag-danger">LOW BATT</span></td></tr>
+          <tr><td>Razer Blade (GTX 1080)</td><td>GPU Node + Laya + Kev</td><td>TBD</td><td><span class="tag-warn">TBD</span></td></tr>
+          <tr><td>MSI Claw 8 AI+</td><td>Orca ADE + Marketing</td><td>TBD</td><td><span class="tag-warn">TBD</span></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Orgo AI Cloud VMs</span></div>
+      <div class="card-body">
+        <table class="table">
+          <tr><th>VM</th><th>Use</th><th>Status</th></tr>
+          <tr><td>1</td><td>Herdr Server (port 2244) + Eve Foreman</td><td><span class="tag-success">LIVE</span></td></tr>
+          <tr><td>2</td><td>Gitea + Laya API server</td><td><span class="tag-success">LIVE</span></td></tr>
+          <tr><td>3-5</td><td>Spark agents</td><td><span class="tag-success">LIVE</span></td></tr>
+          <tr><td>6-10</td><td>Overflow + general agents</td><td><span class="tag-success">LIVE</span></td></tr>
+          <tr><td>Global Markets</td><td>185.209.179.145</td><td><span class="tag-danger">ALL PORTS DOWN</span></td></tr>
+        </table>
+        <p style="margin-top:8px; color:var(--warn); font-size:11px;">⚠️ Over plan limit: 40GB used of 64GB. Need to add RAM or upgrade plan.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Domains & URLs</span></div>
+      <div class="card-body">
+        <ul>
+          <li><a href="https://studex-group.com">studex-group.com</a> — Black & Gold OS dashboard</li>
+          <li><a href="https://factory.studex-group.com">factory.studex-group.com</a> — Factory subsite</li>
+          <li><a href="https://superagents.studex-group.com">superagents.studex-group.com</a> — Super Agents</li>
+          <li><a href="https://markets.studex-group.com">markets.studex-group.com</a> — Markets subsite</li>
+          <li><a href="https://tcz9ls98c77e.space.mcode.io">Dev Hub</a></li>
+          <li><a href="https://7u9zjmd7qd2d.space.mcode.io">Studex Data Room</a> — this page</li>
+          <li><a href="https://studex-super-agent.vercel.app">Super Agent Platform</a></li>
+          <li><a href="https://ana12bhkl5m1.space.mcode.io">IGH Dashboard</a></li>
+          <li><a href="https://zqjy41whi2rt.space.mcode.io">IGH Website</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Google Drive Folders</span></div>
+      <div class="card-body">
+        <ul>
+          <li><a href="https://drive.google.com/drive/folders/1IgG8DF5">Studex Meat main</a> — 1IgG8DF5</li>
+          <li><a href="https://drive.google.com/drive/folders/1NfHg6j5">Super Agents main</a> — 1NfHg6j5</li>
+          <li><a href="https://drive.google.com/drive/folders/1TFDjIV">Agent Bus</a> — 1TFDjIV</li>
+          <li><a href="https://drive.google.com/drive/folders/1a7jcTm">Agent Registry</a> — 1a7jcTm</li>
+          <li><a href="https://drive.google.com/drive/folders/1djabbph">Base44 OS</a> — 1djabbph</li>
+          <li><a href="https://drive.google.com/drive/folders/13GYiTv">Hermes Backup</a> — 13GYiTv</li>
+          <li><a href="https://drive.google.com/drive/folders/1xWpBqvE">AutoMEat×OpenClaw</a> — 1xWpBqvE</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Discord Bot</span><span class="card-badge">LIVE</span></div>
+      <div class="card-body">
+        <p><strong>Token:</strong> ${DISCORD_BOT_TOKEN}</p>
+        <p><strong>Status:</strong> Connected and running</p>
+        <p><strong>Skills:</strong> discord-bot-oauth-setup, discord-composio-setup</p>
+        <p><strong>Next:</strong> Connect Composio for AI agent capabilities</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Vercel Deployments</span></div>
+      <div class="card-body">
+        <p><strong>Project:</strong> studex-hub</p>
+        <p><strong>Project ID:</strong> prj_Nm7GT8v42DFr3fVIp1WCAJmOBriD</p>
+        <p><strong>Framework note:</strong> If framework resets, PATCH /v2/projects/studex-hub {"framework": null}</p>
+        <p><strong>Deploy:</strong> Single index.html. POST /v13/deployments?projectId=prj_Nm7GT8v42DFr3fVIp1WCAJmOBriD</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Herdr Agent Runtime</span><span class="card-badge warn">PENDING</span></div>
+      <div class="card-body">
+        <p><strong>Install:</strong> curl -fsSL https://herdr.dev/install.sh | sh</p>
+        <p><strong>Server:</strong> SA Command on port 2244</p>
+        <p><strong>Config:</strong> hermes.toml on all nodes</p>
+        <p><strong>All VMs + Legion Go:</strong> Connect as agent nodes via Tailscale mesh</p>
+        <p><strong>Skills:</strong> herdr-agent-runtime (loaded)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: CLIENTS & PIPELINE -->
+  <div id="clients" class="section-title">💰 CLIENTS & SALES PIPELINE</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-header"><span class="card-title">IGH — Infinite Growth Haven</span><span class="tag-success">HOT</span></div>
+      <div class="card-body">
+        <p><strong>Contact:</strong> Dr. Amelia Ratlhankana</p>
+        <p><strong>Type:</strong> Wellness clinic, 4 locations</p>
+        <p><strong>Social:</strong> 875K TikTok followers</p>
+        <p><strong>Revenue potential:</strong> R145K/mo</p>
+        <p><strong>Demo:</strong> <a href="https://zqjy41whi2rt.space.mcode.io">Website</a> | <a href="https://ana12bhkl5m1.space.mcode.io">Dashboard</a></p>
+        <p><strong>Pipeline:</strong> Intake</p>
+        <p><strong>Options:</strong> R6.9M-R15.7M project + R35K-R85K/mo retainer</p>
+        <p><strong>Blocker:</strong> Client email missing — need to follow up</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Saudi Sheep Buyer</span><span class="tag-warn">NEW LEAD</span></div>
+      <div class="card-body">
+        <p><strong>Type:</strong> International trade — lamb + beef</p>
+        <p><strong>RFQ:</strong> 100 tons lamb + beef, destination Jordan</p>
+        <p><strong>Pipeline:</strong> New_lead</p>
+        <p><strong>Blocker:</strong> Buyer particulars and supply chain unconfirmed</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">PwC AIOps (Anurag Byala)</span><span class="tag-warn">NEW LEAD</span></div>
+      <div class="card-body">
+        <p><strong>Contact:</strong> Anurag Byala / Techies team</p>
+        <p><strong>Type:</strong> Enterprise AI ops</p>
+        <p><strong>NDA:</strong> Ready to send</p>
+        <p><strong>Pipeline:</strong> New_lead</p>
+        <p><strong>Note:</strong> Anurag can schedule PwC call same day</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Eswatini Opportunities</span><span class="tag-gold">12 LETTERS</span></div>
+      <div class="card-body">
+        <p><strong>Repo:</strong> Meetings--coms/Letters/Eswatini/</p>
+        <p><strong>Count:</strong> 12 letters + receipts sent</p>
+        <p><strong>Source:</strong> Tumelo's Eswatini outreach campaign</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Rwanda Strategic Proposal</span><span class="tag-gold">PROPOSAL</span></div>
+      <div class="card-body">
+        <p><strong>Repo:</strong> Meetings--coms/Letters/Rwanda/rwanda-proposal.md</p>
+        <p><strong>Type:</strong> Strategic market entry proposal</p>
+        <p><strong>Source:</strong> SGM-RWA-1 blueprint repo</p>
+        <p><strong>Status:</strong> Proposal drafted</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Bitfury Meeting</span><span class="tag-gold">DOSSIER</span></div>
+      <div class="card-body">
+        <p><strong>Repo:</strong> Meetings--coms/Meetings/Bitfury/</p>
+        <p><strong>Type:</strong> Meeting dossier</p>
+        <p><strong>Status:</strong> Dossier complete</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Four Seasons Meeting</span><span class="tag-gold">DOSSIER</span></div>
+      <div class="card-body">
+        <p><strong>Repo:</strong> Meetings--coms/Meetings/Four Seasons/</p>
+        <p><strong>Type:</strong> Meeting dossier</p>
+        <p><strong>Status:</strong> Dossier complete</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">MGIMO BRICS Meeting</span><span class="tag-gold">DOSSIER</span></div>
+      <div class="card-body">
+        <p><strong>Repo:</strong> Meetings--coms/Meetings/MGIMO BRICS/</p>
+        <p><strong>Type:</strong> Meeting dossier + BRICS speaker slot</p>
+        <p><strong>BRICS slot:</strong> September 16 — need outcome</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: PROJECTS -->
+  <div id="projects" class="section-title">📦 PROJECTS & REPOS</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-header"><span class="card-title">studex-auto-meat</span><span class="card-badge">PRIMARY</span></div>
+      <div class="card-body">
+        <p><strong>Type:</strong> PRIMARY WORKING REPO</p>
+        <p><strong>Location:</strong> /workspace/studex-auto-meat/</p>
+        <p><strong>Key files:</strong> board/STUDBOT-PIPELINE.md, MINDMAP.md, NALEDI.md, agent-os/, MASTER-AI-OS-PLAN.md</p>
+        <p><strong>Use:</strong> All agent work flows through here. Branches + PRs sent to board.</p>
+        <p><strong>Push from:</strong> MacBook</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Meetings--coms</span><span class="card-badge">MISSION LIBRARY</span></div>
+      <div class="card-body">
+        <p><strong>Type:</strong> MISSION LIBRARY — full Studex context</p>
+        <p><strong>Location:</strong> /workspace/Meetings--coms/</p>
+        <p><strong>Files:</strong> 64 total — CLAUDE.md is the best agent brief</p>
+        <p><strong>Contents:</strong> 53 contacts, 9 sales leads, 12 Eswatini letters, Rwanda proposal, 10 email drafts, meeting dossiers, CodeX Phase 1.5 app build, sync-drive.yml</p>
+        <p><strong>Two-approval rule:</strong> All emails drafts — two Tumelo approvals required</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">SGM-RWA-1</span><span class="card-badge warn">BLUEPRINT</span></div>
+      <div class="card-body">
+        <p><strong>Type:</strong> Blueprint repo — Rwanda standalone stack</p>
+        <p><strong>Branch:</strong> agent-system-setup</p>
+        <p><strong>Status:</strong> All subdirectories empty — skeleton only</p>
+        <p><strong>Pending:</strong> Direction from Tumelo (standalone, merge, or reference only?)</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Portable-agents</span><span class="card-badge warn">PUSH PENDING</span></div>
+      <div class="card-body">
+        <p><strong>Commit:</strong> c8b0212 sitting locally</p>
+        <p><strong>Action:</strong> git pull && git push from MacBook</p>
+        <p><strong>Status:</strong> Waiting for Tumelo to push</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Command Center (Cloudflare)</span><span class="card-badge warn">PLANNED</span></div>
+      <div class="card-body">
+        <p><strong>Use:</strong> Online fleet management dashboard on Cloudflare Pages</p>
+        <p><strong>Subdomain:</strong> TBD (agents./dark-factory./command.studex-group.com)</p>
+        <p><strong>Features:</strong> Device fleet overview, quick install panel, data room link, pipeline overview, Drive shortcuts</p>
+        <p><strong>Blocker:</strong> Cloudflare credentials not provided</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: KNOWLEDGE BASE -->
+  <div id="knowledge" class="section-title">🧠 KNOWLEDGE BASE</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-header"><span class="card-title">Studex Platform Architecture</span></div>
+      <div class="card-body">
+        <div class="code-block">
+LAYER 1 (Fast): Laya 421M + Kev 0.8B — local decision models
+LAYER 2 (Smart): Qwen API + Grok API + Gemini API — reasoning LLMs
+LAYER 3 (Orchestrate): Eve Foreman + Orca ADE + Herdr + LangChain MCP
+LAYER 4 (Deploy): 3 Google Spark agents (Content, Outreach, Analytics)
+        </div>
+        <p><strong>Eve Foreman Factory:</strong> 4 stations — Classifier → Analyst → Implementer → Reviewer</p>
+        <p><strong>Herdr Fleet:</strong> All physical machines as agent nodes</p>
+        <p><strong>LiteLLM Router:</strong> One OpenAI-compatible endpoint fronting MiniMax, Kimi, local Ollama</p>
+        <p><strong>Decision models:</strong> Laya (fast) + Kev (classification) + Jev (paid API fallback)</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">BI Architecture (MiroFish Loop)</span></div>
+      <div class="card-body">
+        <div class="code-block">
+MiroFish (simulate) → AutoResearch (validate) →
+LLM Wiki (compound) → MiroFish (predict again)
+        </div>
+        <p><strong>MiroFish:</strong> Digital twin — runs on Razor laptop (Docker)</p>
+        <p><strong>AutoResearch:</strong> Overnight loops — runs on Lenovo (uv + Python)</p>
+        <p><strong>LLM Wiki:</strong> Persistent knowledge graph — raw-sources/ + wiki/</p>
+        <p><strong>Business questions:</strong> Pricing model, African SMBs, Kenya/Nigeria entry, competitive response</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">LLM Wiki Pattern</span></div>
+      <div class="card-body">
+        <p><strong>Pattern:</strong> karpathy's compounding knowledge base</p>
+        <p><strong>Structure:</strong> raw-sources/ (immutable) → wiki/ (LLM summaries) → CLAUDE.md (agent rules)</p>
+        <p><strong>Key insight:</strong> Knowledge compounds — each iteration builds on previous, becoming smarter</p>
+        <p><strong>Studex use:</strong> Client research, market analysis, competitive intelligence, sales enablement</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Revenue Tools (Mapped)</span></div>
+      <div class="card-body">
+        <ul>
+          <li><strong>Prompt Cache:</strong> <span class="tag-success">HIGHEST ROI</span> — 80% LLM cost reduction, R500-5K/mo SaaS</li>
+          <li><strong>CashClaw HYRVE:</strong> R200-2K/mo per client on managed VPS</li>
+          <li><strong>Flowsint:</strong> R5K-50K/report for OSINT</li>
+          <li><strong>Cloudflare Computer:</strong> R50-500/seat/mo edge workspaces</li>
+          <li><strong>QEMUS:</strong> R100-2K/hr GPU VMs</li>
+          <li><strong>EdgeVPN:</strong> R100-1K/mo P2P networking</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Key Definitions</span></div>
+      <div class="card-body">
+        <ul>
+          <li><strong>Navigator:</strong> Claude Code plugin — 92% token reduction, 20+ exchange sessions</li>
+          <li><strong>GoClaw:</strong> Cross-platform AI gateway for WhatsApp/Telegram/Discord/SMS/Email</li>
+          <li><strong>Tango:</strong> Agent marketplace — AI agents sell services and get rated</li>
+          <li><strong>Orca ADE:</strong> Coding fleet for handheld devices (MSI Claw + Legion Go)</li>
+          <li><strong>OpenMuse:</strong> Self-hosted AI assistant — async tasks, persistent memory, fully self-hosted</li>
+          <li><strong>vphone-ws:</strong> macOS SwiftUI app requiring Apple Silicon + macOS 15 — cannot be mobile app</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: CREDENTIALS (keys only — no secrets) -->
+  <div id="credentials" class="section-title">🔑 CREDENTIALS INDEX (no live keys shown)</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-header"><span class="card-title">Orgo AI</span><span class="tag-warn">PARTIAL</span></div>
+      <div class="card-body">
+        <p><strong>Account:</strong> tumelor001@gmail.com</p>
+        <p><strong>User ID:</strong> 25f5f078-f44f-4c71-92b7-769ccbcd7141</p>
+        <p><strong>Role:</strong> Non-admin</p>
+        <p><strong>Workspace API:</strong> ${ORGO_API_KEY}</p>
+        <p><strong>Desktop API:</strong> Separate token — need from Orgo settings</p>
+        <p><strong>Over limit:</strong> 40GB/64GB — plan upgrade needed</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Vercel</span><span class="tag-success">READY</span></div>
+      <div class="card-body">
+        <p><strong>Project:</strong> studex-hub</p>
+        <p><strong>Project ID:</strong> prj_Nm7GT8v42DFr3fVIp1WCAJmOBriD</p>
+        <p><strong>Deploy API:</strong> POST /v13/deployments</p>
+        <p><strong>Framework fix:</strong> PATCH /v2/projects/studex-hub {"framework": null}</p>
+        <p><strong>Content:</strong> Single index.html</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Discord</span><span class="tag-success">READY</span></div>
+      <div class="card-body">
+        <p><strong>Bot token:</strong> ${DISCORD_BOT_TOKEN}</p>
+        <p><strong>Status:</strong> Connected</p>
+        <p><strong>Skills ready:</strong> discord-bot-oauth-setup, discord-composio-setup</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Buzz / Nostr</span><span class="tag-warn">BLOCKED</span></div>
+      <div class="card-body">
+        <p><strong>Relay:</strong> wss://studex-agents.communities.buzz.xyz</p>
+        <p><strong>Workspace:</strong> i1f808796-db7a-46ad-be60-73632b0f1a60</p>
+        <p><strong>AUTH challenge:</strong> 1caa112211d6a4ee718cb65768be2f325cbf067a9d87b412b6ee5b6e0adc65d9</p>
+        <p><strong>Missing:</strong> Nsec private key for NIP-42 AUTH</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Tailscale</span><span class="tag-warn">PENDING</span></div>
+      <div class="card-body">
+        <p><strong>Legion Go:</strong> Installed, not yet started — AutoMEat running setup</p>
+        <p><strong>Mac Mini:</strong> Unknown — need Tailscale IP from Tumelo</p>
+        <p><strong>MacBook:</strong> Unknown — need Tailscale IP from Tumelo</p>
+        <p><strong>Z Fold 6:</strong> Repo broken (tur.kcubeterm.com), install via F-Droid instead</p>
+        <p><strong>Security note:</strong> Tailscale IP alone is not access — devices must be added to tailnet</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Missing API Keys</span><span class="tag-danger">ACTION NEEDED</span></div>
+      <div class="card-body">
+        <ul>
+          <li><strong>Firecrawl:</strong> Orgo workspace key doesn't work — need real key from Firecrawl</li>
+          <li><strong>MiniMax:</strong> Need for LiteLLM router + fleet brain</li>
+          <li><strong>Kimi:</strong> Need for LiteLLM fallback</li>
+          <li><strong>Qwen API:</strong> Need from Alibaba Cloud (Tumelo to provide)</li>
+          <li><li>Grok API:</strong> Need from xAI (Tumelo to provide)</li>
+          <li><strong>Gemini:</strong> Create in GCP console</li>
+          <li><strong>Buzz nsec:</strong> NIP-42 private key for Nostr AUTH</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: TODO -->
+  <div id="todo" class="section-title">📋 STANDING TODO</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-header"><span class="card-title">HIGH PRIORITY</span></div>
+      <div class="card-body">
+        <ul>
+          <li><span class="tag-success">DONE</span> Studex Data Room deployed</li>
+          <li><span class="tag-success">DONE</span> Meetings--coms fully cloned and analyzed</li>
+          <li><span class="tag-success">DONE</span> Discord bot connected</li>
+          <li><span class="tag-success">DONE</span> Buzz relay AUTH challenge received</li>
+          <li><span class="tag-warn">IN PROGRESS</span> Legion Go Tailscale setup — AutoMEat running</li>
+          <li><span class="tag-warn">IN PROGRESS</span> AutoMEat handoff — 00_HANDOFF_BOARD.md to be read</li>
+          <li><span class="tag-danger">BLOCKED</span> Buzz nsec key — need from Tumelo</li>
+          <li><span class="tag-danger">BLOCKED</span> Mac Mini + MacBook Tailscale IPs — need from Tumelo</li>
+          <li><span class="tag-danger">BLOCKED</span> Cloudflare command center — credentials not provided</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">MEDIUM PRIORITY</span></div>
+      <div class="card-body">
+        <ul>
+          <li><span class="tag-warn">NEXT</span> Deploy Herdr on Legion Go + Orgo VM 1</li>
+          <li><span class="tag-warn">NEXT</span> Deploy LiteLLM router on Legion Go</li>
+          <li><span class="tag-warn">NEXT</span> Set up 2-3 Skunk Works agents as distrobox containers</li>
+          <li><span class="tag-warn">NEXT</span> Build Cloudflare Pages command center</li>
+          <li><span class="tag-warn">NEXT</span> Connect OpenClaw to Shopify + WhatsApp</li>
+          <li><span class="tag-warn">NEXT</span> Deploy CashClaw HYRVE</li>
+          <li><span class="tag-warn">NEXT</span> Deploy Multica agent Kanban</li>
+          <li><span class="tag-warn">NEXT</span> Follow up with IGH — get client email</li>
+          <li><span class="tag-warn">NEXT</span> Push Portable-agents commit c8b0212 from MacBook</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">REVENUE MOVES</span></div>
+      <div class="card-body">
+        <ul>
+          <li><span class="tag-success">FIRST</span> Prompt Cache install on Orgo VM — 80% cost reduction, R500-5K/mo</li>
+          <li><span class="tag-warn">SECOND</span> CashClaw HYRVE deployment — R200-2K/client</li>
+          <li><span class="tag-warn">THIRD</span> IGH client close — R145K/mo potential</li>
+          <li><span class="tag-warn">FOURTH</span> Super Agents seeding — R599/R1,500/R2,500 tiers</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">RESOLVED QUESTIONS</span></div>
+      <div class="card-body">
+        <ul>
+          <li><span class="tag-success">ANSWERED</span> "What is Navigator?" — Claude Code plugin, 92% token reduction</li>
+          <li><span class="tag-success">ANSWERED</span> "What is GoClaw?" — Cross-platform AI gateway</li>
+          <li><span class="tag-success">ANSWERED</span> "What is Tango?" — Agent marketplace</li>
+          <li><span class="tag-success">ANSWERED</span> "What repos do we have?" — 4 repos confirmed</li>
+          <li><span class="tag-success">ANSWERED</span> "What is SGM-RWA-1?" — Blueprint, empty skeleton</li>
+          <li><span class="tag-success">ANSWERED</span> "What is vphone-ws?" — macOS-only, cannot be mobile</li>
+          <li><span class="tag-success">ANSWERED</span> "Legion Go sudo password?" — Immutable Bazzite, Mint or GRUB fix</li>
+          <li><span class="tag-success">ANSWERED</span> "rd.break not found?" — It's a GRUB boot parameter, not terminal command</li>
+          <li><span class="tag-success">ANSWERED</span> "dnf install doesn't work?" — Bazzite is rpm-ostree, dnf fails on base</li>
+          <li><span class="tag-success">ANSWERED</span> "Tailscale IP = access?" — No, devices must be added to tailnet</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: FULL MEMORY -->
+  <div id="memory" class="section-title">📜 FULL MEMORY — COMPLETE CONTEXT</div>
+  <div class="grid">
+    <div class="card" style="grid-column:1/-1;">
+      <div class="card-header"><span class="card-title">STUDEx OS — Complete System Memory</span></div>
+      <div class="card-body">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; font-size:12px; line-height:1.7;">
+
+<div>
+<h4 style="color:var(--gold); margin-bottom:8px;">COMPANY</h4>
+<p>Studex Group — 7 subsidiaries, Black & Gold brand</p>
+<p>Founder: Empire Builder archetype</p>
+<p>Brand: #C9A84C gold on #0A0A0A obsidian</p>
+<p>Deploy: Vercel (prj_Nm7GT8v42DFr3fVIp1WCAJmOBriD)</p>
+<p>Correct subdomains: factory./superagents./markets.</p>
+
+<h4 style="color:var(--gold); margin:16px 0 8px;">PHYSICAL MACHINES</h4>
+<p>Lenovo Legion Go: Bazzite, AutoMEat + Claude Code running</p>
+<p>Mac Mini: Sentinel + Spynel + Buzz groups + Herdr dispatch</p>
+<p>MacBook: Hermes desktop app + Dropbox</p>
+<p>Samsung Z Fold 6: Termux + Tailscale (broken repo)</p>
+<p>Razer Blade GTX 1080: GPU node planned</p>
+<p>MSI Claw 8 AI+: Orca ADE + marketing planned</p>
+
+<h4 style="color:var(--gold); margin:16px 0 8px;">AGENT RUNTIME</h4>
+<p>Herdr: P2P agent mesh (herdr.dev/install.sh)</p>
+<p>SA Command server: port 2244</p>
+<p>All VMs connect as agent nodes</p>
+<p>hermes.toml already included in config</p>
+
+<h4 style="color:var(--gold); margin:16px 0 8px;">ORGO AI</h4>
+<p>Account: tumelor001@gmail.com</p>
+<p>10 VMs × 4GB = 40GB (plan: 64GB)</p>
+<p>Over limit — need RAM upgrade</p>
+<p>Desktop API: 64.34.80.97:37716 (needs auth)</p>
+<p>SA Command: 67.213.119.165:25201 (needs auth)</p>
+<p>Workspace key: ${ORGO_API_KEY}</p>
+<p>Desktop API token ≠ Workspace API token</p>
+
+<h4 style="color:var(--gold); margin:16px 0 8px;">DISCORD</h4>
+<p>Token: ${DISCORD_BOT_TOKEN}</p>
+<p>Status: LIVE and connected</p>
+</div>
+
+<div>
+<h4 style="color:var(--gold); margin-bottom:8px;">MISSION LIBRARY</h4>
+<p>Meetings--coms (github.com/TumeloRamaphosa/Meetings--coms)</p>
+<p>64 files — CLAUDE.md is best agent brief</p>
+<p>53 contacts, 9 sales leads, 12 Eswatini letters</p>
+<p>Rwanda proposal, 10 email drafts, meeting dossiers</p>
+<p>CodeX Phase 1.5: meeting bot + email coordinator</p>
+<p>Supabase migrations ready</p>
+<p>sync-drive.yml auto-syncs to Google Drive</p>
+<p>Two-approval email rule: ALL drafts need 2 Tumelo approvals</p>
+
+<h4 style="color:var(--gold); margin:16px 0 8px;">BUZZ / NOSTR</h4>
+<p>Relay: wss://studex-agents.communities.buzz.xyz</p>
+<p>Workspace: i1f716796-db7a-46ad-be60-73632b0f1a60</p>
+<p>AUTH challenge: received (1caa1122...)</p>
+<p>Nsec key needed for NIP-42 AUTH</p>
+
+<h4 style="color:var(--gold); margin:16px 0 8px;">HOT CLIENTS</h4>
+<p>IGH (Dr. Amelia): R145K/mo, 875K TikTok, demo live</p>
+<p>Saudi buyer: 100 tons, RFQ, destination Jordan</p>
+<p>PwC AIOps (Anurag): NDA ready, call same day</p>
+<p>BRICS speaker slot: Sep 16 — need outcome</p>
+
+<h4 style="color:var(--gold); margin:16px 0 8px;">REPOS</h4>
+<p>studex-auto-meat: PRIMARY — all agent work flows here</p>
+<p>Meetings--coms: MISSION LIBRARY</p>
+<p>SGM-RWA-1: Blueprint, all dirs empty</p>
+<p>Portable-agents: c8b0212 pending push from MacBook</p>
+
+<h4 style="color:var(--gold); margin:16px 0 8px;">BLOCKERS</h4>
+<p>1. Buzz nsec key missing</p>
+<p>2. Mac Mini + MacBook Tailscale IPs unknown</p>
+<p>3. Cloudflare credentials not provided</p>
+<p>4. Z Fold 6: Tailscale via F-Droid</p>
+<p>5. Legion Go: sudo resolved (Claude Code running)</p>
+<p>6. Firecrawl: key doesn't work — need real key</p>
+</div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: AUTO MEAT HANDOFF -->
+  <div id="automeat" class="section-title">📋 AUTO MEAT HANDOFF — 00_HANDOFF_BOARD</div>
+  <div class="grid">
+    <div class="card" style="grid-column:1/-1; border-color:var(--gold);">
+      <div class="card-header" style="background:linear-gradient(90deg,#1a1500,var(--surface));">
+        <span class="card-title">📋 AUTO MEAT × OPENCLAW — OpenClaw: First Reply</span>
+        <span class="card-badge warn">DRAFT — PENDING</span>
+      </div>
+      <div class="card-body">
+        <p style="color:var(--gold); font-size:11px; margin-bottom:12px;">HERMES SECTION — to be filled in after reading 00_HANDOFF_BOARD.md from Drive</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; font-size:12px; line-height:1.7;">
+          <div>
+            <h4 style="color:var(--neon); margin-bottom:8px;">WHAT I CAN ACCESS</h4>
+            <ul>
+              <li><strong>Shopify:</strong> Via AutoMEat relay — need store URL and access scope</li>
+              <li><strong>Blotato:</strong> Via AutoMEat — multi-platform posting tool</li>
+              <li><strong>WhatsApp:</strong> Via AutoMEat (OpenWA gateway)</li>
+              <li><strong>Mac services:</strong> Via Mac Mini Tailscale bridge (pending IP)</li>
+              <li><strong>Orgo VMs:</strong> API access via workspace token</li>
+              <li><strong>Discord:</strong> Direct — bot token active</li>
+              <li><strong>Buzz relay:</strong> AUTH challenge received, nsec needed</li>
+              <li><strong>Vercel:</strong> Direct — project deployed</li>
+            </ul>
+            <h4 style="color:var(--neon); margin:16px 0 8px;">WHAT I'M BLOCKED FROM</h4>
+            <ul>
+              <li>Laisa Aesthetics — hard block, zero access</li>
+              <li>Dropbox — inaccessible from cloud sandbox</li>
+              <li>Mac Mini — Tailscale IP unknown</li>
+              <li>MacBook — Tailscale IP unknown</li>
+              <li>Live Shopify shop — no prices/theme changes</li>
+              <li>Payment systems — Payfast/Stitch/bank</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="color:var(--gold); margin-bottom:8px;">OPEN TASKS I'LL TAKE</h4>
+            <ul>
+              <li><span class="tag-success">IMMEDIATE</span> Read 00_HANDOFF_BOARD.md from Drive</li>
+              <li><span class="tag-success">IMMEDIATE</span> Coordinate with AutoMEat on Legion Go setup</li>
+              <li><span class="tag-success">IMMEDIATE</span> Connect Buzz relay (need nsec key)</li>
+              <li><span class="tag-warn">NEXT</span> Deploy Herdr on Legion Go + Orgo VM 1</li>
+              <li><span class="tag-warn">NEXT</span> Build Cloudflare Pages command center</li>
+              <li><span class="tag-warn">NEXT</span> Set up LiteLLM router (need MiniMax + Kimi keys)</li>
+              <li><span class="tag-warn">NEXT</span> Deploy 2-3 Skunk Works agents</li>
+              <li><span class="tag-warn">NEXT</span> Follow up IGH — get client email</li>
+              <li><span class="tag-warn">NEXT</span> Route first build task through STUDBOT pipeline</li>
+            </ul>
+            <h4 style="color:var(--danger); margin:16px 0 8px;">BLOCKERS FOR MY WORK</h4>
+            <ul>
+              <li>Buzz nsec key — Tumelo must provide</li>
+              <li>Mac Mini Tailscale IP — Tumelo must provide</li>
+              <li>Cloudflare credentials — Tumelo must provide</li>
+              <li>MiniMax + Kimi API keys — needed for LiteLLM</li>
+              <li>Qwen + Grok API keys — Tumelo to provide</li>
+            </ul>
+          </div>
+        </div>
+        <p style="margin-top:12px; color:var(--muted); font-size:11px;">
+          <strong>Note:</strong> This section will be updated once I read 00_HANDOFF_BOARD.md from the AutoMEat×OpenClaw Drive folder.
+          Draft saved to Drive as: <span style="color:var(--neon);">YYYY-MM-DD_openclaw_first_reply.md</span> — NO live keys.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  StudEx OS Data Room · Hermes (AI CTO) · Agent Lord: Tumelo Ramaphosa · Studex Group<br>
+  All work through studex-auto-meat · Two-approval email rule · Laisa Aesthetics: ZERO access<br>
+  Last updated: 2026-01-12 · Session active
+</div>
+
+<script>
+function search(q) {
+  const cards = document.querySelectorAll('.card, .section-title');
+  const lower = q.toLowerCase();
+  cards.forEach(el => {
+    const text = el.textContent.toLowerCase();
+    el.style.display = text.includes(lower) || lower === '' ? '' : 'none';
+  });
+}
+document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); document.querySelector('.search-bar input').focus(); } });
+</script>
+
+</body>
+</html>

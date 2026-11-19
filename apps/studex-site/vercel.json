@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "name": "studex-super-agents",
+  "builds": [
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "headers": {
+        "cache-control": "public, max-age=3600, stale-while-revalidate=86400",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY",
+        "x-xss-protection": "1; mode=block",
+        "referrer-policy": "strict-origin-when-cross-origin"
+      },
+      "dest": "/$1"
+    }
+  ]
+}

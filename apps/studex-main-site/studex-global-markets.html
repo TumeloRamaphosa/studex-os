@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StudEx Global Markets — Own-stock commodity trade, settled on one rail</title>
+  <meta name="description" content="StudEx Global Markets is the own-stock commodity trade platform: coffee and wheat sold from our own stock, USD settlement through the platform, compliance-screened counterparties, and a trade desk subscription for import houses and distributors.">
+  <link rel="canonical" href="https://www.studex-group.com/studex-global-markets.html">
+  <meta property="og:title" content="StudEx Global Markets — Own-stock commodity trade, settled on one rail">
+  <meta property="og:description" content="Sell from own stock. Settle through the platform. Coffee and wheat desks live, compliance-screened counterparties, USD settlement via XREX Pay.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.studex-group.com/studex-global-markets.html">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Space+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-2: #141414;
+      --ink: #f0e5d3;
+      --muted: #b7b1a6;
+      --line: #2a2a2a;
+      --gold: #c9a84c;
+      --gold-ink: #1a1408;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 1.25rem;
+      line-height: 1.45;
+    }
+    a { color: inherit; }
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      height: 68px;
+      padding: 0 1.5rem;
+      background: rgba(10, 10, 10, 0.92);
+      border-bottom: 1px solid var(--line);
+    }
+    .word {
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.16em;
+      font-size: 1.35rem;
+      text-decoration: none;
+    }
+    .nav ul {
+      display: flex;
+      gap: 1.35rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .nav a { text-decoration: none; }
+    .nav a:hover { color: var(--gold); }
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: calc(100dvh - 68px);
+      padding: 4.5rem 6vw 4rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-inner { max-width: 52rem; }
+    .eyebrow {
+      margin: 0 0 1rem;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    h1 {
+      margin: 0;
+      font-family: "Bebas Neue", sans-serif;
+      font-weight: 400;
+      font-size: clamp(4.2rem, 8vw, 7.4rem);
+      letter-spacing: 0.04em;
+      line-height: 0.88;
+    }
+    .lede {
+      max-width: 40rem;
+      margin: 1.4rem 0 0;
+      color: var(--muted);
+      font-size: 1.45rem;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 2rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 3rem;
+      padding: 0.7rem 1.2rem;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      white-space: nowrap;
+      border: 1px solid var(--gold);
+    }
+    .btn-solid { background: var(--gold); color: var(--gold-ink); }
+    .btn-line { background: transparent; color: var(--ink); }
+    .btn:active { transform: translateY(1px); }
+    section { border-bottom: 1px solid var(--line); }
+    .copy {
+      padding: 5.5rem 6vw;
+      max-width: 52rem;
+    }
+    h2 {
+      margin: 0 0 1rem;
+      font-family: "Bebas Neue", sans-serif;
+      font-weight: 400;
+      font-size: clamp(3.2rem, 6vw, 5.4rem);
+      letter-spacing: 0.05em;
+      line-height: 0.9;
+    }
+    h3 {
+      margin: 0 0 0.4rem;
+      font-family: "Bebas Neue", sans-serif;
+      font-weight: 400;
+      font-size: 1.9rem;
+      letter-spacing: 0.06em;
+    }
+    p { margin: 0 0 1rem; }
+    .mono {
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.85rem;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+    }
+    .desks {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .desk {
+      padding: 4rem 3vw;
+      min-height: 22rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .desk + .desk { border-left: 1px solid var(--line); }
+    .desk .tag {
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.9rem;
+    }
+    .desk .tag.dim { color: var(--muted); }
+    .desk p { color: var(--muted); font-size: 1.15rem; }
+    .desk .foot {
+      margin-top: auto;
+      padding-top: 1.2rem;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .pane {
+      padding: 5.5rem 6vw;
+      min-height: 22rem;
+    }
+    .pane + .pane { border-left: 1px solid var(--line); }
+    .pane p { color: var(--muted); }
+    .pane ul {
+      margin: 1rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .pane li {
+      padding: 0.55rem 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 1.15rem;
+    }
+    .pane li b { color: var(--ink); font-weight: 600; }
+    .price-card {
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      padding: 2.2rem;
+      margin-top: 1.6rem;
+    }
+    .price-card .amount {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 3.4rem;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .price-card .per {
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0.4rem 0 1rem;
+    }
+    .fine {
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-family: "Space Mono", ui-monospace, monospace;
+      letter-spacing: 0.02em;
+    }
+    .cta {
+      padding: 6rem 6vw;
+      text-align: left;
+    }
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 2rem 6vw 3rem;
+      color: var(--muted);
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+    }
+    footer a { color: var(--ink); }
+    @media (max-width: 900px) {
+      .desks, .grid-2 { grid-template-columns: 1fr; }
+      .desk + .desk, .pane + .pane { border-left: 0; border-top: 1px solid var(--line); }
+      .desk { min-height: 0; }
+    }
+    @media (max-width: 800px) {
+      .nav { height: auto; min-height: 64px; padding: 0.8rem 1rem; align-items: flex-start; flex-direction: column; }
+      .nav ul { flex-wrap: wrap; gap: 0.8rem 1rem; }
+      .hero, .copy, .pane, .cta { padding: 2.5rem 1.15rem; }
+      .desk { padding: 2.5rem 1.15rem; }
+      h1 { font-size: 4.4rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn:active { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <a class="word" href="/">StudEx</a>
+    <ul>
+      <li><a href="/#meat">Meat</a></li>
+      <li><a href="/#coffee">Coffee</a></li>
+      <li><a href="/#markets">Markets</a></li>
+      <li><a href="/#wheat">Wheat</a></li>
+      <li><a href="app.html">App</a></li>
+      <li><a href="os.html">OS</a></li>
+      <li><a href="valley.html">Valley OS</a></li>
+    </ul>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">StudEx Global Markets · Johannesburg</p>
+      <h1>Global<br>Markets</h1>
+      <p class="lede">An own-stock commodity trade platform. We sell from our own stock, settle payments through the platform, and open markets through government trade frameworks. One desk for supply, compliance and settlement — built for import houses and distributors.</p>
+      <div class="actions">
+        <a class="btn btn-solid" href="https://global-markets-platform.workers.dev/signup">Open your desk</a>
+        <a class="btn btn-line" href="#desks">See the desks</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="desks">
+    <div class="copy">
+      <p class="eyebrow">Live desks</p>
+      <h2>Trade from our stock.</h2>
+      <p>Every line on the platform is inventory we stand behind as seller of record — not a marketplace listing. Quotes are per counterparty, after onboarding. Coffee is the proof, not the hero: it is the desk the platform was built on.</p>
+    </div>
+    <div class="desks">
+      <div class="desk">
+        <p class="tag">Live · First desk</p>
+        <h3>Coffee</h3>
+        <p>Ethiopia Sidamo G2 and Tanzania Arabica AB, in 60kg bags. Traded on our own rails from the existing StudEx coffee operation.</p>
+        <p class="foot">Quote on request</p>
+      </div>
+      <div class="desk">
+        <p class="tag">Live · Volume line</p>
+        <h3>Wheat</h3>
+        <p>Milling wheat, quoted per metric tonne. South Africa imported roughly 1.74 Mt in 2025/26 and the line is re-accelerating — we serve that demand from our own import stock.</p>
+        <p class="foot">Quote on request · per MT</p>
+      </div>
+      <div class="desk">
+        <p class="tag dim">Not yet trading</p>
+        <h3>Oats</h3>
+        <p>Under compliance review.</p>
+        <p class="foot" style="color: var(--muted);">No quotes while the review stands</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="grid-2">
+      <div class="pane">
+        <p class="eyebrow">The platform</p>
+        <h2>Your own desk, on subscription.</h2>
+        <p>Counterparties run their trade on the same machinery we use. Each desk is a subscription, and buyers can sponsor seats for their suppliers.</p>
+        <ul>
+          <li><b>Trading desk intelligence</b> — prices, signals and market reads behind every quote.</li>
+          <li><b>Agent fleet</b> — research, outreach, structuring and tracking agents working your pipeline.</li>
+          <li><b>Approval-gated actions</b> — nothing external goes out without a human sign-off in-app.</li>
+          <li><b>Audit trail</b> — every state change, approval and dispatch on an append-only record.</li>
+        </ul>
+      </div>
+      <div class="pane">
+        <p class="eyebrow">Pricing</p>
+        <h2>Desk pricing.</h2>
+        <div class="price-card">
+          <div class="amount">$99</div>
+          <div class="per">per desk / per month</div>
+          <p class="fine">$990 per desk per year, billed annually — two months free. Buyer-sponsored seats available: an import house can carry its suppliers' desks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="grid-2">
+      <div class="pane">
+        <p class="eyebrow">Settlement</p>
+        <h2>USD in. USD out.</h2>
+        <p>Buyers pay in USD by SWIFT transfer or in USDT. StudEx always receives USD — the platform never touches crypto.</p>
+        <p>Settlement runs on XREX Pay: deposit on order, balance on delivery, with a payment proof generated for your accounting, tax and regulatory file.</p>
+      </div>
+      <div class="pane">
+        <p class="eyebrow">Compliance</p>
+        <h2>Screened before the first quote.</h2>
+        <p>Every counterparty passes sanctions and PEP screening at onboarding. XREX runs its own KYB review at first payment. No payments to or through sanctioned banks, ever.</p>
+        <p>Each deal closes with a trade documentation pack: invoice, payment proof, compliance screen record, permits and framework references.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="copy">
+      <p class="eyebrow">Market access</p>
+      <h2>Governments open doors. They don't sit at the table.</h2>
+      <p>Governments are facilitators and market-access partners on this platform — never trade counterparties, and no payment ever flows to a state entity. Our framework registry tracks the agreements that make each corridor possible, and our first counterparty cohort — the Women's First 20, women-led African exporters — comes aboard through ministry-facilitated channels as design partners.</p>
+    </div>
+  </section>
+
+  <section class="cta">
+    <p class="eyebrow">Start trading</p>
+    <h2>Open your desk.</h2>
+    <p class="lede">Onboard, pass screening, and your desk is live: catalog, quotes, settlement and documentation in one place.</p>
+    <div class="actions">
+      <a class="btn btn-solid" href="https://global-markets-platform.workers.dev/signup">Open your desk</a>
+      <a class="btn btn-line" href="mailto:t.ramaphosa@studex.dev?subject=Global%20Markets%20desk">Write to the desk</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>StudEx Group. Johannesburg.</span>
+    <a href="mailto:t.ramaphosa@studex.dev">t.ramaphosa@studex.dev</a>
+  </footer>
+</body>
+</html>

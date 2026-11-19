@@ -1,0 +1,62 @@
+[
+  {
+    "id": "hermes",
+    "name": "Hermes Orchestrator",
+    "platform": "miniMax",
+    "status": "ACTIVE",
+    "role": "orchestrator",
+    "location": "here"
+  },
+  {
+    "id": "sentinel",
+    "name": "Sentinel Discord",
+    "platform": "Discord",
+    "status": "NOT_CONNECTED",
+    "role": "communication",
+    "oauth_url": "https://discord.com/oauth2/authorize?client_id=1530551927979511838&permissions=8&scope=bot"
+  },
+  {
+    "id": "metal",
+    "name": "Metal WhatsApp",
+    "platform": "WhatsApp",
+    "status": "ACTIVE",
+    "role": "client-facing"
+  },
+  {
+    "id": "buzz",
+    "name": "Buzz Agents",
+    "platform": "Daytona",
+    "status": "ACTIVE",
+    "role": "per-client",
+    "agents": [
+      "dench-client",
+      "hourly-reporter",
+      "huly-client",
+      "openclaw-client",
+      "whatsapp-client"
+    ]
+  },
+  {
+    "id": "orgo",
+    "name": "Orgo VMs",
+    "platform": "Orgo AI",
+    "status": "ACTIVE",
+    "role": "execution",
+    "count": 10,
+    "mcp_status": "BROKEN"
+  },
+  {
+    "id": "openclaw",
+    "name": "OpenClaw",
+    "platform": "Daytona",
+    "status": "READY",
+    "role": "coding"
+  },
+  {
+    "id": "deerflow",
+    "name": "DeerFlow",
+    "platform": "Daytona",
+    "status": "READY",
+    "role": "agent-framework"
+  }
+]

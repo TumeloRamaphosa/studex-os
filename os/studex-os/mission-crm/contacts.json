@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Robusca Prime",
+    "email": "president-robusca@studex-group.com",
+    "role": "Executive AI Chief of Staff",
+    "organization": "Studex Group",
+    "timezone": "Africa/Johannesburg",
+    "npub": "npub1ve2n8jh8ta5mdrf6fzmeqtwsnlmknj24lrctskpr0e2v9s50wnrsrutjx4",
+    "buzz_status": "LIVE",
+    "channel": "Command"
+  },
+  {
+    "name": "OpenClaw",
+    "email": "openclaw@studex-group.com",
+    "role": "Execution Agent",
+    "organization": "Studex Group",
+    "timezone": "Africa/Johannesburg",
+    "npub": "npub1ny0nlgvp20ke2n79c6c7yc9safv6gpf2ytgnjjtcrtr4jungjyesskm7yf",
+    "buzz_status": "LIVE",
+    "channel": "Execution"
+  },
+  {
+    "name": "Goose",
+    "email": "goose@studex-group.com",
+    "role": "Developer / Builder",
+    "organization": "Studex Group",
+    "timezone": "Africa/Johannesburg",
+    "npub": "npub1lmytj4m5rknjd5xkmtnw5gl7esjgejtgt3z0v00a76dy7aysghyselddld",
+    "buzz_status": "LIVE",
+    "channel": "Development"
+  },
+  {
+    "name": "Naledi",
+    "email": "naledi-cmo@studex-group.com",
+    "role": "CMO / Marketing",
+    "organization": "Studex Group",
+    "timezone": "Africa/Johannesburg",
+    "npub": "npub1gafyheugruunf9q7l5e6uzjeeffw78ecx9t39f02j9jy7d3e9ayqvdewak",
+    "buzz_status": "LIVE",
+    "channel": "Marketing"
+  },
+  {
+    "name": "CashClaw",
+    "email": "cashclaw@studex-group.com",
+    "role": "Payments & Invoicing",
+    "organization": "Studex Group",
+    "timezone": "Africa/Johannesburg",
+    "npub": "npub1mkncwcl3s0m7y0vathgj9g8rawwt3l0dl7t6ms5az2wya3furcustkmaee",
+    "buzz_status": "LIVE",
+    "channel": "Finance"
+  },
+  {
+    "name": "Auto-Meat",
+    "email": "auto-meat@studex-group.com",
+    "role": "Meat Business Ops",
+    "organization": "Studex Group",
+    "timezone": "Africa/Johannesburg",
+    "npub": "npub1ka7y3k93dyd60nuhudu4t6qamdy6gypdlag3wlgh3m0ruvt2fw0qunax6a",
+    "buzz_status": "LIVE",
+    "channel": "Operations"
+  },
+  {
+    "name": "Cypher Trace",
+    "email": "cypher-trace-cto-superagents@studex-group.com",
+    "role": "CTO / Super Agents",
+    "organization": "Studex Group",
+    "timezone": "Africa/Johannesburg",
+    "npub": "npub14l0zxuq0v49hhs4uru4t8kjxyhtm3lzkmx7v4e32dwe4jtknd8nse7cg38",
+    "buzz_status": "LIVE",
+    "channel": "Technical"
+  }
+]

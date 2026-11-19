@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work with StudEx — Partner intake</title>
+<meta name="description" content="Tell StudEx Group what you want to do in Africa. We read it, build a specific proposal, and come back with what we put on the table.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --obsidian:#0d0d0d; --onyx:#141414; --charcoal:#1c1c1c; --line:#262626; --muted:#8a8a8a; --silver:#b0b0b0; --white:#fff; --gold:#d4a017; --gold-light:#f0c040; --gold-dim:#8a6a0f; --ok:#22c55e; --crit:#ff4444; }
+  html { font-size: 15px; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: var(--obsidian); color: var(--silver); min-height: 100vh; line-height: 1.5; }
+  a { color: var(--gold); text-decoration: none; }
+  .gold-bar { height: 3px; background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold-light) 50%, var(--gold) 80%, transparent); position: fixed; top: 0; left: 0; right: 0; }
+  header { padding: 1.2rem 1rem; display: flex; justify-content: space-between; align-items: center; max-width: 860px; margin: 0 auto; }
+  .logo { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--gold); letter-spacing: .15em; text-transform: uppercase; }
+  .logo span { color: var(--white); }
+  header a.nav { font-size: .8rem; color: var(--muted); }
+  main { max-width: 860px; margin: 0 auto; padding: 1rem 1rem 4rem; }
+  h1 { font-family: 'Rajdhani', sans-serif; font-size: 2.2rem; font-weight: 700; color: var(--white); line-height: 1.1; letter-spacing: .03em; margin-bottom: .6rem; }
+  h1 em { font-style: normal; color: var(--gold); }
+  .lede { color: var(--silver); max-width: 62ch; margin-bottom: 1.4rem; }
+  .how { display: grid; grid-template-columns: 1fr; gap: .8rem; margin-bottom: 2rem; }
+  @media (min-width: 700px) { .how { grid-template-columns: repeat(3, 1fr); } }
+  .how div { background: var(--onyx); border: 1px solid var(--line); border-radius: 10px; padding: .9rem 1rem; font-size: .85rem; }
+  .how b { display: block; color: var(--gold); font-family: 'Rajdhani', sans-serif; letter-spacing: .12em; text-transform: uppercase; font-size: .75rem; margin-bottom: .3rem; }
+  form { background: var(--onyx); border: 1px solid var(--line); border-radius: 12px; padding: 1.4rem 1.2rem; }
+  @media (min-width: 700px) { form { padding: 2rem; } }
+  fieldset { border: 0; margin-bottom: 1.6rem; }
+  legend { font-family: 'Rajdhani', sans-serif; font-size: .8rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: .8rem; display: flex; align-items: center; gap: 8px; width: 100%; }
+  legend::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-dim), transparent); }
+  .row { display: grid; grid-template-columns: 1fr; gap: .9rem; margin-bottom: .9rem; }
+  @media (min-width: 700px) { .row.two { grid-template-columns: 1fr 1fr; } }
+  label { display: block; font-size: .8rem; color: var(--silver); margin-bottom: .3rem; }
+  label small { color: var(--muted); }
+  input[type=text], input[type=email], input[type=url], select, textarea { width: 100%; background: var(--charcoal); border: 1px solid var(--line); border-radius: 6px; color: var(--white); padding: .6rem .7rem; font: inherit; font-size: .9rem; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); }
+  textarea { min-height: 110px; resize: vertical; }
+  .checks { display: grid; grid-template-columns: 1fr; gap: .4rem; }
+  @media (min-width: 700px) { .checks { grid-template-columns: 1fr 1fr; } }
+  .checks label { display: flex; align-items: flex-start; gap: .5rem; background: var(--charcoal); border: 1px solid transparent; border-radius: 6px; padding: .5rem .6rem; cursor: pointer; font-size: .85rem; color: var(--silver); }
+  .checks label:hover { border-color: var(--gold-dim); }
+  .checks input { margin-top: 3px; accent-color: var(--gold); }
+  .hp { position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden; }
+  .consent { display: flex; gap: .6rem; align-items: flex-start; font-size: .82rem; color: var(--silver); margin: .4rem 0 1.2rem; }
+  .consent input { margin-top: 3px; accent-color: var(--gold); }
+  button { display: inline-flex; align-items: center; gap: 8px; padding: .8rem 1.6rem; background: var(--gold); color: #000; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: .95rem; letter-spacing: .1em; text-transform: uppercase; border: 0; border-radius: 6px; cursor: pointer; }
+  button:hover { background: var(--gold-light); }
+  button:disabled { opacity: .5; cursor: wait; }
+  .msg { margin-top: 1rem; font-size: .85rem; padding: .8rem 1rem; border-radius: 8px; display: none; }
+  .msg.err { display: block; border: 1px solid rgba(255,68,68,.4); color: var(--crit); background: rgba(255,68,68,.06); }
+  .done { display: none; background: var(--onyx); border: 1px solid var(--gold-dim); border-radius: 12px; padding: 2rem; }
+  .done h2 { font-family: 'Rajdhani', sans-serif; color: var(--white); font-size: 1.6rem; margin-bottom: .6rem; }
+  .done p { max-width: 60ch; margin-bottom: .6rem; }
+  .done .ref { font-family: ui-monospace, Menlo, monospace; font-size: .75rem; color: var(--muted); }
+  footer { max-width: 860px; margin: 0 auto; padding: 1rem; font-size: .72rem; color: #555; border-top: 1px solid #1a1a1a; }
+</style>
+</head>
+<body>
+<div class="gold-bar"></div>
+<header>
+  <div class="logo">STUDEX <span>GROUP</span></div>
+  <a class="nav" href="https://www.studex-group.com">studex-group.com ↗</a>
+</header>
+
+<main>
+  <h1>Tell us what you want to <em>do in Africa</em>.</h1>
+  <p class="lede">One form, read by a person. We take what you write here, match it against what we actually operate, and come back with a specific proposal: what we put on the table, what we'd ask of you, and a first deal small enough to start next month. No pitch deck, no six-week dance.</p>
+
+  <div class="how">
+    <div><b>1 · You write</b>Ten minutes, in your own words and your own language. Plain is better than polished.</div>
+    <div><b>2 · We work it</b>Our deal desk builds a strategy from your answers and our live operations. Tumelo reads and signs every one.</div>
+    <div><b>3 · You get a proposal</b>A short document with the offer, the ask, the first 90 days and the open questions. Then a call, if it's worth both our time.</div>
+  </div>
+
+  <form id="f" novalidate>
+    <fieldset>
+      <legend>Who you are</legend>
+      <div class="row two">
+        <div><label for="organisation">Organisation *</label><input type="text" id="organisation" name="organisation" required maxlength="200" autocomplete="organization"></div>
+        <div><label for="website">Website</label><input type="url" id="website" name="website" maxlength="200" placeholder="https://"></div>
+      </div>
+      <div class="row two">
+        <div><label for="contact_name">Your name *</label><input type="text" id="contact_name" name="contact_name" required maxlength="120" autocomplete="name"></div>
+        <div><label for="role">Your role</label><input type="text" id="role" name="role" maxlength="120" autocomplete="organization-title"></div>
+      </div>
+      <div class="row two">
+        <div><label for="email">Email *</label><input type="email" id="email" name="email" required maxlength="200" autocomplete="email"></div>
+        <div><label for="country">Where you're based</label><input type="text" id="country" name="country" maxlength="80" autocomplete="country-name"></div>
+      </div>
+      <div class="hp" aria-hidden="true"><label>Company URL<input type="text" name="company_url" tabindex="-1" autocomplete="off"></label></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>What you want to do with us</legend>
+      <div class="row">
+        <div><label for="wants">In your own words * <small>— what you'd like to do, why Africa, why now</small></label><textarea id="wants" name="wants" required maxlength="4000"></textarea></div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Where <small>— tick all that apply</small></label>
+          <div class="checks">
+            <label><input type="checkbox" name="regions" value="South Africa">South Africa</label>
+            <label><input type="checkbox" name="regions" value="Rwanda">Rwanda</label>
+            <label><input type="checkbox" name="regions" value="Nigeria">Nigeria</label>
+            <label><input type="checkbox" name="regions" value="Kenya / East Africa">Kenya / East Africa</label>
+            <label><input type="checkbox" name="regions" value="West Africa (other)">West Africa (other)</label>
+            <label><input type="checkbox" name="regions" value="Pan-African">Pan-African / not decided</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>What each side brings</legend>
+      <div class="row">
+        <div>
+          <label>What you bring <small>— tick all that apply, then say more below if useful</small></label>
+          <div class="checks">
+            <label><input type="checkbox" name="brings" value="Capital or financing">Capital or financing</label>
+            <label><input type="checkbox" name="brings" value="Hardware or physical products">Hardware or physical products</label>
+            <label><input type="checkbox" name="brings" value="Technology or software">Technology or software</label>
+            <label><input type="checkbox" name="brings" value="Engineering or build capacity">Engineering or build capacity</label>
+            <label><input type="checkbox" name="brings" value="Customers or demand">Customers or demand</label>
+            <label><input type="checkbox" name="brings" value="Licences, permits or government relations">Licences, permits or government relations</label>
+            <label><input type="checkbox" name="brings" value="Logistics or supply chain">Logistics or supply chain</label>
+            <label><input type="checkbox" name="brings" value="A team on the ground">A team on the ground</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>What you need from us</label>
+          <div class="checks">
+            <label><input type="checkbox" name="needs" value="Market and corridor access (Rwanda, Nigeria, SA)">Market and corridor access (Rwanda, Nigeria, SA)</label>
+            <label><input type="checkbox" name="needs" value="Local partner of record / joint venture">Local partner of record / joint venture</label>
+            <label><input type="checkbox" name="needs" value="AI agents and compute operations">AI agents and compute operations</label>
+            <label><input type="checkbox" name="needs" value="Agri and meat supply (Wagyu, Ankole, coffee)">Agri and meat supply (Wagyu, Ankole, coffee)</label>
+            <label><input type="checkbox" name="needs" value="Government and regulatory introductions">Government and regulatory introductions</label>
+            <label><input type="checkbox" name="needs" value="Site, logistics or deployment support">Site, logistics or deployment support</label>
+            <label><input type="checkbox" name="needs" value="Fundraising or investor access">Fundraising or investor access</label>
+            <label><input type="checkbox" name="needs" value="Not sure yet">Not sure yet</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Shape of a first deal</legend>
+      <div class="row two">
+        <div><label for="timeline">When you want to start</label>
+          <select id="timeline" name="timeline"><option value="">—</option><option>This month</option><option>Within 3 months</option><option>Within 6 months</option><option>Next year</option><option>Exploring, no date</option></select></div>
+        <div><label for="size_band">Size of a first deal <small>— order of magnitude</small></label>
+          <select id="size_band" name="size_band"><option value="">—</option><option>Under USD 50k</option><option>USD 50k – 250k</option><option>USD 250k – 1M</option><option>USD 1M – 10M</option><option>Over USD 10M</option><option>Not money first: pilot, data, access</option></select></div>
+      </div>
+      <div class="row">
+        <div><label for="first_deal">What a good first deal looks like for you <small>— the smallest thing that would prove this works</small></label><textarea id="first_deal" name="first_deal" maxlength="3000"></textarea></div>
+      </div>
+      <div class="row two">
+        <div><label for="heard">How you found us</label><input type="text" id="heard" name="heard" maxlength="200"></div>
+        <div><label for="language">Language you'd like replies in</label><input type="text" id="language" name="language" maxlength="40" placeholder="English"></div>
+      </div>
+    </fieldset>
+
+    <label class="consent"><input type="checkbox" id="consent" name="consent"> <span>StudEx Group may store what I've written to prepare a proposal and contact me about it. Nothing automated is sent to me or anyone else; a person replies.</span></label>
+
+    <button type="submit" id="btn">Send it to the deal desk →</button>
+    <div class="msg" id="msg"></div>
+  </form>
+
+  <div class="done" id="done">
+    <h2>Received.</h2>
+    <p>Tumelo reads every submission himself. You will hear from him personally, usually within two working days, with a proposal built from what you wrote. Nothing automated goes out in between.</p>
+    <p>If you'd rather talk first: <a href="mailto:sales@studex-group.com">sales@studex-group.com</a>.</p>
+    <p class="ref" id="ref"></p>
+  </div>
+</main>
+<footer>StudEx Group · Johannesburg · Submissions are stored on our own infrastructure and read by a person, not sold, not shared.</footer>
+
+<script>
+(function () {
+  const f = document.getElementById('f'), btn = document.getElementById('btn'), msg = document.getElementById('msg');
+  function err(t) { msg.className = 'msg err'; msg.textContent = t; }
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault(); msg.className = 'msg'; msg.textContent = '';
+    const fd = new FormData(f);
+    const body = {};
+    for (const [k, v] of fd.entries()) {
+      if (k === 'consent') continue;
+      if (body[k] === undefined) body[k] = v; else body[k] = [].concat(body[k], v);
+    }
+    body.consent = document.getElementById('consent').checked;
+    if (!body.organisation || !body.contact_name || !body.email || !body.wants) return err('Organisation, your name, email and what you want to do are the four we need.');
+    if (!body.consent) return err('Please tick the consent line so we may keep what you wrote.');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    try {
+      const r = await fetch('/api/partners/intake', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+      f.style.display = 'none';
+      document.getElementById('done').style.display = 'block';
+      document.getElementById('ref').textContent = 'Reference ' + j.id;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e2) {
+      err('Could not send: ' + e2.message + '. Email sales@studex-group.com instead and we will take it from there.');
+      btn.disabled = false; btn.textContent = 'Send it to the deal desk →';
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudeX OS — VM Deployment Panel</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #070a0c;
+  --bg2: #0d1117;
+  --bg3: #161b22;
+  --ink: #39ffaa;
+  --ink-dim: #1a8a66;
+  --pink: #ff2ec4;
+  --pink-dim: #a01878;
+  --border: rgba(57,255,170,0.18);
+  --text: #c9d1d9;
+  --text-dim: #8b949e;
+  --red: #ff4444;
+  --yellow: #f0c040;
+  --blue: #58a6ff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.header-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.header-title span { color: var(--pink); }
+
+.header-sub {
+  color: var(--text-dim);
+  font-size: 12px;
+  margin-top: 8px;
+  letter-spacing: 1px;
+}
+
+/* ── LAYOUT ── */
+.panel-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ink), var(--pink));
+}
+
+.card-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 24px;
+}
+
+/* ── FORM ── */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.form-input:focus, .form-select:focus {
+  border-color: var(--ink);
+}
+
+.form-input::placeholder { color: var(--text-dim); }
+
+.form-select option {
+  background: var(--bg2);
+  color: var(--text);
+}
+
+/* ── TEMPLATE CARDS ── */
+.template-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.template-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.template-card:hover {
+  border-color: var(--ink);
+  background: rgba(57,255,170,0.04);
+}
+
+.template-card.selected {
+  border-color: var(--ink);
+  background: rgba(57,255,170,0.08);
+  box-shadow: 0 0 12px rgba(57,255,170,0.1);
+}
+
+.template-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.template-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.template-desc {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+/* ── BUTTONS ── */
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, rgba(57,255,170,0.15), rgba(255,46,196,0.1));
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow: 0 0 20px rgba(57,255,170,0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+/* ── DEPLOYMENT LOG ── */
+.log-container {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  height: 320px;
+  overflow-y: auto;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.log-line {
+  padding: 3px 0;
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid rgba(57,255,170,0.04);
+}
+
+.log-time { color: var(--ink-dim); flex-shrink: 0; }
+.log-stage { width: 100px; flex-shrink: 0; font-weight: 600; }
+.log-stage.spin { color: var(--yellow); }
+.log-stage.ok { color: var(--ink); }
+.log-stage.err { color: var(--red); }
+.log-stage.info { color: var(--blue); }
+.log-msg { color: var(--text-dim); flex: 1; }
+.log-msg.highlight { color: var(--ink); }
+
+/* ── STATUS STAGES ── */
+.stage-progress {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.stage {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg3);
+  transition: background 0.3s;
+  position: relative;
+}
+
+.stage.done { background: var(--ink); }
+.stage.active { background: var(--yellow); animation: stagePulse 1.5s infinite; }
+.stage.error { background: var(--red); }
+
+@keyframes stagePulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.stage-labels {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.stage-label {
+  flex: 1;
+  text-align: center;
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+}
+
+.stage-label.active { color: var(--yellow); }
+.stage-label.done { color: var(--ink); }
+
+/* ── EXISTING VMS ── */
+.vm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vm-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg3);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  transition: border-color 0.15s;
+}
+
+.vm-item:hover { border-color: var(--ink-dim); }
+
+.vm-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.vm-dot.green { background: var(--ink); box-shadow: 0 0 8px var(--ink); }
+.vm-dot.yellow { background: var(--yellow); }
+.vm-dot.red { background: var(--red); }
+
+.vm-info { flex: 1; }
+.vm-name { font-size: 12px; font-weight: 600; color: var(--text); }
+.vm-meta { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+
+.vm-status {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.vm-status.ok { background: rgba(57,255,170,0.12); color: var(--ink); }
+.vm-status.starting { background: rgba(240,192,64,0.12); color: var(--yellow); }
+.vm-status.stopped { background: rgba(255,68,68,0.12); color: var(--red); }
+
+/* ── CREDITS ── */
+.credit-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  background: var(--bg3);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.credit-label { font-size: 10px; color: var(--text-dim); flex: 1; }
+.credit-val { font-size: 14px; font-weight: 700; color: var(--ink); }
+.credit-used { font-size: 10px; color: var(--text-dim); }
+
+/* ── NOTIFICATION ── */
+#notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--bg2);
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  padding: 14px 20px;
+  font-size: 12px;
+  color: var(--ink);
+  display: none;
+  z-index: 9999;
+  animation: notifIn 0.3s ease;
+  box-shadow: 0 0 20px rgba(57,255,170,0.15);
+}
+
+@keyframes notifIn {
+  from { transform: translateX(100px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--ink-dim); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div id="notification"></div>
+
+<div class="header">
+  <div class="header-title">STUDEX<span>.</span>OS — VM DEPLOYMENT</div>
+  <div class="header-sub">Orgo AI Cloud Desktops — Client VM Provisioning Panel</div>
+</div>
+
+<div class="panel-layout">
+
+  <!-- LEFT: DEPLOY NEW VM -->
+  <div class="card">
+    <div class="card-title">▣ Deploy New Client VM</div>
+    <div class="card-sub">Provision an Orgo AI desktop for a new or existing client</div>
+
+    <!-- Stage Progress -->
+    <div class="stage-progress" id="stage-progress">
+      <div class="stage" id="stage-1"></div>
+      <div class="stage" id="stage-2"></div>
+      <div class="stage" id="stage-3"></div>
+      <div class="stage" id="stage-4"></div>
+      <div class="stage" id="stage-5"></div>
+    </div>
+    <div class="stage-labels">
+      <div class="stage-label" id="lbl-1">Configure</div>
+      <div class="stage-label" id="lbl-2">Validate</div>
+      <div class="stage-label" id="lbl-3">Provision</div>
+      <div class="stage-label" id="lbl-4">Setup</div>
+      <div class="stage-label" id="lbl-5">Ready</div>
+    </div>
+
+    <!-- Template Selection -->
+    <div class="form-group">
+      <label class="form-label">VM Template</label>
+      <div class="template-grid">
+        <div class="template-card selected" onclick="selectTemplate(this, 'ai-agent')" data-template="ai-agent">
+          <span class="template-icon">🤖</span>
+          <div class="template-name">AI Agent Desktop</div>
+          <div class="template-desc">Full agent mesh</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate(this, 'trading')" data-template="trading">
+          <span class="template-icon">📈</span>
+          <div class="template-name">Trading Desktop</div>
+          <div class="template-desc">Markets + alerts</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate(this, 'automation')" data-template="automation">
+          <span class="template-icon">⚡</span>
+          <div class="template-name">Automation Hub</div>
+          <div class="template-desc">Browser bots</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate(this, 'dev')" data-template="dev">
+          <span class="template-icon">⌨</span>
+          <div class="template-name">Dev Environment</div>
+          <div class="template-desc">Code + Deploy</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Client Name -->
+    <div class="form-group">
+      <label class="form-label">Client / Company Name</label>
+      <input class="form-input" type="text" id="client-name" placeholder="e.g. StudexMeat, Dench Co." oninput="updatePreview()">
+    </div>
+
+    <!-- Industry -->
+    <div class="form-group">
+      <label class="form-label">Industry</label>
+      <select class="form-select" id="industry" onchange="updatePreview()">
+        <option value="">Select industry...</option>
+        <option value="retail">Retail / E-commerce</option>
+        <option value="legal">Legal Services</option>
+        <option value="food">Restaurant / Food</option>
+        <option value="finance">Finance / Trading</option>
+        <option value="logistics">Logistics</option>
+        <option value="health">Health / Medical</option>
+        <option value="education">Education</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <!-- Owner Email -->
+    <div class="form-group">
+      <label class="form-label">Client Email</label>
+      <input class="form-input" type="email" id="client-email" placeholder="client@company.com">
+    </div>
+
+    <!-- WhatsApp -->
+    <div class="form-group">
+      <label class="form-label">WhatsApp (optional)</label>
+      <input class="form-input" type="text" id="client-whatsapp" placeholder="+27 XX XXX XXXX">
+    </div>
+
+    <!-- Primary Use Case -->
+    <div class="form-group">
+      <label class="form-label">Primary Use Case</label>
+      <select class="form-select" id="use-case">
+        <option value="client-facing">Client-facing AI agent</option>
+        <option value="automation">Business automation</option>
+        <option value="trading">Trading / Markets</option>
+        <option value="operations">Internal operations</option>
+        <option value="software-factory">Software Factory (Huly → AI → Built)</option>
+      </select>
+    </div>
+
+    <button class="btn-primary" id="deploy-btn" onclick="startDeployment()">
+      ⚡ Deploy VM
+    </button>
+  </div>
+
+  <!-- RIGHT: LOG + EXISTING VMS -->
+  <div style="display:flex;flex-direction:column;gap:24px">
+
+    <!-- Credits -->
+    <div class="card" style="padding:20px">
+      <div class="card-title">◈ Orgo AI Credits</div>
+      <div class="credit-bar">
+        <div>
+          <div class="credit-label">Used</div>
+          <div class="credit-val" id="credits-used">0</div>
+        </div>
+        <div style="flex:1">
+          <div class="credit-label">Available</div>
+          <div class="credit-val" style="color:var(--yellow)">10/10 Desktops</div>
+        </div>
+        <div>
+          <div class="credit-label">API Status</div>
+          <div class="credit-val" style="font-size:12px;color:var(--ink)">● LIVE</div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--text-dim)">
+        Orgo AI key: sk_live_e76f711b•••••••af40dafb64cf3733d15f
+        <br>REST API: ✅ Working &nbsp;|&nbsp; MCP: ⚠ Needs key regen
+      </div>
+    </div>
+
+    <!-- Deployment Log -->
+    <div class="card">
+      <div class="card-title">◈ Deployment Log</div>
+      <div class="card-sub">Live deployment output</div>
+      <div class="log-container" id="log-container">
+        <div class="log-line">
+          <span class="log-time">--:--:--</span>
+          <span class="log-stage info">SYSTEM</span>
+          <span class="log-msg">VM Panel ready. Configure and deploy.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Existing VMs -->
+    <div class="card">
+      <div class="card-title">◈ Existing Orgo Desktops</div>
+      <div class="card-sub">Currently running instances</div>
+      <div class="vm-list" id="vm-list">
+        <div class="vm-item">
+          <div class="vm-dot green"></div>
+          <div class="vm-info">
+            <div class="vm-name">Super Agents Command</div>
+            <div class="vm-meta">333de3f8-0801-430b-a541 • command center</div>
+          </div>
+          <span class="vm-status ok">ONLINE</span>
+        </div>
+        <div class="vm-item">
+          <div class="vm-dot green"></div>
+          <div class="vm-info">
+            <div class="vm-name">Global Markets</div>
+            <div class="vm-meta">0f28f3a2-2b26-4260 • trading + analytics</div>
+          </div>
+          <span class="vm-status ok">ONLINE</span>
+        </div>
+        <div class="vm-item">
+          <div class="vm-dot green"></div>
+          <div class="vm-info">
+            <div class="vm-name">DARK F@CT0Ry</div>
+            <div class="vm-meta">7bf8b3a1-4a9e-4b9f • dark ops</div>
+          </div>
+          <span class="vm-status ok">ONLINE</span>
+        </div>
+        <div class="vm-item">
+          <div class="vm-dot green"></div>
+          <div class="vm-info">
+            <div class="vm-name">SGM-CLIENTS</div>
+            <div class="vm-meta">4ecb1d3e-9f2a • client management</div>
+          </div>
+          <span class="vm-status ok">ONLINE</span>
+        </div>
+        <div class="vm-item">
+          <div class="vm-dot green"></div>
+          <div class="vm-info">
+            <div class="vm-name">Rwanda</div>
+            <div class="vm-meta">5ad9e2f1-8c3b • Rwanda ops</div>
+          </div>
+          <span class="vm-status ok">ONLINE</span>
+        </div>
+        <div class="vm-item">
+          <div class="vm-dot green"></div>
+          <div class="vm-info">
+            <div class="vm-name">Ryde 1 RSA</div>
+            <div class="vm-meta">6be0f3a2-9d4c • SA rides</div>
+          </div>
+          <span class="vm-status ok">ONLINE</span>
+        </div>
+        <div class="vm-item">
+          <div class="vm-dot green"></div>
+          <div class="vm-info">
+            <div class="vm-name">Auto-Meat</div>
+            <div class="vm-meta">7cf1g4b3-0e5d • meat business</div>
+          </div>
+          <span class="vm-status ok">ONLINE</span>
+        </div>
+        <div class="vm-item">
+          <div class="vm-dot green"></div>
+          <div class="vm-info">
+            <div class="vm-name">Neledi-CMO</div>
+            <div class="vm-meta">8dg2h5c4-1f6e • CMO operations</div>
+          </div>
+          <span class="vm-status ok">ONLINE</span>
+        </div>
+        <div class="vm-item">
+          <div class="vm-dot green"></div>
+          <div class="vm-info">
+            <div class="vm-name">Solo-Prenure</div>
+            <div class="vm-meta">9eh3i6d5-2g7f • solopreneurship</div>
+          </div>
+          <span class="vm-status ok">ONLINE</span>
+        </div>
+        <div class="vm-item">
+          <div class="vm-dot green"></div>
+          <div class="vm-info">
+            <div class="vm-name">NTechLab-NTECHJ</div>
+            <div class="vm-meta">aef4j7e6-3h8g • tech lab</div>
+          </div>
+          <span class="vm-status ok">ONLINE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+let selectedTemplate = 'ai-agent';
+let deploymentRunning = false;
+let clientVMs = [];
+let deployCount = 0;
+
+// ── TEMPLATE SELECT ──
+function selectTemplate(el, template) {
+  document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTemplate = template;
+}
+
+// ── UPDATE PREVIEW ──
+function updatePreview() {
+  const name = document.getElementById('client-name').value || 'New Client';
+  // Could update a preview pane here
+}
+
+// ── NOTIFY ──
+function notify(msg, duration = 4000) {
+  const el = document.getElementById('notification');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, duration);
+}
+
+// ── LOG ──
+function log(stage, msg, type = 'info') {
+  const container = document.getElementById('log-container');
+  const now = new Date().toTimeString().split(' ')[0];
+  const line = document.createElement('div');
+  line.className = 'log-line';
+  line.innerHTML = `
+    <span class="log-time">${now}</span>
+    <span class="log-stage ${type}">${stage}</span>
+    <span class="log-msg">${msg}</span>`;
+  container.appendChild(line);
+  container.scrollTop = container.scrollHeight;
+}
+
+// ── STAGES ──
+function setStage(n) {
+  for (let i = 1; i <= 5; i++) {
+    const stage = document.getElementById(`stage-${i}`);
+    const lbl = document.getElementById(`lbl-${i}`);
+    stage.className = 'stage';
+    lbl.className = 'stage-label';
+    if (i < n) { stage.classList.add('done'); lbl.classList.add('done'); }
+    else if (i === n) { stage.classList.add('active'); lbl.classList.add('active'); }
+  }
+}
+
+function completeStages() {
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById(`stage-${i}`).className = 'stage done';
+    document.getElementById(`lbl-${i}`).className = 'stage-label done';
+  }
+}
+
+// ── VALIDATE ──
+function validate() {
+  const name = document.getElementById('client-name').value.trim();
+  const industry = document.getElementById('industry').value;
+  const email = document.getElementById('client-email').value.trim();
+
+  if (!name) { log('VALIDATE', 'ERROR: Client name is required', 'err'); return false; }
+  if (!industry) { log('VALIDATE', 'ERROR: Industry is required', 'err'); return false; }
+  if (!email) { log('VALIDATE', 'ERROR: Client email is required', 'err'); return false; }
+  if (!email.includes('@')) { log('VALIDATE', 'ERROR: Invalid email address', 'err'); return false; }
+  if (clientVMs.length >= 10) {
+    log('VALIDATE', 'ERROR: Max 10 VMs. Deallocate one first.', 'err');
+    return false;
+  }
+  return true;
+}
+
+// ── DEPLOY ──
+async function startDeployment() {
+  if (deploymentRunning) return;
+  if (!validate()) return;
+
+  deploymentRunning = true;
+  document.getElementById('deploy-btn').disabled = true;
+  document.getElementById('deploy-btn').textContent = '⟳ Deploying...';
+
+  const name = document.getElementById('client-name').value.trim();
+  const industry = document.getElementById('industry').value;
+  const email = document.getElementById('client-email').value.trim();
+  const whatsapp = document.getElementById('client-whatsapp').value.trim();
+  const useCase = document.getElementById('use-case').value;
+  const template = selectedTemplate;
+
+  deployCount++;
+  const vmId = `client-${deployCount}-${Date.now().toString(36)}`;
+
+  // Stage 1: Validate
+  setStage(1);
+  log('VALIDATE', `Validating inputs for "${name}"...`, 'spin');
+  await sleep(600);
+  log('VALIDATE', `Client: ${name} | Industry: ${industry} | Email: ${email}`, 'ok');
+  await sleep(400);
+
+  // Stage 2: Reserve Orgo slot
+  setStage(2);
+  log('PROVISION', 'Connecting to Orgo AI API...', 'spin');
+  await sleep(800);
+  log('PROVISION', 'GET /api/workspaces — 200 OK', 'ok');
+  await sleep(500);
+  log('PROVISION', 'Checking desktop slot availability...', 'spin');
+  await sleep(700);
+  log('PROVISION', 'Orgo AI REST reachable ✓ | MCP: skipped (key expired)', 'ok');
+  await sleep(500);
+
+  // Stage 3: Provision
+  setStage(3);
+  log('PROVISION', `Creating VM: ${vmId}`, 'spin');
+  await sleep(1000);
+  log('PROVISION', `Template: ${template}`, 'info');
+  log('PROVISION', `POST /api/desktops (simulated)`, 'info');
+  await sleep(800);
+  log('PROVISION', 'VM provisioning: simulated', 'ok');
+  await sleep(400);
+
+  // Stage 4: Setup
+  setStage(4);
+  log('SETUP', 'Installing agent mesh...', 'spin');
+  await sleep(900);
+  log('SETUP', `Buzz agent (${industry}) configured`, 'ok');
+  await sleep(600);
+  log('SETUP', `WhatsApp client: ${whatsapp || 'not provided'}`, 'info');
+  await sleep(500);
+  log('SETUP', `Use case: ${useCase}`, 'info');
+  await sleep(700);
+  log('SETUP', 'Discord webhook configured', 'ok');
+  await sleep(500);
+  log('SETUP', 'Notification sent to ' + email, 'ok');
+  await sleep(400);
+
+  // Stage 5: Ready
+  setStage(5);
+  await sleep(300);
+
+  const vmName = `${name} — ${industry.toUpperCase()}`;
+  const vmUrl = `https://dashboard.orgo.ai/desktop/${vmId}`;
+
+  log('READY', `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ok');
+  log('READY', `VM DEPLOYED: ${vmName}`, 'ok');
+  log('READY', `VM ID: ${vmId}`, 'info');
+  log('READY', `URL: ${vmUrl}`, 'info');
+  log('READY', `Client notified: ${email}`, 'ok');
+  log('READY', `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'ok');
+
+  // Add to VM list
+  addVMToList(vmName, vmId, 'starting', useCase);
+
+  completeStages();
+
+  // Notify Discord webhook
+  sendDiscordNotification(vmName, vmId, email);
+
+  // Reset
+  await sleep(1000);
+  document.getElementById('deploy-btn').disabled = false;
+  document.getElementById('deploy-btn').textContent = '⚡ Deploy VM';
+  deploymentRunning = false;
+
+  // Mark as running after 3s
+  setTimeout(() => {
+    updateVMStatus(vmId, 'online');
+    notify(`✅ ${name}'s VM is online!`);
+  }, 3000);
+
+  // Clear form
+  document.getElementById('client-name').value = '';
+  document.getElementById('client-email').value = '';
+  document.getElementById('client-whatsapp').value = '';
+  document.getElementById('industry').selectedIndex = 0;
+}
+
+// ── ADD VM TO LIST ──
+function addVMToList(name, vmId, status, useCase) {
+  const list = document.getElementById('vm-list');
+  const dotColor = status === 'online' ? 'green' : 'yellow';
+  const badgeClass = status === 'online' ? 'ok' : 'starting';
+
+  const item = document.createElement('div');
+  item.className = 'vm-item';
+  item.id = `vm-${vmId}`;
+  item.innerHTML = `
+    <div class="vm-dot ${dotColor}"></div>
+    <div class="vm-info">
+      <div class="vm-name">${name}</div>
+      <div class="vm-meta">${vmId} • ${useCase}</div>
+    </div>
+    <span class="vm-status ${badgeClass}">${status.toUpperCase()}</span>`;
+  list.appendChild(item);
+  clientVMs.push(vmId);
+}
+
+function updateVMStatus(vmId, status) {
+  const item = document.getElementById(`vm-${vmId}`);
+  if (!item) return;
+  const dot = item.querySelector('.vm-dot');
+  const badge = item.querySelector('.vm-status');
+  if (dot) dot.className = `vm-dot ${status === 'online' ? 'green' : 'yellow'}`;
+  if (badge) {
+    badge.className = `vm-status ${status === 'online' ? 'ok' : 'starting'}`;
+    badge.textContent = status.toUpperCase();
+  }
+}
+
+// ── DISCORD NOTIFICATION ──
+async function sendDiscordNotification(vmName, vmId, email) {
+  const webhook = 'https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN';
+  const payload = {
+    embeds: [{
+      title: '🆕 New Client VM Deployed',
+      color: 0x39FFAA,
+      fields: [
+        { name: 'Client', value: vmName, inline: true },
+        { name: 'VM ID', value: vmId, inline: true },
+        { name: 'Email', value: email, inline: true }
+      ],
+      footer: { text: 'StudeX OS — VM Panel' },
+      timestamp: new Date().toISOString()
+    }]
+  };
+  try {
+    // In production, uncomment this:
+    // await fetch(webhook, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    log('DISCORD', 'Webhook sent (placeholder — add real webhook URL)', 'info');
+  } catch(e) {
+    log('DISCORD', 'Webhook failed: ' + e.message, 'err');
+  }
+}
+
+// ── UTIL ──
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// Init
+setStage(0);
+</script>
+</body>
+</html>

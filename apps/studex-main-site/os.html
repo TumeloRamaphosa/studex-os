@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STUDEX OS — Command Center</title>
+<meta name="description" content="StudEx Group operating status. Every number on this page is measured by the heartbeat; none is typed by a person.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black:#000; --obsidian:#0d0d0d; --onyx:#141414; --charcoal:#1c1c1c; --line:#222; --line2:#1a1a1a;
+    --muted:#7a7a7a; --silver:#a8a8a8; --white:#fff;
+    --gold:#d4a017; --gold-light:#f0c040; --gold-dim:#8a6a0f;
+    --ok:#22c55e; --warn:#d4a017; --crit:#ff4444; --info:#3b82f6;
+  }
+  html { font-size: 14px; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: var(--obsidian); color: var(--silver); min-height: 100vh; overflow-x: hidden; }
+  a { color: var(--gold); text-decoration: none; }
+  .gold-bar { height: 3px; background: linear-gradient(90deg, transparent 0%, var(--gold) 20%, var(--gold-light) 50%, var(--gold) 80%, transparent 100%); position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+
+  header { background: var(--black); border-bottom: 1px solid var(--gold-dim); padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; position: sticky; top: 3px; z-index: 90; min-height: 60px; flex-wrap: wrap; }
+  .logo { font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--gold); letter-spacing: .15em; text-transform: uppercase; }
+  .logo span { color: var(--white); }
+  .logo-sub { font-size: .65rem; color: var(--muted); letter-spacing: .25em; text-transform: uppercase; margin-top: -2px; }
+  nav { display: flex; gap: .4rem; flex-wrap: wrap; }
+  nav a { color: var(--muted); font-size: .8rem; padding: 4px 10px; border-radius: 4px; border: 1px solid transparent; }
+  nav a:hover { color: var(--gold); border-color: var(--gold-dim); }
+  .pills { display: flex; gap: .5rem; flex-wrap: wrap; font-size: .72rem; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 20px; border: 1px solid var(--line); background: var(--onyx); color: var(--silver); }
+  .pill.ok { border-color: rgba(34,197,94,.3); color: var(--ok); }
+  .pill.warn { border-color: rgba(212,160,23,.4); color: var(--gold); }
+  .pill.crit { border-color: rgba(255,68,68,.35); color: var(--crit); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  main { max-width: 1400px; margin: 0 auto; padding: 1.5rem 1rem 2rem; }
+  @media (min-width: 800px) { main { padding: 2rem; } }
+
+  .banner { border: 1px solid rgba(255,68,68,.4); background: rgba(255,68,68,.06); color: var(--crit); border-radius: 10px; padding: .9rem 1.2rem; margin-bottom: 1.5rem; font-size: .85rem; display: none; }
+  .banner.warn { border-color: rgba(212,160,23,.4); background: rgba(212,160,23,.06); color: var(--gold); }
+  .banner.show { display: block; }
+
+  .hero { background: linear-gradient(135deg, var(--black) 0%, #111 50%, #1a1200 100%); border: 1px solid var(--gold-dim); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0 0 0 auto; width: 40%; background: radial-gradient(ellipse at right, rgba(212,160,23,.08) 0%, transparent 70%); pointer-events: none; }
+  .hero-tag { font-size: .7rem; letter-spacing: .3em; color: var(--gold); text-transform: uppercase; margin-bottom: .5rem; }
+  .hero h1 { font-family: 'Rajdhani', sans-serif; font-size: 2.4rem; font-weight: 700; color: var(--white); letter-spacing: .05em; line-height: 1.1; margin-bottom: .3rem; }
+  .hero h1 em { font-style: normal; color: var(--gold); }
+  .hero-sub { font-size: .85rem; color: var(--muted); margin-bottom: 1.4rem; max-width: 60ch; }
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; }
+  .metric .num { font-family: 'Rajdhani', sans-serif; font-size: 2.2rem; font-weight: 700; color: var(--gold); line-height: 1; }
+  .metric .num.ok { color: var(--ok); } .metric .num.crit { color: var(--crit); } .metric .num.dim { color: var(--muted); }
+  .metric .lbl { font-size: .65rem; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; margin-top: 4px; }
+  .metric .src { font-size: .62rem; color: #555; margin-top: 2px; }
+
+  .section-title { font-family: 'Rajdhani', sans-serif; font-size: .75rem; font-weight: 600; color: var(--gold); letter-spacing: .2em; text-transform: uppercase; margin: 1.5rem 0 .8rem; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-dim), transparent); }
+  .section-title .meta { font-family: 'Inter', sans-serif; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--muted); font-size: .7rem; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
+  @media (min-width: 900px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+
+  .card { background: var(--onyx); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .card-header { padding: .8rem 1.1rem; border-bottom: 1px solid var(--line2); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .card-title { font-family: 'Rajdhani', sans-serif; font-size: .8rem; font-weight: 600; color: var(--gold); letter-spacing: .15em; text-transform: uppercase; }
+  .card-badge { font-size: .65rem; padding: 2px 8px; border-radius: 10px; background: rgba(212,160,23,.12); color: var(--gold); border: 1px solid var(--gold-dim); white-space: nowrap; }
+  .card-body { padding: .9rem 1.1rem; }
+  .card-foot { padding: .5rem 1.1rem; border-top: 1px solid var(--line2); font-size: .65rem; color: #555; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th { font-size: .62rem; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line2); font-weight: 500; }
+  td { padding: 8px; font-size: .8rem; border-bottom: 1px solid #161616; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  .name { color: var(--silver); font-weight: 500; }
+  .mono { font-family: ui-monospace, Menlo, monospace; font-size: .7rem; color: var(--muted); }
+  .tbl-wrap { overflow-x: auto; }
+
+  .st { display: inline-flex; align-items: center; gap: 5px; font-size: .64rem; padding: 2px 8px; border-radius: 10px; font-weight: 600; letter-spacing: .04em; white-space: nowrap; }
+  .st::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .st.ok { background: rgba(34,197,94,.12); color: var(--ok); border: 1px solid rgba(34,197,94,.25); }
+  .st.warn { background: rgba(212,160,23,.1); color: var(--gold); border: 1px solid rgba(212,160,23,.25); }
+  .st.crit { background: rgba(255,68,68,.1); color: var(--crit); border: 1px solid rgba(255,68,68,.25); }
+  .st.off { background: rgba(255,255,255,.04); color: var(--muted); border: 1px solid #2a2a2a; }
+  .st.info { background: rgba(59,130,246,.1); color: var(--info); border: 1px solid rgba(59,130,246,.25); }
+
+  .rows { display: flex; flex-direction: column; gap: 6px; }
+  .row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--charcoal); border-radius: 6px; border: 1px solid transparent; }
+  .row:hover { border-color: var(--gold-dim); }
+  .row .info { flex: 1; min-width: 0; }
+  .row .t { font-size: .82rem; color: var(--silver); font-weight: 500; }
+  .row .s { font-size: .68rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row.sev-crit { border-color: rgba(255,68,68,.25); background: rgba(255,68,68,.04); }
+  .row.sev-warn { border-color: rgba(212,160,23,.2); background: rgba(212,160,23,.04); }
+
+  .empty { font-size: .8rem; color: var(--muted); padding: .6rem 0; }
+  .unknown { font-size: .8rem; color: var(--gold); padding: .4rem 0; }
+  .unknown b { color: var(--white); font-weight: 500; }
+
+  footer { border-top: 1px solid var(--line2); padding: 1.5rem 1rem; max-width: 1400px; margin: 2rem auto 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: .72rem; color: #555; }
+  footer span { color: var(--gold-dim); }
+  .footer-links { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); }
+  .footer-links a:hover { color: var(--gold); }
+  .rule { font-size: .72rem; color: var(--muted); margin-top: .6rem; }
+</style>
+</head>
+<body>
+<div class="gold-bar"></div>
+
+<header>
+  <div>
+    <div class="logo">STUDEX <span>OS</span></div>
+    <div class="logo-sub">Tip of the Spear · Command Center</div>
+  </div>
+  <nav>
+    <a href="#machines">Machines</a>
+    <a href="#agents">Agents</a>
+    <a href="#deploys">Deployments</a>
+    <a href="#issues">Issues</a>
+    <a href="https://www.studex-group.com">Hub ↗</a>
+  </nav>
+  <div class="pills" id="pills"><span class="pill"><span class="dot"></span>loading heartbeat…</span></div>
+</header>
+
+<main>
+  <div class="banner" id="banner"></div>
+
+  <div class="hero" id="overview">
+    <div class="hero-tag">Studex Group · Measured state</div>
+    <h1>STUDEX <em>OS</em></h1>
+    <p class="hero-sub">Every number on this page is written by the heartbeat on the MacBook desk. Nothing here is typed by a person. If a source could not be read, the page says so instead of showing an old number.</p>
+    <div class="metrics" id="metrics"></div>
+  </div>
+
+  <div class="section-title" id="issues">Open issues <span class="meta" id="issues-meta"></span></div>
+  <div class="card"><div class="card-body"><div class="rows" id="issue-list"><div class="empty">Waiting for heartbeat…</div></div></div></div>
+
+  <div class="section-title" id="machines">Machines <span class="meta" id="machines-meta"></span></div>
+  <div class="card">
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Machine</th><th>Where</th><th>Status</th><th>Shape</th><th>Source</th></tr></thead>
+      <tbody id="machine-rows"></tbody>
+    </table>
+    </div>
+    <div class="card-foot" id="machines-foot"></div>
+  </div>
+
+  <div class="section-title" id="agents">Agents and services <span class="meta" id="agents-meta"></span></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Hermes scheduled jobs</div><div class="card-badge" id="hermes-badge">—</div></div>
+      <div class="card-body"><div class="rows" id="hermes-rows"></div></div>
+      <div class="card-foot" id="hermes-foot"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Seats and local services on this Mac</div><div class="card-badge" id="local-badge">—</div></div>
+      <div class="card-body"><div class="rows" id="local-rows"></div></div>
+      <div class="card-foot" id="local-foot"></div>
+    </div>
+  </div>
+
+  <div class="section-title" id="deploys">Public surfaces <span class="meta" id="deploys-meta"></span></div>
+  <div class="card">
+    <div class="card-body"><div class="rows" id="deploy-rows"></div></div>
+    <div class="card-foot" id="deploys-foot"></div>
+  </div>
+
+  <div class="section-title">Repo and store <span class="meta"></span></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Our-OS repo on this Mac</div></div>
+      <div class="card-body" id="repo-body"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Studex Meat store</div></div>
+      <div class="card-body" id="store-body"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div>STUDEX OS · <span>Tip of the Spear</span> · <span id="gen"></span> · <span id="clock"></span></div>
+  <div class="footer-links">
+    <a href="https://www.studex-group.com">Hub</a>
+    <a href="https://factory.studex-group.com">Dark Factory</a>
+    <a href="https://superagents.studex-group.com">Super Agents</a>
+    <a href="https://studexmeat.com">Studex Meat</a>
+    <a href="https://github.com/TumeloRamaphosa/Our-OS">Our-OS</a>
+    <a href="/api/status">status.json</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const st = (cls, label) => `<span class="st ${cls}">${esc(label)}</span>`;
+  const fmtAge = (ms) => { const m = Math.round(ms/60000); if (m < 1) return 'just now'; if (m < 60) return m + ' min ago'; const h = Math.floor(m/60); return h + ' h ' + (m%60) + ' min ago'; };
+  const when = (iso) => iso ? new Date(iso).toLocaleString('en-ZA', {timeZone:'Africa/Johannesburg', hour12:false}) : '—';
+
+  function clock() { $('clock').textContent = 'SAST ' + new Date().toLocaleTimeString('en-ZA', {timeZone:'Africa/Johannesburg', hour12:false}); }
+  clock(); setInterval(clock, 1000);
+
+  function unknown(sec, what) {
+    return `<div class="unknown">⚠ <b>${esc(what)}</b> could not be read. ${esc(sec && sec.reason || '')}<br><span class="mono">source: ${esc(sec && sec.source || 'none')}</span></div>`;
+  }
+
+  function render(s) {
+    const gen = new Date(s.generated_at);
+    const ageMs = Date.now() - gen.getTime();
+    const stale = ageMs > (s.stale_after_minutes || 30) * 60000;
+    $('gen').textContent = 'heartbeat ' + fmtAge(ageMs) + ' (' + when(s.generated_at) + ')';
+
+    const b = $('banner');
+    if (stale) { b.className = 'banner warn show'; b.textContent = `Heartbeat is stale: last run ${fmtAge(ageMs)}. Everything below is as of ${when(s.generated_at)}, not now.`; }
+    else { b.className = 'banner'; }
+
+    // Pills
+    const pills = [];
+    pills.push(`<span class="pill ${stale ? 'warn' : 'ok'}"><span class="dot"></span>heartbeat ${fmtAge(ageMs)}</span>`);
+    if (s.gcp.state === 'measured') pills.push(`<span class="pill"><span class="dot"></span>GCP ${s.gcp.running}/${s.gcp.total} running</span>`);
+    if (s.orgo.state === 'measured') pills.push(`<span class="pill"><span class="dot"></span>Orgo ${s.orgo.running}/${s.orgo.total} running</span>`);
+    const crit = (s.issues || []).filter(i => i.sev === 'crit').length;
+    pills.push(`<span class="pill ${crit ? 'crit' : 'ok'}"><span class="dot"></span>${crit} critical</span>`);
+    $('pills').innerHTML = pills.join('');
+
+    // Hero metrics
+    const m = [];
+    const metric = (num, lbl, src, cls='') => m.push(`<div class="metric"><div class="num ${cls}">${esc(num)}</div><div class="lbl">${esc(lbl)}</div><div class="src">${esc(src)}</div></div>`);
+    metric(s.gcp.state === 'measured' ? `${s.gcp.running}/${s.gcp.total}` : '?', 'Google VMs running', s.gcp.state === 'measured' ? 'gcloud' : 'unreadable', s.gcp.state === 'measured' ? '' : 'dim');
+    metric(s.orgo.state === 'measured' ? `${s.orgo.running}/${s.orgo.total}` : '?', 'Orgo desks running', s.orgo.state === 'measured' ? 'orgo' : 'unreadable', s.orgo.state === 'measured' ? '' : 'dim');
+    metric(`${s.public.up}/${s.public.total}`, 'Public surfaces up', 'GET from the Mac', s.public.up === s.public.total ? 'ok' : '');
+    const h = s.hermes;
+    metric(h.state === 'measured' ? `${h.ok}/${h.total}` : '?', 'Hermes jobs healthy', h.state === 'measured' ? 'hermes cron list' : 'unreadable', h.state === 'measured' ? (h.failing ? 'crit' : 'ok') : 'dim');
+    metric(`${s.local.up}/${s.local.services.length}`, 'Local services answering', '127.0.0.1');
+    metric(String((s.issues || []).length), 'Open issues', 'derived', crit ? 'crit' : '');
+    $('metrics').innerHTML = m.join('');
+
+    // Issues
+    const il = $('issue-list');
+    const sevCls = { crit: 'crit', warn: 'warn', info: 'info' };
+    const sevLbl = { crit: 'critical', warn: 'warning', info: 'note' };
+    il.innerHTML = (s.issues && s.issues.length) ? s.issues.map(i => `<div class="row sev-${i.sev}"><div class="info"><div class="t">${esc(i.what)}</div><div class="s">${esc(i.where)}</div></div>${st(sevCls[i.sev], sevLbl[i.sev])}</div>`).join('')
+      : '<div class="empty">No open issues detected by the heartbeat.</div>';
+    $('issues-meta').textContent = `${(s.issues||[]).length} derived from the probes`;
+
+    // Machines
+    const rows = [];
+    const hs = s.host;
+    if (hs.state === 'measured') rows.push(`<tr><td><span class="name">${esc(hs.hostname)}</span><div class="mono">primary desk</div></td><td>local · this Mac</td><td>${st('ok','running')}</td><td>macOS ${esc(hs.macos||'?')} · disk ${hs.disk ? hs.disk.used_pct + '% used, ' + hs.disk.free_gb + ' GB free' : '?'}</td><td class="mono">${esc(hs.source)}</td></tr>`);
+    if (s.gcp.state === 'measured') for (const v of s.gcp.vms) rows.push(`<tr><td><span class="name">${esc(v.name)}</span>${v.external_ip ? `<div class="mono">${esc(v.external_ip)}</div>` : ''}</td><td>${esc(v.zone)}</td><td>${st(v.status === 'RUNNING' ? 'ok' : 'off', v.status)}</td><td>${esc(v.type)}</td><td class="mono">gcloud</td></tr>`);
+    else rows.push(`<tr><td colspan="5">${unknown(s.gcp, 'Google Cloud VMs')}</td></tr>`);
+    if (s.orgo.state === 'measured') for (const c of s.orgo.computers) rows.push(`<tr><td><span class="name">${esc(c.name)}</span>${c.instance ? `<div class="mono">${esc(c.instance)}</div>` : ''}</td><td>Orgo cloud desk</td><td>${st(c.status === 'running' ? 'ok' : c.status === 'error' ? 'crit' : 'off', c.status)}</td><td>${c.cpu ?? '?'} CPU · ${c.ram_gb ?? '?'} GB${c.age ? ' · ' + esc(c.age) : ''}</td><td class="mono">orgo</td></tr>`);
+    else rows.push(`<tr><td colspan="5">${unknown(s.orgo, 'Orgo desks')}</td></tr>`);
+    $('machine-rows').innerHTML = rows.join('');
+    $('machines-meta').textContent = `checked ${when(s.gcp.checked_at)}`;
+    $('machines-foot').textContent = 'Frozen and terminated machines stay as they are until someone asks to resume one. The page never restarts anything.';
+
+    // Hermes jobs
+    const hr = $('hermes-rows');
+    if (h.state === 'measured') {
+      hr.innerHTML = h.jobs.length ? h.jobs.map(j => `<div class="row"><div class="info"><div class="t">${esc(j.title)}</div><div class="s">${j.last_run ? 'last run ' + when(j.last_run) : 'never run'}${j.error ? ' · ' + esc(j.error) : ''}${j.failures_in_a_row ? ' · ' + j.failures_in_a_row + ' in a row' : ''}${j.delivery_error ? ' · delivery failed' : ''}</div></div>${st(j.status === 'ok' ? 'ok' : j.status === 'failing' ? 'crit' : j.status === 'paused' ? 'off' : 'warn', j.status)}</div>`).join('')
+        : '<div class="empty">No scheduled jobs registered.</div>';
+      $('hermes-badge').textContent = `${h.ok} ok · ${h.failing} failing · ${h.total} total`;
+    } else { hr.innerHTML = unknown(h, 'Hermes cron'); $('hermes-badge').textContent = 'unknown'; }
+    const hp = s.hermes_profiles;
+    $('hermes-foot').textContent = hp.state === 'measured' ? `${hp.total} profiles on disk: ${hp.profiles.map(p => p.name).join(', ')}` : 'profiles: ' + (hp.reason || 'unknown');
+
+    // Local services + seats
+    const lr = [];
+    for (const r of s.local.services) lr.push(`<div class="row"><div class="info"><div class="t">${esc(r.name)}</div><div class="s">127.0.0.1:${r.port}${r.code ? ' · HTTP ' + r.code : ''}</div></div>${st(r.code ? 'ok' : 'off', r.code ? 'answering' : 'not answering')}</div>`);
+    const cc = s.cashclaw;
+    lr.push(cc.state === 'measured' ? `<div class="row"><div class="info"><div class="t">CashClaw · ${esc(cc.agent || '?')}</div><div class="s">${cc.services_on} services on · ${cc.services_off} off</div></div>${st(cc.services_on ? 'ok' : 'warn', cc.services_on ? 'active' : 'idle')}</div>` : `<div class="row"><div class="info"><div class="t">CashClaw</div><div class="s">${esc(cc.reason)}</div></div>${st('warn','unknown')}</div>`);
+    $('local-rows').innerHTML = lr.join('');
+    $('local-badge').textContent = `${s.local.up}/${s.local.services.length} answering`;
+    $('local-foot').textContent = 'A port that answers is a process that is up. It is not proof the agent behind it is doing anything.';
+
+    // Public surfaces
+    $('deploy-rows').innerHTML = s.public.sites.map(r => {
+      const ok = r.code >= 200 && r.code < 400;
+      const host = r.url.replace(/^https?:\/\//, '');
+      return `<a class="row" href="${esc(r.url)}" target="_blank" rel="noopener"><div class="info"><div class="t">${esc(r.name)}</div><div class="s">${esc(host)}${r.redirect_to ? ' → ' + esc(r.redirect_to.replace(/^https?:\/\//, '')) : ''}${r.ms ? ' · ' + r.ms + ' ms' : ''}</div></div>${st(ok ? (r.redirect_to ? 'info' : 'ok') : 'crit', ok ? (r.redirect_to ? 'redirect' : 'HTTP ' + r.code) : (r.code ? 'HTTP ' + r.code : (r.error || 'down')))}</a>`;
+    }).join('');
+    $('deploys-meta').textContent = `${s.public.up}/${s.public.total} up · checked ${when(s.public.checked_at)}`;
+    $('deploys-foot').textContent = 'Probed from the MacBook, so a site that is up for the Mac and down for a customer is still a down site. Ask before trusting a green here for a launch.';
+
+    // Repo
+    const r = s.repo;
+    $('repo-body').innerHTML = r.state === 'measured'
+      ? `<div class="row"><div class="info"><div class="t">${esc(r.head)}</div><div class="s">${r.ahead_of_github ? r.ahead_of_github + ' commit(s) not on GitHub · ' : ''}${r.behind_github ? r.behind_github + ' behind GitHub · ' : ''}${r.uncommitted_paths ?? '?'} uncommitted path(s)</div></div>${st(r.ahead_of_github || r.uncommitted_paths ? 'warn' : 'ok', r.ahead_of_github || r.uncommitted_paths ? 'unpushed work' : 'in sync')}</div>`
+      : unknown(r, 'Our-OS checkout');
+
+    // Store
+    const so = s.store;
+    $('store-body').innerHTML = so.state === 'measured'
+      ? `<div class="row"><div class="info"><div class="t">${esc(so.orders_30d)} orders · R${esc(so.revenue_30d)}</div><div class="s">last 30 days</div></div></div>`
+      : `${unknown(so, 'Store figures')}<div class="rule">Shop stays live at <a href="https://studexmeat.com">studexmeat.com</a>${s.public.sites.find(x => /studexmeat/.test(x.url) && x.code === 200) ? ' (answering)' : ''}. Order and revenue numbers appear here only when a read connector is wired to the heartbeat.</div>`;
+  }
+
+  function fail(msg) {
+    const b = $('banner'); b.className = 'banner show'; b.textContent = msg;
+    $('pills').innerHTML = '<span class="pill crit"><span class="dot"></span>no heartbeat</span>';
+    $('metrics').innerHTML = '';
+    $('issue-list').innerHTML = `<div class="empty">${esc(msg)}</div>`;
+  }
+
+  async function load() {
+    try {
+      const res = await fetch('/api/status', { cache: 'no-store' });
+      if (res.status === 404) return fail('No heartbeat has been received yet. Run heartbeat.py on the MacBook desk.');
+      if (!res.ok) return fail('status endpoint answered HTTP ' + res.status);
+      render(await res.json());
+    } catch (e) { fail('Could not reach /api/status: ' + e.message); }
+  }
+  load();
+  setInterval(load, 120000);
+})();
+</script>
+</body>
+</html>

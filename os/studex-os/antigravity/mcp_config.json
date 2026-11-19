@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "herdr-fleet": {
+      "serverUrl": "http://10.0.0.1:8080/mcp"
+    },
+    "laya-decisions": {
+      "command": "python3",
+      "args": ["/workspace/studex-os/mcp/laya_mcp_server.py"]
+    },
+    "ollama-local": {
+      "serverUrl": "http://10.0.0.5:11434/mcp"
+    },
+    "crucix-scanner": {
+      "command": "node",
+      "args": ["/workspace/Crucix/server.js"]
+    }
+  }
+}

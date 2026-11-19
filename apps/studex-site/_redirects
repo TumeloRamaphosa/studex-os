@@ -1,0 +1,5 @@
+# Redirect www to apex
+https://www.superagents.studex.dev/* https://superagents.studex.dev/:splat 301!
+
+# 404 fallback
+/* /studex-superagents-v3.html 200

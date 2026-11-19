@@ -1,0 +1,29 @@
+name: dev-kev
+version: "1.0"
+description: >
+  Quality gate agent — reviews code, runs quality checks, enforces standards.
+  Codex runtime (GPT-6 Astra). Part of the StudeX OS fleet.
+
+defaults:
+  runtime: codex
+
+profiles:
+  default:
+    uses:
+      skills: []
+      guidance: []
+      subagents: []
+      plugins: []
+      runtime_resources: []
+
+resources:
+  guidance:
+    - id: role
+      path: guidance/role.md
+
+startup:
+  files:
+    - path: guidance/role.md
+      delivery_hint: send_text
+      required: true
+  actions: []

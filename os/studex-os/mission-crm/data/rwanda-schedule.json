@@ -1,0 +1,106 @@
+{
+  "tue_25aug": {
+    "date": "Tuesday 25 August",
+    "theme": "Arrival & Command Setup",
+    "owner": "Mission Orchestrator",
+    "actions": [
+      "Hotel/transport check-in",
+      "Establish mission command room",
+      "Test mobile data-centre + demo equipment",
+      "Product inventory: coffee + Biltong Gold + materials",
+      "Confirm meeting schedule + local transport",
+      "Internal mission briefing",
+      "Partner welcome dinner",
+      "Assign owners per track",
+      "Record 60-second mission-opening video"
+    ],
+    "outputs": "Run-of-show confirmed; emergency contacts; equipment checklist; inventory; meeting-owner matrix",
+    "status": "not_started"
+  },
+  "wed_26aug": {
+    "date": "Wednesday 26 August",
+    "theme": "Coffee Origin & Women in AI Rehearsal",
+    "owner": "Coffee Agent + Women Agent",
+    "actions": [
+      "Coffee-farm mission: meet farmers, cooperatives, exporters",
+      "Map Rwanda + export corridors",
+      "Record farm + origin content",
+      "Identify available lots, grades, harvest timing + volumes",
+      "Review roasting, packaging, private-label options",
+      "KAKA activation: final naming + owner assigned",
+      "Women in AI rehearsal: venue walk-through",
+      "Focus Magazine editorial/production briefing",
+      "Speaker rehearsal + AV test"
+    ],
+    "outputs": "Producer registry; coffee-lot shortlist; sample register; Women in AI run sheet",
+    "status": "not_started"
+  },
+  "thu_27aug": {
+    "date": "Thursday 27 August",
+    "theme": "Women in AI with Focus Magazine",
+    "owner": "Women Agent",
+    "actions": [
+      "Women in AI programme: Focus Magazine event",
+      "SA + Rwandan women-in-business celebration",
+      "Agentic Rise demonstration",
+      "Women in coffee + value-chain opportunity",
+      "AI tools for business, content, sales + research",
+      "Google/Alibaba coding-session announcement",
+      "Women founders' one-minute pitches",
+      "StudEx Coffee + Biltong Gold hospitality",
+      "Cohort registration: 50 women target"
+    ],
+    "outputs": "50 women engaged; 20 cohort applications; 10 founder profiles; 5 mentor commitments; 3 pilot opportunities",
+    "status": "not_started"
+  },
+  "fri_28aug": {
+    "date": "Friday 28 August",
+    "theme": "AI Coding, Hackathon & Gaming",
+    "owner": "Gaming Agent + Coding Agent",
+    "actions": [
+      "Google: Gemini/AI cloud learning sessions",
+      "Alibaba: Qwen + cloud AI application dev",
+      "StudEx: agents, VMs, mobile data centres",
+      "Hackathon tracks: coffee commerce, tourism, women-led tools, youth employment, mobile commerce, gaming, drones, data centres, methane, robotics",
+      "Friday gaming qualifiers launch",
+      "Working prototypes + team Talent Passports",
+      "Shortlist for Agentic Rise"
+    ],
+    "outputs": "Working prototypes; Talent Passports; recorded pitches; Agentic Rise shortlist; Google/Alibaba follow-ups",
+    "status": "not_started"
+  },
+  "sat_29aug": {
+    "date": "Saturday 29 August",
+    "theme": "Conservation, Founders & Tournament",
+    "owner": "Gaming Agent",
+    "actions": [
+      "Gorilla/conservation programme",
+      "Conservation-technology discussion",
+      "Tourism content capture",
+      "Founders engagement + coffee tasting",
+      "Gaming tournament semi-finals",
+      "Rwanda-SA-global market discussion",
+      "Tourism + conservation hospitality partner meeting"
+    ],
+    "outputs": "Conservation partnerships; gaming semi-final results; founder commitments",
+    "status": "not_started"
+  },
+  "sun_30aug": {
+    "date": "Sunday 30 August",
+    "theme": "Rise Together Hike + Mission Close",
+    "owner": "Mission Orchestrator",
+    "actions": [
+      "Rise Together group hike: Coffee + Agentic Rise + Timbuktoo",
+      "Hackathon demonstrations",
+      "Enterprise + mobile-data-centre showcase",
+      "Coffee commercial roundtable",
+      "Lake Kivu methane opportunity discussion",
+      "Partner commitments + next-step assignments",
+      "Gaming tournament finals + awards",
+      "Cohort announcement",
+      "Mission Results recording"
+    ],
+    "outputs": "Partner commitments; Lake Kivu opportunity note draft; cohort placed; mission report",
+    "status": "not_started"
+  }
+}

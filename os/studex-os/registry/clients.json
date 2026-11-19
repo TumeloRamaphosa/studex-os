@@ -1,0 +1,20 @@
+[
+  {
+    "id": "studexmeat",
+    "name": "StudexMeat",
+    "status": "PILOT",
+    "industry": "Meat/Retail"
+  },
+  {
+    "id": "law-firm",
+    "name": "Law Firm",
+    "status": "INTAKE",
+    "industry": "Legal"
+  },
+  {
+    "id": "restaurant",
+    "name": "Restaurant",
+    "status": "INTAKE",
+    "industry": "Food"
+  }
+]

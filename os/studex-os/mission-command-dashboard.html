@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudEx Mission Command — Rwanda → Russia → Switzerland</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070a0c;
+  --surface: #0d1117;
+  --border: #1e2a3a;
+  --green: #39ffaa;
+  --pink: #ff2ec4;
+  --yellow: #ffd700;
+  --blue: #00b4d8;
+  --orange: #ff6b35;
+  --purple: #b76cff;
+  --red: #ff3366;
+  --text: #c8d6e5;
+  --dim: #4a5568;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; padding: 20px; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* HEADER */
+.header { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border: 1px solid var(--border); background: var(--surface); margin-bottom: 20px; }
+.logo { font-size: 20px; font-weight: 700; }
+.logo span { color: var(--green); }
+.logo .pink { color: var(--pink); }
+.header-right { text-align: right; font-size: 12px; color: var(--dim); }
+.header-right .live { color: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* MISSION TIMELINE */
+.timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.country-card { border: 1px solid var(--border); padding: 16px; background: var(--surface); position: relative; overflow: hidden; }
+.country-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.rwanda::before { background: var(--green); }
+.nigeria::before { background: var(--pink); }
+.russia::before { background: var(--blue); }
+.switzerland::before { background: var(--yellow); }
+.country-name { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+.rwanda .country-name { color: var(--green); }
+.nigeria .country-name { color: var(--pink); }
+.russia .country-name { color: var(--blue); }
+.switzerland .country-name { color: var(--yellow); }
+.country-dates { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.country-focus { font-size: 11px; color: var(--dim); margin-bottom: 8px; }
+.countdown { font-size: 22px; font-weight: 700; }
+.countdown .val { color: var(--green); }
+.country-status { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.badge { font-size: 9px; padding: 2px 8px; border-radius: 2px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+.bg-active { background: rgba(57,255,170,0.15); color: var(--green); border: 1px solid var(--green); }
+.bg-prep { background: rgba(0,180,216,0.15); color: var(--blue); border: 1px solid var(--blue); }
+.bg-pending { background: rgba(74,85,104,0.3); color: var(--dim); border: 1px solid var(--dim); }
+.bg-warning { background: rgba(255,51,102,0.15); color: var(--red); border: 1px solid var(--red); }
+
+/* COUNTDOWN CLOCK */
+.countdown-banner { border: 1px solid var(--green); background: var(--surface); padding: 20px; text-align: center; margin-bottom: 20px; position: relative; overflow: hidden; }
+.countdown-banner::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 2px; background: var(--green); animation: scan 3s linear infinite; }
+@keyframes scan { to { left: 100%; } }
+.countdown-label { font-size: 11px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; }
+.countdown-timer { font-size: 48px; font-weight: 700; color: var(--green); font-family: 'JetBrains Mono', monospace; }
+.countdown-unit { font-size: 14px; color: var(--dim); margin-top: 4px; }
+.mission-title { font-size: 24px; font-weight: 700; margin-top: 12px; }
+.mission-title .pink { color: var(--pink); }
+
+/* DECISION BOARD */
+.section { border: 1px solid var(--border); background: var(--surface); margin-bottom: 16px; }
+.section-header { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.section-title { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--pink); }
+.section-count { font-size: 11px; color: var(--dim); font-family: 'JetBrains Mono', monospace; }
+
+.decision-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); }
+.decision-item { background: var(--surface); padding: 14px 20px; }
+.decision-q { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.decision-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.decision-owner { font-size: 10px; color: var(--dim); font-family: 'JetBrains Mono', monospace; }
+.priority-tag { font-size: 9px; padding: 1px 6px; border-radius: 2px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.p-urgent { background: var(--red); color: white; }
+.p-high { background: rgba(255,51,102,0.2); color: var(--red); }
+.p-medium { background: rgba(255,215,0,0.15); color: var(--yellow); }
+.p-low { background: rgba(74,85,104,0.2); color: var(--dim); }
+.decision-status { font-size: 10px; padding: 1px 6px; border-radius: 2px; font-family: 'JetBrains Mono', monospace; }
+.s-open { background: rgba(255,51,102,0.15); color: var(--red); border: 1px solid var(--red); }
+.s-blocked { background: rgba(255,51,102,0.2); color: var(--red); border: 1px solid var(--red); }
+.s-inprogress { background: rgba(57,255,170,0.1); color: var(--green); border: 1px solid var(--green); }
+.s-closed { background: rgba(57,255,170,0.1); color: var(--green); border: 1px solid var(--green); }
+
+/* ACTION BOARD */
+.action-section { padding: 12px 20px; border-bottom: 1px solid var(--border); }
+.action-section:last-child { border-bottom: none; }
+.action-section-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; font-weight: 600; }
+.checklist { list-style: none; }
+.checklist li { padding: 6px 0; font-size: 12px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(30,42,58,0.5); }
+.checklist li:last-child { border-bottom: none; }
+.checkbox { width: 14px; height: 14px; border: 1px solid var(--border); background: transparent; flex-shrink: 0; }
+.checkbox.checked { background: var(--green); border-color: var(--green); }
+.task-text.checked { text-decoration: line-through; color: var(--dim); }
+.task-owner { font-size: 10px; color: var(--blue); font-family: 'JetBrains Mono', monospace; margin-left: auto; white-space: nowrap; }
+
+/* TRACK PROGRESS */
+.tracks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.track-card { border: 1px solid var(--border); background: var(--surface); padding: 14px; }
+.track-num { font-size: 10px; color: var(--dim); font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
+.track-name { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+.progress-bar { height: 3px; background: var(--border); margin-bottom: 6px; }
+.progress-fill { height: 100%; transition: width 0.5s; }
+.progress-label { font-size: 10px; color: var(--dim); font-family: 'JetBrains Mono', monospace; display: flex; justify-content: space-between; }
+.owner-tag { font-size: 10px; color: var(--green); font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+
+/* AGENT ASSIGNMENTS */
+.agents-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.agent-card { border: 1px solid var(--border); background: var(--surface); padding: 14px; }
+.agent-name { font-size: 13px; font-weight: 600; color: var(--green); margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+.agent-role { font-size: 11px; color: var(--dim); margin-bottom: 8px; }
+.agent-tasks { font-size: 11px; line-height: 1.6; }
+.agent-tasks span { display: block; padding: 2px 0; }
+.task-active { color: var(--green); }
+.task-waiting { color: var(--yellow); }
+
+/* LIVE LOG */
+.log-feed { max-height: 300px; overflow-y: auto; padding: 12px 20px; }
+.log-entry { font-size: 11px; font-family: 'JetBrains Mono', monospace; padding: 4px 0; border-bottom: 1px solid rgba(30,42,58,0.5); display: flex; gap: 10px; }
+.log-time { color: var(--dim); flex-shrink: 0; }
+.log-type { flex-shrink: 0; width: 50px; text-align: center; font-size: 9px; font-weight: 700; letter-spacing: 1px; padding: 1px 4px; border-radius: 2px; }
+.log-info { color: var(--blue); background: rgba(0,180,216,0.1); }
+.log-success { color: var(--green); background: rgba(57,255,170,0.1); }
+.log-warning { color: var(--yellow); background: rgba(255,215,0,0.1); }
+.log-alert { color: var(--red); background: rgba(255,51,102,0.1); }
+
+/* GRID LAYOUT */
+.main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.main-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.full { grid-column: 1 / -1; }
+.two-thirds { grid-column: 1 / 2; }
+.one-third { grid-column: 2 / 3; }
+
+.footer { text-align: center; padding: 20px; font-size: 11px; color: var(--dim); border-top: 1px solid var(--border); margin-top: 20px; font-family: 'JetBrains Mono', monospace; }
+.footer span { color: var(--green); }
+
+/* COUNTRY-SPECIFIC COLORS */
+.track-coffee .progress-fill { background: var(--green); }
+.track-biltong .progress-fill { background: var(--orange); }
+.track-datacenter .progress-fill { background: var(--blue); }
+.track-agentic .progress-fill { background: var(--purple); }
+.track-gaming .progress-fill { background: var(--pink); }
+.track-coding .progress-fill { background: var(--yellow); }
+.track-women .progress-fill { background: var(--pink); }
+.track-lake .progress-fill { background: var(--green); }
+.track-restaurant .progress-fill { background: var(--orange); }
+.track-nigeria .progress-fill { background: var(--pink); }
+.track-russia .progress-fill { background: var(--blue); }
+.track-switzerland .progress-fill { background: var(--yellow); }
+.track-distribution .progress-fill { background: var(--green); }
+.track-timbuktoo .progress-fill { background: var(--purple); }
+
+.surface-header { padding: 10px 20px; border-bottom: 1px solid var(--border); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+.surface-header.green { color: var(--green); }
+.surface-header.pink { color: var(--pink); }
+.surface-header.blue { color: var(--blue); }
+.surface-header.yellow { color: var(--yellow); }
+.surface-header.purple { color: var(--purple); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo"><span>Stud</span><span class="pink">Ex</span> MISSION COMMAND</div>
+  <div class="header-right">
+    <div>Rwanda <span style="color:var(--green)">● LIVE</span> | Nigeria <span style="color:var(--dim)">○ PREP</span> | Russia <span style="color:var(--dim)">○ PREP</span> | Switzerland <span style="color:var(--dim)">○ PREP</span></div>
+    <div class="live mono">HERMES ONLINE — MISSION DAY -16</div>
+  </div>
+</div>
+
+<!-- COUNTDOWN -->
+<div class="countdown-banner">
+  <div class="countdown-label">MISSION LAUNCH — KIGALI, RWANDA</div>
+  <div class="countdown-timer mono" id="countdown">--d --h --m --s</div>
+  <div class="countdown-unit">25 August 2026 &nbsp;|&nbsp; 10:00 AM Kigali Time (CAT)</div>
+  <div class="mission-title"><span class="pink">RWANDA</span> → <span class="pink">NIGERIA</span> → <span class="pink">RUSSIA</span> → <span class="pink">SWITZERLAND</span></div>
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline">
+  <div class="country-card rwanda">
+    <div class="country-name">🇷🇼 Rwanda</div>
+    <div class="country-dates">25–30 Aug</div>
+    <div class="country-focus">Coffee · AI · Women · Gaming · Data Centres</div>
+    <div class="countdown" style="font-size:16px"><span class="val" id="rwanda-days">16</span> days</div>
+    <div class="country-status">
+      <span class="badge bg-active">ACTIVE PREP</span>
+      <span class="badge bg-warning">8 DECISIONS OPEN</span>
+    </div>
+  </div>
+  <div class="country-card nigeria">
+    <div class="country-name">🇳🇬 Nigeria</div>
+    <div class="country-dates">31 Aug – 4 Sep</div>
+    <div class="country-focus">GITEX Nigeria · Abuja · Lagos · Partners</div>
+    <div class="countdown" style="font-size:16px"><span class="val" id="nigeria-days">22</span> days</div>
+    <div class="country-status">
+      <span class="badge bg-prep">REGISTER</span>
+      <span class="badge bg-pending">TARGET: 20 CONTACTS</span>
+    </div>
+  </div>
+  <div class="country-card russia">
+    <div class="country-name">🇷🇺 Russia</div>
+    <div class="country-dates">11–17 Sep</div>
+    <div class="country-focus">Youth Festival · Coffee · Technology · Women</div>
+    <div class="countdown" style="font-size:16px"><span class="val" id="russia-days">33</span> days</div>
+    <div class="country-status">
+      <span class="badge bg-pending">PACKING LIST</span>
+      <span class="badge bg-pending">DELEGATE SELECT</span>
+    </div>
+  </div>
+  <div class="country-card switzerland">
+    <div class="country-name">🇨🇭 Switzerland</div>
+    <div class="country-dates">28 Sep – 3 Oct</div>
+    <div class="country-focus">Trade · Investment · Commodities · Deal Room</div>
+    <div class="countdown" style="font-size:16px"><span class="val" id="swiss-days">50</span> days</div>
+    <div class="country-status">
+      <span class="badge bg-pending">MEETING LIST</span>
+      <span class="badge bg-pending">DEAL ROOM PREP</span>
+    </div>
+  </div>
+</div>
+
+<!-- 15 TRACKS -->
+<div class="surface-header green">15 COMMERCIAL TRACKS — PROGRESS</div>
+<div class="tracks">
+  <div class="track-card track-coffee">
+    <div class="track-num">TRACK 01</div>
+    <div class="track-name">StudEx Coffee</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:35%"></div></div>
+    <div class="progress-label"><span>Supplier registry</span><span>35%</span></div>
+    <div class="owner-tag">OWNER: COFFEE AGENT</div>
+  </div>
+  <div class="track-card track-biltong">
+    <div class="track-num">TRACK 02</div>
+    <div class="track-name">Wagyu Biltong Gold</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+    <div class="progress-label"><span>SKU confirmation</span><span>20%</span></div>
+    <div class="owner-tag">OWNER: MEAT AGENT</div>
+  </div>
+  <div class="track-card track-datacenter">
+    <div class="track-num">TRACK 03</div>
+    <div class="track-name">Mobile Data Centres</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
+    <div class="progress-label"><span>Demo package</span><span>25%</span></div>
+    <div class="owner-tag">OWNER: DATA AGENT</div>
+  </div>
+  <div class="track-card track-agentic">
+    <div class="track-num">TRACK 04</div>
+    <div class="track-name">Agentic Rise</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+    <div class="progress-label"><span>Cohort curriculum</span><span>40%</span></div>
+    <div class="owner-tag">OWNER: MISSION ORCHESTRATOR</div>
+  </div>
+  <div class="track-card track-gaming">
+    <div class="track-num">TRACK 05</div>
+    <div class="track-name">Gaming & Esports</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:30%"></div></div>
+    <div class="progress-label"><span>StudEx Arcade</span><span>30%</span></div>
+    <div class="owner-tag">OWNER: GAMING AGENT</div>
+  </div>
+  <div class="track-card track-coding">
+    <div class="track-num">TRACK 06</div>
+    <div class="track-name">Coding Education</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:15%"></div></div>
+    <div class="progress-label"><span>Partner outreach</span><span>15%</span></div>
+    <div class="owner-tag">OWNER: COFFEE AGENT</div>
+  </div>
+  <div class="track-card track-women">
+    <div class="track-num">TRACK 07</div>
+    <div class="track-name">Women in AI</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
+    <div class="progress-label"><span>Focus Magazine</span><span>55%</span></div>
+    <div class="owner-tag">OWNER: WOMEN AGENT</div>
+  </div>
+  <div class="track-card track-lake">
+    <div class="track-num">TRACK 08</div>
+    <div class="track-name">Lake Kivu Methane</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:10%"></div></div>
+    <div class="progress-label"><span>Opportunity note</span><span>10%</span></div>
+    <div class="owner-tag">OWNER: DATA AGENT</div>
+  </div>
+  <div class="track-card track-restaurant">
+    <div class="track-num">TRACK 09</div>
+    <div class="track-name">Statix Coffee AI Restaurant</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+    <div class="progress-label"><span>Concept & SOPs</span><span>20%</span></div>
+    <div class="owner-tag">OWNER: MISSION ORCHESTRATOR</div>
+  </div>
+  <div class="track-card track-nigeria">
+    <div class="track-num">TRACK 10</div>
+    <div class="track-name">Nigeria GITEX</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:10%"></div></div>
+    <div class="progress-label"><span>Registration</span><span>10%</span></div>
+    <div class="owner-tag">OWNER: MISSION ORCHESTRATOR</div>
+  </div>
+  <div class="track-card track-russia">
+    <div class="track-num">TRACK 11</div>
+    <div class="track-name">Russia Market</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:5%"></div></div>
+    <div class="progress-label"><span>Commercial pack</span><span>5%</span></div>
+    <div class="owner-tag">OWNER: MISSION ORCHESTRATOR</div>
+  </div>
+  <div class="track-card track-switzerland">
+    <div class="track-num">TRACK 12</div>
+    <div class="track-name">Switzerland Deal Room</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+    <div class="progress-label"><span>Meeting prep</span><span>0%</span></div>
+    <div class="owner-tag">OWNER: MISSION ORCHESTRATOR</div>
+  </div>
+  <div class="track-card track-distribution">
+    <div class="track-num">TRACK 13</div>
+    <div class="track-name">International Distribution</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:5%"></div></div>
+    <div class="progress-label"><span>China/Russia maps</span><span>5%</span></div>
+    <div class="owner-tag">OWNER: COFFEE AGENT</div>
+  </div>
+  <div class="track-card track-timbuktoo">
+    <div class="track-num">TRACK 14</div>
+    <div class="track-name">Timbuktoo Initiative</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:5%"></div></div>
+    <div class="progress-label"><span>Cape Town link</span><span>5%</span></div>
+    <div class="owner-tag">OWNER: MISSION ORCHESTRATOR</div>
+  </div>
+  3 more tracks below...
+</div>
+
+<!-- DECISION BOARD -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">⚠ DECISIONS THAT CANNOT REMAIN OPEN</div>
+    <div class="section-count">14 OPEN — 0 CLOSED — 6 URGENT</div>
+  </div>
+  <div class="decision-grid">
+    <div class="decision-item">
+      <div class="decision-q">Women in AI: 26 or 27 August?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-urgent">URGENT</span>
+        <span class="decision-status s-open">OPEN</span>
+        <span class="decision-owner">TOUMELO + WOMEN AGENT</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">"KAKA" activation: exact name + host?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-urgent">URGENT</span>
+        <span class="decision-status s-open">OPEN</span>
+        <span class="decision-owner">COFFEE AGENT</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">Gorilla visit: permits + location confirmed?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-high">HIGH</span>
+        <span class="decision-status s-open">OPEN</span>
+        <span class="decision-owner">LOGISTICS AGENT</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">Sunday hike: route + Timbuktoo confirmed?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-high">HIGH</span>
+        <span class="decision-status s-open">OPEN</span>
+        <span class="decision-owner">LOGISTICS AGENT</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">Coffee: supplier + volume + packaging + pricing?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-urgent">URGENT</span>
+        <span class="decision-status s-blocked">BLOCKED</span>
+        <span class="decision-owner">COFFEE AGENT</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">Biltong Gold: exact SKU + 2,000 units feasible?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-urgent">URGENT</span>
+        <span class="decision-status s-blocked">BLOCKED</span>
+        <span class="decision-owner">MEAT AGENT</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">Mobile data centre: equipment + demo owner?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-high">HIGH</span>
+        <span class="decision-status s-inprogress">IN PROGRESS</span>
+        <span class="decision-owner">DATA AGENT</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">Google/Alibaba: invited, confirmed or sponsor?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-high">HIGH</span>
+        <span class="decision-status s-open">OPEN</span>
+        <span class="decision-owner">MISSION ORCHESTRATOR</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">Russia: depart 16 Sept or attend 17 Sept closing?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-high">HIGH</span>
+        <span class="decision-status s-open">OPEN</span>
+        <span class="decision-owner">TUMELO</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">Switzerland: Geneva + Zurich? Confirmed host?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-medium">MEDIUM</span>
+        <span class="decision-status s-open">OPEN</span>
+        <span class="decision-owner">MISSION ORCHESTRATOR</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">Budget: travel + events + products + permits + contingency?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-urgent">URGENT</span>
+        <span class="decision-status s-open">OPEN</span>
+        <span class="decision-owner">TUMELO</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">Who holds final authority for daily mission decisions?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-high">HIGH</span>
+        <span class="decision-status s-open">OPEN</span>
+        <span class="decision-owner">TUMELO</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">Focus Magazine: venue + AV + guest list confirmed?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-urgent">URGENT</span>
+        <span class="decision-status s-inprogress">IN PROGRESS</span>
+        <span class="decision-owner">WOMEN AGENT</span>
+      </div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-q">GITEX Nigeria: registrations + Abuja-Lagos plan?</div>
+      <div class="decision-meta">
+        <span class="priority-tag p-high">HIGH</span>
+        <span class="decision-status s-open">OPEN</span>
+        <span class="decision-owner">MISSION ORCHESTRATOR</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACTION BOARD + AGENTS -->
+<div class="main-grid">
+  <div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">⚡ IMMEDIATE ACTION BOARD</div>
+        <div class="section-count">WITHIN 24 HOURS</div>
+      </div>
+      <div class="action-section">
+        <div class="action-section-title">✈ Travel & Logistics</div>
+        <ul class="checklist">
+          <li><div class="checkbox"></div><span class="task-text">Confirm Rwanda arrival/departure flights + traveller list</span><span class="task-owner">LOGISTICS</span></li>
+          <li><div class="checkbox"></div><span class="task-text">Confirm Women in AI as Thursday 27 August</span><span class="task-owner">TOUMELO</span></li>
+          <li><div class="checkbox"></div><span class="task-text">Confirm Focus Magazine participation</span><span class="task-owner">WOMEN</span></li>
+          <li><div class="checkbox"></div><span class="task-text">Confirm venue, capacity and AV</span><span class="task-owner">WOMEN</span></li>
+          <li><div class="checkbox"></div><span class="task-text">Confirm gorilla permits and group hike logistics</span><span class="task-owner">LOGISTICS</span></li>
+          <li><div class="checkbox"></div><span class="task-text">Confirm Timbuktoo Initiative participants</span><span class="task-owner">ORCHESTRATOR</span></li>
+          <li><div class="checkbox"></div><span class="task-text">Confirm GITEX registrations + Abuja-Lagos plan</span><span class="task-owner">ORCHESTRATOR</span></li>
+        </ul>
+      </div>
+      <div class="action-section">
+        <div class="action-section-title">☕ Commercial Tracks</div>
+        <ul class="checklist">
+          <li><div class="checkbox"></div><span class="task-text">Confirm coffee-farm host + route</span><span class="task-owner">COFFEE</span></li>
+          <li><div class="checkbox"></div><span class="task-text">Clarify "KAKA" activation name + owner</span><span class="task-owner">COFFEE</span></li>
+          <li><div class="checkbox"></div><span class="task-text">Decide Russia departure: 16 or 17 September</span><span class="task-owner">TUMELO</span></li>
+          <li><div class="checkbox"></div><span class="task-text">Confirm Switzerland city + meeting purpose</span><span class="task-owner">ORCHESTRATOR</span></li>
+        </ul>
+      </div>
+      <div class="action-section">
+        <div class="action-section-title">🤖 AI Agents & Systems</div>
+        <ul class="checklist">
+          <li><div class="checkbox"></div><span class="task-text">Deploy Hermes mission command dashboard</span><span class="task-owner">HERMES</span></li>
+          <li><div class="checkbox"></div><span class="task-text">Assign human owner to every workstream</span><span class="task-owner">TUMELO</span></li>
+          <li><div class="checkbox"></div><span class="task-text">Build mission CRM + daily reporting system</span><span class="task-owner">HERMES</span></li>
+          <li><div class="checkbox"></div><span class="task-text">Set up Discord #mission-command channel</span><span class="task-owner">HERMES</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">🤖 MISSION AGENT ROSTER</div>
+        <div class="section-count">14 AGENTS ASSIGNED</div>
+      </div>
+      <div class="agents-grid" style="grid-template-columns: 1fr 1fr; padding: 12px; gap: 8px;">
+        <div class="agent-card">
+          <div class="agent-name">HERMES</div>
+          <div class="agent-role">Mission Orchestrator</div>
+          <div class="agent-tasks">
+            <span class="task-active">✓ Dashboard deployed</span>
+            <span class="task-active">→ Decision board live</span>
+            <span class="task-waiting">⏳ CRM system</span>
+          </div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-name">MISSION.CMD</div>
+          <div class="agent-role">Orgo VM: Command</div>
+          <div class="agent-tasks">
+            <span class="task-waiting">⏳ Daily brief agent</span>
+            <span class="task-waiting">⏳ Mission close agent</span>
+            <span class="task-waiting">⏳ CRM updater</span>
+          </div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-name">COFFEE.AGENT</div>
+          <div class="agent-role">Track 01 + 06 + 13</div>
+          <div class="agent-tasks">
+            <span class="task-active">→ Farmer registry</span>
+            <span class="task-active">→ Brand decision</span>
+            <span class="task-waiting">⏳ China/Russia maps</span>
+          </div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-name">MEAT.AGENT</div>
+          <div class="agent-role">Track 02</div>
+          <div class="agent-tasks">
+            <span class="task-waiting">⏳ SKU confirmation</span>
+            <span class="task-waiting">⏳ Halaal docs</span>
+            <span class="task-waiting">⏳ 2,000-unit plan</span>
+          </div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-name">DATA.AGENT</div>
+          <div class="agent-role">Track 03 + 08</div>
+          <div class="agent-tasks">
+            <span class="task-active">→ Demo package</span>
+            <span class="task-waiting">⏳ Lake Kivu note</span>
+            <span class="task-waiting">⏳ Methane research</span>
+          </div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-name">WOMEN.AI</div>
+          <div class="agent-role">Track 07</div>
+          <div class="agent-tasks">
+            <span class="task-active">→ Focus Magazine</span>
+            <span class="task-active">→ Venue walk-through</span>
+            <span class="task-waiting">⏳ Run sheet</span>
+          </div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-name">GAMING.AGENT</div>
+          <div class="agent-role">Track 05</div>
+          <div class="agent-tasks">
+            <span class="task-active">→ Arcade pathway</span>
+            <span class="task-waiting">⏳ Tournament format</span>
+            <span class="task-waiting">⏳ Prize pool</span>
+          </div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-name">CRM.AGENT</div>
+          <div class="agent-role">Contact management</div>
+          <div class="agent-tasks">
+            <span class="task-waiting">⏳ Setup CRM system</span>
+            <span class="task-waiting">⏳ Contact capture</span>
+            <span class="task-waiting">⏳ Follow-up workflow</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE LOG -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">📡 LIVE MISSION LOG</div>
+    <div class="section-count">AUG 20 10:24 SAST</div>
+  </div>
+  <div class="log-feed" id="logFeed">
+    <div class="log-entry"><span class="log-time">10:24</span><span class="log-type log-alert">ALERT</span><span>Mission command dashboard deployed. 16 days to Rwanda launch.</span></div>
+    <div class="log-entry"><span class="log-time">10:23</span><span class="log-type log-info">INFO</span><span>14 decisions identified. 6 marked URGENT. Cannot depart without closing.</span></div>
+    <div class="log-entry"><span class="log-time">10:22</span><span class="log-type log-warning">WARN</span><span>COFFEE supplier decision BLOCKED — no approved producer registered.</span></div>
+    <div class="log-entry"><span class="log-time">10:22</span><span class="log-type log-warning">WARN</span><span>BILTONG GOLD SKU BLOCKED — no confirmed pack size or halal cert path.</span></div>
+    <div class="log-entry"><span class="log-time">10:21</span><span class="log-type log-success">OK</span><span>Women in AI date: 27 August confirmed. Focus Magazine engaged.</span></div>
+    <div class="log-entry"><span class="log-time">10:20</span><span class="log-type log-info">INFO</span><span>Honcho MCP memory skill saved. Awaiting Tumelo's API key.</span></div>
+    <div class="log-entry"><span class="log-time">10:19</span><span class="log-type log-success">OK</span><span>Tailscale mesh network documented. Awaiting device installation.</span></div>
+    <div class="log-entry"><span class="log-time">10:18</span><span class="log-type log-info">INFO</span><span>Mission master plan received. 15 commercial tracks identified.</span></div>
+    <div class="log-entry"><span class="log-time">10:17</span><span class="log-type log-info">INFO</span><span>StudeX OS v3.6 active. StudEx Coffee, Meat, Data Centres, Gaming, Coding, Women in AI, Lake Kivu, Nigeria, Russia, Switzerland all documented.</span></div>
+  </div>
+</div>
+
+<!-- DAILY RHYTHM -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">🔁 MISSION DAILY RHYTHM</div>
+    <div class="section-count">NON-NEGOTIABLE</div>
+  </div>
+  <div style="display:grid; grid-template-columns: repeat(6,1fr); gap: 1px; background: var(--border);">
+    <div style="background: var(--surface); padding: 14px; text-align:center;">
+      <div style="font-size:20px">🌅</div>
+      <div style="font-size:11px; font-weight:600; margin:4px 0; color:var(--green)">07:00</div>
+      <div style="font-size:11px; color:var(--dim)">Command Brief<br/>Objectives + risks<br/>Transport + inventory</div>
+    </div>
+    <div style="background: var(--surface); padding: 14px; text-align:center;">
+      <div style="font-size:20px">🎯</div>
+      <div style="font-size:11px; font-weight:600; margin:4px 0; color:var(--blue)">ALL DAY</div>
+      <div style="font-size:11px; color:var(--dim)">CRM scan<br/>Contact capture<br/>Video + photos<br/>Assign next step</div>
+    </div>
+    <div style="background: var(--surface); padding: 14px; text-align:center;">
+      <div style="font-size:20px">☕</div>
+      <div style="font-size:11px; font-weight:600; margin:4px 0; color:var(--orange)">13:00</div>
+      <div style="font-size:11px; color:var(--dim)">Lunch debrief<br/>Quick decision log<br/>Afternoon prep</div>
+    </div>
+    <div style="background: var(--surface); padding: 14px; text-align:center;">
+      <div style="font-size:20px">📊</div>
+      <div style="font-size:11px; font-weight:600; margin:4px 0; color:var(--yellow)">17:00</div>
+      <div style="font-size:11px; color:var(--dim)">End-of-day pipeline<br/>Lead qualification<br/>Owner assignment</div>
+    </div>
+    <div style="background: var(--surface); padding: 14px; text-align:center;">
+      <div style="font-size:20px">🎬</div>
+      <div style="font-size:11px; font-weight:600; margin:4px 0; color:var(--pink)">19:00</div>
+      <div style="font-size:11px; color:var(--dim)">Content batch<br/>Social posts<br/>Press outreach</div>
+    </div>
+    <div style="background: var(--surface); padding: 14px; text-align:center;">
+      <div style="font-size:20px">🌙</div>
+      <div style="font-size:11px; font-weight:600; margin:4px 0; color:var(--red)">21:30</div>
+      <div style="font-size:11px; color:var(--dim)">Mission Close<br/>Results vs targets<br/>Next-day priorities</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  StudEx Mission Command v1.0 &nbsp;|&nbsp; Rwanda 25-30 Aug &nbsp;|&nbsp; Nigeria 31 Aug-4 Sep &nbsp;|&nbsp; Russia 11-17 Sep &nbsp;|&nbsp; Switzerland 28 Sep-3 Oct &nbsp;|&nbsp; <span>HERMES AGENT ONLINE</span>
+</div>
+
+<script>
+// Countdown to 25 August 2026
+function updateCountdown() {
+  const launch = new Date('2026-08-25T10:00:00+02:00');
+  const now = new Date();
+  const diff = launch - now;
+  if (diff <= 0) {
+    document.getElementById('countdown').textContent = 'MISSION LIVE';
+    return;
+  }
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+  const secs = Math.floor((diff % (1000*60)) / 1000);
+  document.getElementById('countdown').textContent =
+    days + 'd ' + String(hours).padStart(2,'0') + 'h ' + String(mins).padStart(2,'0') + 'm ' + String(secs).padStart(2,'0') + 's';
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>

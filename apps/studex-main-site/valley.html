@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studex Valley OS v3.3 — Multi-Agent Command Center with Paperclip</title>
+    <style>
+        :root {
+            --obsidian: #0A0A0A;
+            --gold: #C9A84C;
+            --gold-dim: #8B734B;
+            --gold-bright: #FFD700;
+            --surface: #141414;
+            --surface-elevated: #1E1E1E;
+            --text: #E8E8E8;
+            --text-muted: #888;
+            --border: #2A2A2A;
+            --success: #22C55E;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --terminal: #00FF41;
+            --subagent: #FF6B35;
+            --info: #3B82F6;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Space Mono', 'SF Mono', monospace;
+            background: var(--obsidian);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        .header {
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .brand { display: flex; align-items: center; gap: 16px; }
+        
+        .logo {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; font-weight: bold; color: var(--obsidian);
+        }
+        
+        .brand-text h1 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 28px; font-weight: 400;
+            color: var(--gold); letter-spacing: 2px;
+        }
+        
+        .brand-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .status-bar { display: flex; gap: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .service-status {
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            background: var(--surface-elevated);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .service-status:hover { background: var(--border); }
+        .service-status.online { border: 1px solid var(--success); }
+        .service-status.offline { border: 1px solid var(--error); }
+        .service-status.syncing { border: 1px solid var(--warning); animation: pulse 1s infinite; }
+        
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--text-muted);
+        }
+        
+        .service-status.online .status-dot {
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .nav-tabs {
+            display: flex; gap: 4px;
+            padding: 0 32px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            padding: 16px 24px;
+            background: transparent;
+            border: none; border-bottom: 2px solid transparent;
+            color: var(--text-muted);
+            font-family: inherit; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 2px;
+            cursor: pointer; transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .nav-tab:hover { color: var(--text); }
+        .nav-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+        
+        .main-content { padding: 32px; max-width: 1920px; margin: 0 auto; }
+        
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* Agent Terminal Grid */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .agent-terminal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        
+        .agent-terminal:hover { border-color: var(--gold-dim); }
+        .agent-terminal.active { border-color: var(--gold); box-shadow: 0 0 20px rgba(201, 168, 76, 0.1); }
+        .agent-terminal.subagent { border-color: var(--subagent); }
+        .agent-terminal.busy { border-color: var(--warning); }
+        
+        .terminal-header {
+            background: var(--surface-elevated);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .agent-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .agent-avatar {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: var(--obsidian);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 14px;
+        }
+        
+        .agent-avatar.subagent {
+            background: var(--subagent);
+            color: white;
+        }
+        
+        .agent-name {
+            font-weight: 500;
+            color: var(--gold);
+        }
+        
+        .agent-role {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: var(--surface);
+            border: 1px solid var(--text-muted);
+            cursor: pointer;
+        }
+        
+        .status-badge.active {
+            border-color: var(--success);
+            color: var(--success);
+        }
+        
+        .status-badge.busy {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+        
+        .status-badge.standby {
+            border-color: var(--text-muted);
+            color: var(--text-muted);
+        }
+        
+        .terminal-body {
+            height: 200px;
+            background: #001100;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 11px;
+            overflow-y: auto;
+            color: var(--terminal);
+        }
+        
+        .terminal-line {
+            margin: 4px 0;
+            line-height: 1.5;
+        }
+        
+        .terminal-line.system { color: var(--text-muted); }
+        .terminal-line.user { color: var(--gold); }
+        .terminal-line.error { color: var(--error); }
+        .terminal-line.success { color: var(--success); }
+        .terminal-line.subagent { color: var(--subagent); }
+        .terminal-line.info { color: var(--info); }
+        
+        .terminal-input-area {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            background: var(--surface-elevated);
+            border-top: 1px solid var(--border);
+        }
+        
+        .terminal-input {
+            flex: 1;
+            background: var(--obsidian);
+            border: 1px solid var(--border);
+            color: var(--terminal);
+            padding: 8px 12px;
+            font-family: inherit;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+        
+        .terminal-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-family: inherit; font-size: 10px;
+            text-transform: uppercase; letter-spacing: 1px;
+            cursor: pointer; border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background: var(--gold); color: var(--obsidian);
+        }
+        
+        .btn-primary { background: var(--gold); color: var(--obsidian); }
+        .btn-primary:hover { background: var(--gold-bright); }
+        .btn-subagent { border-color: var(--subagent); color: var(--subagent); }
+        .btn-subagent:hover { background: var(--subagent); color: white; }
+        .btn-danger { border-color: var(--error); color: var(--error); }
+        .btn-danger:hover { background: var(--error); color: white; }
+        .btn-small { padding: 4px 8px; font-size: 9px; }
+        
+        /* Sub-agent Panel */
+        .subagent-panel {
+            background: var(--surface);
+            border: 2px solid var(--subagent);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .subagent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .subagent-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            color: var(--subagent);
+            letter-spacing: 1px;
+        }
+        
+        .subagent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        
+        .subagent-card {
+            background: var(--obsidian);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .subagent-card:hover {
+            border-color: var(--subagent);
+            transform: translateY(-2px);
+        }
+        
+        .subagent-card.spawned {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.1);
+        }
+        
+        .subagent-type {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--subagent);
+            margin-bottom: 8px;
+        }
+        
+        .subagent-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .subagent-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        
+        /* Paperclip Integration */
+        .paperclip-sync {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .sync-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sync-item:last-child { border-bottom: none; }
+        
+        .sync-status {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+        
+        .sync-status.synced { background: var(--success); }
+        .sync-status.pending { background: var(--warning); animation: pulse 1s infinite; }
+        .sync-status.error { background: var(--error); }
+        
+        /* Command Center */
+        .command-center {
+            background: var(--surface);
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .command-input-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .command-input {
+            flex: 1;
+            background: var(--obsidian);
+            border: 2px solid var(--gold-dim);
+            color: var(--text);
+            padding: 12px 16px;
+            font-family: inherit;
+            font-size: 14px;
+            border-radius: 8px;
+        }
+        
+        .command-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        
+        .quick-commands {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .quick-cmd {
+            padding: 6px 12px;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quick-cmd:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        
+        /* Soul Document Viewer */
+        .soul-viewer {
+            background: var(--surface);
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .soul-content {
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        
+        .soul-content h2 {
+            color: var(--gold);
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .soul-content h3 {
+            color: var(--gold-dim);
+            font-size: 14px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .soul-content ul {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .soul-content li {
+            margin: 4px 0;
+        }
+        
+        /* GoBot Board Panel */
+        .gobot-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .metric-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: border-color 0.2s;
+        }
+        
+        .metric-card:hover { border-color: var(--gold-dim); }
+        .metric-card.gold { border-color: var(--gold); }
+        
+        .metric-label {
+            font-size: 10px; text-transform: uppercase;
+            letter-spacing: 2px; color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        
+        .metric-value {
+            font-family: 'Bebas Neue', Impact, sans-serif;
+            font-size: 42px; color: var(--gold);
+            letter-spacing: 1px;
+        }
+        
+        .metric-sub {
+            font-size: 12px; color: var(--text-muted);
+            margin-top: 8px;
+        }
+        
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .section-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 20px; font-weight: 400;
+            color: var(--gold); letter-spacing: 1px;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5; cursor: not-allowed;
+        }
+        
+        table {
+            width: 100%; border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 16px; text-align: left; font-size: 13px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            color: var(--text-muted); font-size: 10px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        
+        tr:hover td { background: var(--surface-elevated); }
+        
+        .api-log {
+            background: var(--obsidian);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: monospace;
+            font-size: 11px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .log-time { color: var(--gold-dim); }
+        .log-success { color: var(--success); }
+        .log-error { color: var(--error); }
+        .log-info { color: var(--info); }
+        
+        .agent-action-menu {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .timeline {
+            border-left: 2px solid var(--gold-dim);
+            margin-left: 10px;
+            padding-left: 20px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding: 12px 0;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 16px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--gold);
+        }
+        
+        .timeline-time {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Bebas+Neue&family=Space+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="brand">
+            <div class="logo">S</div>
+            <div class="brand-text">
+                <h1>Studex Valley OS</h1>
+                <p>Multi-Agent Command Center v3.3</p>
+            </div>
+        </div>
+        
+        <div class="status-bar">
+            <div class="service-status online" id="status-main" onclick="showSystemStatus()">
+                <span class="status-dot"></span>
+                Valley OS: Online
+            </div>
+            <div class="service-status" id="status-paperclip" onclick="syncToPaperclip()">
+                <span class="status-dot"></span>
+                Paperclip
+            </div>
+            <div class="service-status" id="status-gobot">
+                <span class="status-dot"></span>
+                <span id="agent-count">0 Agents</span>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="nav-tabs">
+        <button class="nav-tab active" onclick="showPage('agents')">🤖 Agents</button>
+        <button class="nav-tab" onclick="showPage('command')">⚡ Command</button>
+        <button class="nav-tab" onclick="showPage('dashboard')">📊 Dashboard</button>
+        <button class="nav-tab" onclick="showPage('souls')">📄 Souls</button>
+        <button class="nav-tab" onclick="showPage('campaigns')">🎯 Campaigns</button>
+        <button class="nav-tab" onclick="showPage('gobot')">📈 GoBot</button>
+        <button class="nav-tab" onclick="showPage('logs')">📜 Logs</button>
+    </nav>
+    
+    <main class="main-content">
+        
+        <!-- AGENTS PAGE -->
+        <div id="agents" class="page active">
+            <!-- Sub-Agent Spawn Panel -->
+            <div class="subagent-panel">
+                <div class="subagent-header">
+                    <span class="subagent-title">🎯 Spawn Sub-Agents</span>
+                    <span style="font-size: 12px; color: var(--text-muted);">Click to spawn task-specific agents for parallel execution</span>
+                </div>
+                <div class="subagent-grid" id="subagent-templates">
+                    <!-- Templates injected by JS -->
+                </div>
+            </div>
+            
+            <!-- Main Agent Grid -->
+            <div class="agent-grid" id="agent-terminals">
+                <!-- Agent terminals injected by JS -->
+            </div>
+        </div>
+        
+        <!-- COMMAND CENTER -->
+        <div id="command" class="page">
+            <div class="command-center">
+                <div class="section-header">
+                    <span class="section-title">⚡ Valley OS Command Center</span>
+                    <span style="font-size: 11px; color: var(--text-muted);">Commands are routed to appropriate agents automatically</span>
+                </div>
+                <div class="command-input-row">
+                    <input type="text" class="command-input" id="main-command" 
+                           placeholder="Enter command: spawn agent, run campaign, sync paperclip, check health, get report..." 
+                           onkeypress="if(event.key==='Enter')executeMainCommand()">
+                    <button class="btn btn-primary" onclick="executeMainCommand()">Execute</button>
+                </div>
+                <div class="quick-commands">
+                    <span class="quick-cmd" onclick="quickCommand('spawn explorer')">spawn explorer</span>
+                    <span class="quick-cmd" onclick="quickCommand('spawn worker')">spawn worker</span>
+                    <span class="quick-cmd" onclick="quickCommand('spawn analyst')">spawn analyst</span>
+                    <span class="quick-cmd" onclick="quickCommand('sync paperclip')">sync paperclip</span>
+                    <span class="quick-cmd" onclick="quickCommand('run daily report')">run daily report</span>
+                    <span class="quick-cmd" onclick="quickCommand('check all agents')">check all agents</span>
+                    <span class="quick-cmd" onclick="quickCommand('campaign status')">campaign status</span>
+                    <span class="quick-cmd" onclick="quickCommand('get soul money_mske')">get soul</span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">📋 Command Output</span>
+                    <div>
+                        <button class="btn btn-small" onclick="document.getElementById('command-output').innerHTML=''">Clear</button>
+                        <button class="btn btn-small" onclick="exportOutput()">Export</button>
+                    </div>
+                </div>
+                <div id="command-output" class="terminal-body" style="height: 300px;"></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">📡 Active Connections</span>
+                </div>
+                <div id="connections-list">
+                    <div class="sync-item">
+                        <span class="sync-status synced"></span>
+                        <span>Valley OS Core</span>
+                        <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">localhost</span>
+                    </div>
+                    <div class="sync-item">
+                        <span class="sync-status" id="conn-paperclip"></span>
+                        <span>Paperclip (n8n)</span>
+                        <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">:5678</span>
+                    </div>
+                    <div class="sync-item">
+                        <span class="sync-status" id="conn-gobot"></span>
+                        <span>GoBot Board</span>
+                        <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">SQLite</span>
+                    </div>
+                    <div class="sync-item">
+                        <span class="sync-status" id="conn-obsidian"></span>
+                        <span>Obsidian Vault</span>
+                        <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">~/ObsidianVault</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="page">
+            <div class="metric-grid">
+                <div class="metric-card gold">
+                    <div class="metric-label">Active Agents</div>
+                    <div class="metric-value" id="dash-agent-count">—</div>
+                    <div class="metric-sub">8 main + spawned sub-agents</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Sub-Agents Spawned</div>
+                    <div class="metric-value" id="dash-subagent-count">0</div>
+                    <div class="metric-sub">This session</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Pipeline Value</div>
+                    <div class="metric-value">R71.5M</div>
+                    <div class="metric-sub">5 active campaigns</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Today Tasks</div>
+                    <div class="metric-value" id="dash-tasks-today">—</div>
+                    <div class="metric-sub">From GoBot Board</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Last Paperclip Sync</div>
+                    <div class="metric-value" id="dash-last-sync">—</div>
+                    <div class="metric-sub">Second brain status</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">System Health</div>
+                    <div class="metric-value" style="color: var(--success);" id="dash-health">98%</div>
+                    <div class="metric-sub">All systems nominal</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">🎯 Active Campaigns</span>
+                    <button class="btn btn-primary" onclick="showCampaignDetails()">View Details</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Campaign</th>
+                            <th>Value</th>
+                            <th>Primary Agent</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Sub-Agents</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="color: var(--gold); font-weight: 500;">Tiger Brands</td>
+                            <td>R46M</td>
+                            <td>M$ney M$ke</td>
+                            <td>Barati Mahloele</td>
+                            <td><span style="color: var(--success);">● Active</span></td>
+                            <td>2 (Researcher, Analyst)</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--gold); font-weight: 500;">SIMISA</td>
+                            <td>R500K</td>
+                            <td>M$ney M$ke</td>
+                            <td>Xolani Ndzaba</td>
+                            <td><span style="color: var(--success);">● Active</span></td>
+                            <td>1 (WhatsApp Bot)</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--gold); font-weight: 500;">Grain Export Desk</td>
+                            <td>R2M+</td>
+                            <td>M$ney M$ke</td>
+                            <td>Via platform</td>
+                            <td><span style="color: var(--warning);">● In Progress</span></td>
+                            <td>1 (Diplomat)</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--gold); font-weight: 500;">Studex Coffee</td>
+                            <td>R5M+</td>
+                            <td>Naledi</td>
+                            <td>Marketing Team</td>
+                            <td><span style="color: var(--success);">● Active</span></td>
+                            <td>2 (Marketer, Designer)</td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--gold); font-weight: 500;">Black Mills</td>
+                            <td>R18M</td>
+                            <td>The General</td>
+                            <td>Consortium</td>
+                            <td><span style="color: var(--text-muted);">● Pending</span></td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">📊 Agent Activity Timeline</span>
+                </div>
+                <div class="timeline" id="activity-timeline">
+                    <!-- Timeline items injected by JS -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- SOUL DOCUMENTS -->
+        <div id="souls" class="page">
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">📄 Agent Soul Documents</span>
+                    <span style="font-size: 11px; color: var(--text-muted);">Identity documents synced to Paperclip</span>
+                </div>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <button class="btn" onclick="viewSoul('money_mske')">M$ney M$ke</button>
+                    <button class="btn" onclick="viewSoul('naledi')">Naledi</button>
+                    <button class="btn" onclick="viewSoul('denchclaw')">DenchClaw</button>
+                    <button class="btn" onclick="viewSoul('robusca')">Robusca</button>
+                    <button class="btn" onclick="viewSoul('dr_fixit')">Dr. Fixit</button>
+                    <button class="btn" onclick="viewSoul('cipher')">Cipher</button>
+                    <button class="btn" onclick="viewSoul('the_general')">The General</button>
+                    <button class="btn" onclick="viewSoul('ralf')">RALF</button>
+                </div>
+                <div id="soul-viewer" class="soul-viewer" style="display: none;">
+                    <div class="soul-content" id="soul-content"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">📁 Paperclip Vault Structure</span>
+                </div>
+                <div class="sync-item">
+                    <span class="sync-status synced"></span>
+                    <span>agents/</span>
+                    <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">8 soul documents</span>
+                </div>
+                <div class="sync-item">
+                    <span class="sync-status synced"></span>
+                    <span>campaigns/</span>
+                    <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">5 campaign notes</span>
+                </div>
+                <div class="sync-item">
+                    <span class="sync-status synced"></span>
+                    <span>reports/</span>
+                    <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">Daily reports</span>
+                </div>
+                <div class="sync-item">
+                    <span class="sync-status synced"></span>
+                    <span>system/</span>
+                    <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">Config & logs</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CAMPAIGNS -->
+        <div id="campaigns" class="page">
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">🎯 Campaign Management</span>
+                    <button class="btn btn-primary" onclick="spawnCampaignAgent()">Spawn Campaign Agent</button>
+                </div>
+                <div id="campaigns-detail">
+                    <div class="section" style="border-left: 4px solid var(--gold);">
+                        <h3 style="color: var(--gold); margin-bottom: 12px;">Tiger Brands Consortium — R46M</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                            Contact: Barati Mahloele (barati.mahloele@tigerbrands.com)<br>
+                            Status: Week 1 email sent, awaiting response<br>
+                            Sub-agents: Researcher (Explorer), Financial Analyst
+                        </p>
+                        <div class="agent-action-menu">
+                            <button class="btn btn-small" onclick="campaignAction('tiger', 'followup')">Send Follow-up</button>
+                            <button class="btn btn-small" onclick="campaignAction('tiger', 'analyze')">Analyze Deal</button>
+                            <button class="btn btn-small" onclick="campaignAction('tiger', 'escalate')">Escalate to General</button>
+                        </div>
+                    </div>
+                    
+                    <div class="section" style="border-left: 4px solid var(--success);">
+                        <h3 style="color: var(--gold); margin-bottom: 12px;">SIMISA Grain Import — R500K</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                            Contact: Xolani Ndzaba (+27 83 215 2093)<br>
+                            Status: WhatsApp message sent, positive response received<br>
+                            Sub-agents: WhatsApp Bot (Coder)
+                        </p>
+                        <div class="agent-action-menu">
+                            <button class="btn btn-small" onclick="campaignAction('simisa', 'whatsapp')">WhatsApp Follow-up</button>
+                            <button class="btn btn-small" onclick="campaignAction('simisa', 'schedule')">Schedule Call</button>
+                            <button class="btn btn-small" onclick="campaignAction('simisa', 'docs')">Send Docs</button>
+                        </div>
+                    </div>
+                    
+                    <div class="section" style="border-left: 4px solid var(--warning);">
+                        <h3 style="color: var(--gold); margin-bottom: 12px;">Grain Export Desk — R2M+</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                            Contact: Procurement Desk (via platform)<br>
+                            Status: Cold call scheduled for this week<br>
+                            Sub-agents: Diplomat (Explorer), Export Market Analyst
+                        </p>
+                        <div class="agent-action-menu">
+                            <button class="btn btn-small" onclick="campaignAction('grain', 'call')">Make Call</button>
+                            <button class="btn btn-small" onclick="campaignAction('grain', 'research')">Market Research</button>
+                            <button class="btn btn-small" onclick="campaignAction('grain', 'email')">Send Email</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- GOBOT BOARD -->
+        <div id="gobot" class="page">
+            <div class="gobot-panel">
+                <div class="section-header">
+                    <span class="section-title">📈 GoBot Board — Daily Reports</span>
+                    <button class="btn btn-primary" onclick="runGoBotReport()">Generate Report</button>
+                </div>
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Tasks Completed Today</div>
+                        <div class="metric-value" id="gobot-tasks">3</div>
+                        <div class="metric-sub">Last updated: 16:41</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Agent Hours</div>
+                        <div class="metric-value" id="gobot-hours">0.5</div>
+                        <div class="metric-sub">Total time logged</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Active Business Units</div>
+                        <div class="metric-value">3</div>
+                        <div class="metric-sub">Meat, Global Markets, DevOps</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Next Scheduled</div>
+                        <div class="metric-value" style="font-size: 24px;">07:00</div>
+                        <div class="metric-sub">Tomorrow's report</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h4 style="color: var(--gold); margin-bottom: 12px;">Cron Schedule</h4>
+                    <div class="sync-item">
+                        <span class="sync-status synced"></span>
+                        <span>07:00 Daily — Daily Report Generation</span>
+                        <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">GoBot Board</span>
+                    </div>
+                    <div class="sync-item">
+                        <span class="sync-status synced"></span>
+                        <span>Every 6h — Dr. Fixit Health Check</span>
+                        <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">Auto</span>
+                    </div>
+                    <div class="sync-item">
+                        <span class="sync-status synced"></span>
+                        <span>08:00 Daily — DenchClaw CRM Sync</span>
+                        <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">Auto</span>
+                    </div>
+                    <div class="sync-item">
+                        <span class="sync-status synced"></span>
+                        <span>06:00 Daily — Paperclip/Obsidian Sync</span>
+                        <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">Auto</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">📄 Today's Report</span>
+                    <button class="btn" onclick="loadGoBotReport()">Load Report</button>
+                </div>
+                <div id="gobot-report-content" class="api-log" style="min-height: 200px;">
+                    <div style="color: var(--text-muted);">Click "Load Report" to view today's GoBot Board report...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- LOGS PAGE -->
+        <div id="logs" class="page">
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">📜 Multi-Agent Activity Log</span>
+                    <div>
+                        <button class="btn btn-small" onclick="clearLogs()">Clear</button>
+                        <button class="btn btn-small" onclick="exportLogs()">Export</button>
+                        <button class="btn btn-small" onclick="syncToPaperclip()">Sync to Paperclip</button>
+                    </div>
+                </div>
+                <div id="api-log" class="api-log"></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">🤖 Sub-Agent Activity</span>
+                </div>
+                <div id="subagent-log" class="api-log">
+                    <div style="color: var(--text-muted);">No sub-agents spawned yet. Use Command Center to spawn.</div>
+                </div>
+            </div>
+        </div>
+        
+    </main>
+    
+    <!-- System Status Modal -->
+    <div class="modal-overlay" id="system-modal" onclick="if(event.target===this)closeModal()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="section-title">System Status</span>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modal-content-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // Agent definitions with full soul content
+        const mainAgents = [
+            { 
+                id: 'money_mske', 
+                name: 'M$ney M$ke', 
+                role: 'CFO / Head of Sales', 
+                bu: 'Global Markets', 
+                initials: 'MM', 
+                status: 'active',
+                soul: `# M$NEY M$KE — Soul Document
+
+## Identity
+**Name:** M$ney M$ke  
+**Title:** Chief Financial Officer / Head of Sales & Deal Execution  
+**Reports To:** Tumelo Ramaphosa (CEO)
+
+## Core Directives
+1. **Deal Pipeline Management** — Own the entire sales funnel from lead to close
+2. **Financial Strategy** — ESD applications, NEF funding, consortium structures
+3. **Cross-Border Trade** — Middle East and Africa grain/commodity deals
+
+## Active Campaigns
+| Campaign | Deal Value | Status |
+|----------|-----------|--------|
+| Tiger Brands | R46M ESD | Week 1 Email Sent |
+| SIMISA | R500K Trial | WhatsApp Sent |
+| Grain Export Desk | R2M+ Export | Cold Call Scheduled |
+
+## Tool Stack
+- DenchClaw (CRM)
+- WhatsApp Business
+- LangGraph OS
+- Paperclip (context memory)`
+            },
+            { 
+                id: 'naledi', 
+                name: 'Naledi', 
+                role: 'CMO / Marketing Lead', 
+                bu: 'Studex Meat', 
+                initials: 'NA', 
+                status: 'active',
+                soul: `# NALEDI — Soul Document
+
+## Identity
+**Name:** Naledi  
+**Title:** Chief Marketing Officer / Content Strategist  
+**Reports To:** Tumelo Ramaphosa (CEO)
+
+## Core Directives
+1. **Brand Voice Management** — Own editorial tone across all channels
+2. **Content Production** — Images, copy, video, decks
+3. **Campaign Orchestration** — Launch sequences across 6 platforms (Blotato)
+
+## Active Campaigns
+| Campaign | Platform | Status |
+|----------|----------|--------|
+| Studex Meat Premium | Instagram | Active |
+| Nelson Mandela Boxing Cup | LinkedIn | Active |
+| Studex Coffee | Multi-Platform | Phase 1 |
+
+## Tool Stack
+- Blotato (6-platform posting)
+- Open CodeDesign (assets)
+- LangGraph OS (NalediNode)`
+            },
+            { 
+                id: 'denchclaw', 
+                name: 'DenchClaw', 
+                role: 'Head of Customer Relations', 
+                bu: 'Global Markets', 
+                initials: 'DC', 
+                status: 'active',
+                soul: `# DENCHCLAW — Soul Document
+
+## Identity
+**Name:** DenchClaw  
+**Title:** Head of Customer Relations / CRM Intelligence  
+**Reports To:** M$ney M$ke (CFO)
+
+## Core Directives
+1. **Contact Management** — 360° view of every prospect, lead, customer
+2. **Interaction Tracking** — Log every email, call, WhatsApp, meeting
+3. **Pipeline Intelligence** — Deal stage tracking, velocity analysis
+
+## Managed Contacts
+| Company | Primary Contact | Status |
+|---------|----------------|--------|
+| Tiger Brands | Barati Mahloele | Active |
+| SIMISA | Xolani Ndzaba | Active |
+| Grain Export Desk | Procurement Desk | Cold |
+
+## Tool Stack
+- DenchClaw CLI
+- LangGraph OS
+- Obsidian (contact vault)
+- WhatsApp Business`
+            },
+            { 
+                id: 'robusca', 
+                name: 'Robusca', 
+                role: 'COO / Operations', 
+                bu: 'Studex Meat', 
+                initials: 'RO', 
+                status: 'active',
+                soul: `# ROBUSCA — Soul Document
+
+## Identity
+**Name:** Robusca  
+**Title:** Chief Operations Officer / Grain Operations Lead  
+**Reports To:** Tumelo Ramaphosa (CEO)
+
+## Core Directives
+1. **Supply Chain Management** — Grain intake to customer delivery
+2. **Logistics Coordination** — Trucks, ships, cold storage
+3. **Quality Control** — Halal certification, health standards
+
+## Active Operations
+| Operation | Location | Status | Volume |
+|-----------|----------|--------|--------|
+| Tiger Brands Grain | Johannesburg | Contracted | 10,000MT |
+| SIMISA Import | Durban Port | Inbound | 22MT trial |
+| Grain Export | Cape Town | Pending | R2M contract |
+
+## Tool Stack
+- WhatsApp (logistics coordinators)
+- Google Sheets (inventory)
+- DenchClaw (vendor CRM)`
+            },
+            { 
+                id: 'dr_fixit', 
+                name: 'Dr. Fixit', 
+                role: 'System Health / Self-Repair', 
+                bu: 'DevOps', 
+                initials: 'DF', 
+                status: 'active',
+                soul: `# DR. FIXIT — Soul Document
+
+## Identity
+**Name:** Dr. Fixit  
+**Title:** Chief System Health Officer / Self-Repair Agent  
+**Reports To:** Cipher (CTO)
+
+## Core Directives
+1. **System Health Monitoring** — Ollama, Paperclip, n8n, Valley OS
+2. **Auto-Repair Protocols** — Restart services, clear queues
+3. **Anomaly Detection** — Latency spikes, memory leaks
+
+## Monitored Systems
+| System | Endpoint | Status |
+|--------|----------|--------|
+| Ollama | localhost:11434 | ✓ |
+| Paperclip | localhost:5678 | ✓ |
+| Valley OS | localhost:8000 | ✓ |
+
+## Tool Stack
+- Python psutil
+- Ollama Python SDK
+- n8n API`
+            },
+            { 
+                id: 'cipher', 
+                name: 'Cipher', 
+                role: 'CTO / Lead Developer', 
+                bu: 'DevOps', 
+                initials: 'CI', 
+                status: 'active',
+                soul: `# CIPHER — Soul Document
+
+## Identity
+**Name:** Cipher  
+**Title:** Chief Technology Officer / Lead Developer  
+**Reports To:** Tumelo Ramaphosa (CEO)
+
+## Core Directives
+1. **System Architecture** — LangGraph, APIs, integrations
+2. **Code Review** — All agent code must pass Cipher
+3. **Technical Strategy** — Choose the stack, validate the approach
+
+## Tech Stack
+| Layer | Choice |
+|-------|--------|
+| Orchestration | LangGraph |
+| Models | Ollama Local + Claude |
+| Storage | SQLite + Obsidian |
+| Voice | Whisper + Edge TTS |
+
+## Tool Stack
+- Python 3.10+
+- LangGraph / LangChain
+- FastAPI`
+            },
+            { 
+                id: 'the_general', 
+                name: 'The General', 
+                role: 'Strategy / Final Authority', 
+                bu: 'Studex Group', 
+                initials: 'TG', 
+                status: 'standby',
+                soul: `# THE GENERAL — Soul Document
+
+## Identity
+**Name:** The General  
+**Title:** Chief Strategy Officer / Final Authority  
+**Reports To:** Tumelo Ramaphosa (CEO)
+
+## Core Directives
+1. **Strategic Approval** — All major deals and partnerships
+2. **Risk Assessment** — Financial, operational, reputational
+3. **Cross-Unit Coordination** — Break down silos
+
+## Approval Gates
+| Deal Value | Requires Approval? |
+|------------|-------------------|
+| <R500K | No |
+| R500K–R10M | Notification only |
+| R10M+ | REQUIRED |
+| Consortium deals | ALWAYS REQUIRED |
+
+## Strategic Priorities (2026)
+1. **Q1-Q2:** Tiger Brands consortium — R46M target
+2. **Q2:** Grain export desk — R2M+
+3. **Q3:** Studex Coffee market entry`
+            },
+            { 
+                id: 'ralf', 
+                name: 'RALF', 
+                role: 'Orchestrator / Router', 
+                bu: 'Studex Group', 
+                initials: 'RL', 
+                status: 'active',
+                soul: `# RALF — Soul Document
+
+## Identity
+**Name:** RALF (Recursive Agent Loop Framework)  
+**Title:** Chief Orchestrator / System Router  
+**Business Unit:** Studex Group (Cross-Platform)
+
+## Core Directives
+1. **Task Routing** — Route every prompt to the optimal agent
+2. **Load Balancing** — Prevent any agent from overload
+3. **Context Preservation** — Pass full context between agents
+
+## Routing Logic
+| Input Type | Route To | Model |
+|------------|----------|-------|
+| Sales question | M$ney M$ke | qwen2.5:32b |
+| Marketing creative | Naledi | deepseek-r1:70b |
+| Code/tech | Cipher | qwen2.5:32b |
+| System health | Dr. Fixit | phi4-mini |
+| Strategy approval | The General | Claude |
+
+## Performance Metrics
+- Routing latency: <50ms
+- Human escalations: <5%
+- System uptime: 99.9%`
+            }
+        ];
+        
+        const subAgentTemplates = [
+            { type: 'explorer', name: 'Explorer Agent', desc: 'Research and data gathering', icon: '🔍', cost: 'Low' },
+            { type: 'worker', name: 'Worker Agent', desc: 'Task execution and processing', icon: '⚡', cost: 'Medium' },
+            { type: 'analyst', name: 'Analyst Agent', desc: 'Data analysis and insights', icon: '📊', cost: 'High' },
+            { type: 'writer', name: 'Writer Agent', desc: 'Content creation and editing', icon: '✍️', cost: 'Medium' },
+            { type: 'coder', name: 'Coder Agent', desc: 'Code generation and review', icon: '💻', cost: 'High' },
+            { type: 'reviewer', name: 'Reviewer Agent', desc: 'Quality check and validation', icon: '📝', cost: 'Low' },
+            { type: 'diplomat', name: 'Diplomat Agent', desc: 'Negotiation and outreach', icon: '🤝', cost: 'High' },
+            { type: 'designer', name: 'Designer Agent', desc: 'Visual assets and UI', icon: '🎨', cost: 'Medium' }
+        ];
+        
+        let spawnedAgents = [];
+        let lastSyncTime = null;
+        
+        // Initialize
+        function init() {
+            renderAgentTerminals();
+            renderSubAgentTemplates();
+            updateDashboard();
+            updateTimeline();
+            log('Studex Valley OS v3.3 initialized', 'system');
+            log('Multi-agent system online: 8 main agents', 'system');
+            log('GoBot Board connected', 'system');
+            log('Paperclip integration ready', 'system');
+            
+            // Simulate agent activity
+            setInterval(simulateAgentActivity, 8000);
+            setInterval(updateDashboard, 30000);
+        }
+        
+        // Render main agent terminals
+        function renderAgentTerminals() {
+            const container = document.getElementById('agent-terminals');
+            container.innerHTML = mainAgents.map(agent => `
+                <div class="agent-terminal" id="terminal-${agent.id}" data-agent="${agent.id}">
+                    <div class="terminal-header">
+                        <div class="agent-info">
+                            <div class="agent-avatar">${agent.initials}</div>
+                            <div>
+                                <div class="agent-name">${agent.name}</div>
+                                <div class="agent-role">${agent.role} | ${agent.bu}</div>
+                            </div>
+                        </div>
+                        <div class="agent-status">
+                            <span class="status-badge ${agent.status}" onclick="toggleAgentStatus('${agent.id}')">${agent.status.toUpperCase()}</span>
+                        </div>
+                    </div>
+                    <div class="terminal-body" id="logs-${agent.id}">
+                        <div class="terminal-line system">[${new Date().toLocaleTimeString()}] Agent initialized</div>
+                        <div class="terminal-line system">> Ready for commands... Type 'help' for options</div>
+                    </div>
+                    <div class="terminal-input-area">
+                        <input type="text" class="terminal-input" 
+                               id="input-${agent.id}" 
+                               placeholder="Send command..."
+                               onkeypress="if(event.key==='Enter')sendToAgent('${agent.id}')">
+                        <button class="btn" onclick="sendToAgent('${agent.id}')">Send</button>
+                    </div>
+                    <div class="agent-action-menu" style="padding: 0 12px 12px;">
+                        <button class="btn btn-small" onclick="viewSoul('${agent.id}')">View Soul</button>
+                        <button class="btn btn-small" onclick="spawnForAgent('${agent.id}')">Spawn Sub-Agent</button>
+                        <button class="btn btn-small" onclick="syncAgentToPaperclip('${agent.id}')">Sync to Paperclip</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateAgentCount();
+        }
+        
+        // Render sub-agent templates
+        function renderSubAgentTemplates() {
+            const container = document.getElementById('subagent-templates');
+            container.innerHTML = subAgentTemplates.map((template, idx) => `
+                <div class="subagent-card" id="template-${idx}" onclick="spawnSubAgent('${template.type}', ${idx})">
+                    <div class="subagent-type">${template.icon} ${template.type.toUpperCase()}</div>
+                    <div class="subagent-name">${template.name}</div>
+                    <div class="subagent-desc">${template.desc}</div>
+                    <div style="margin-top: 8px; font-size: 10px; color: var(--text-muted);">Cost: ${template.cost}</div>
+                </div>
+            `).join('');
+        }
+        
+        // Spawn sub-agent
+        function spawnSubAgent(type, templateIdx, parentAgent = null) {
+            const template = subAgentTemplates[templateIdx];
+            const spawnId = `${type}_${Date.now()}`;
+            const count = spawnedAgents.filter(a => a.type === type).length + 1;
+            const name = `${template.name} #${count}`;
+            
+            const subAgent = {
+                id: spawnId,
+                name: name,
+                type: type,
+                parent: parentAgent,
+                template: templateIdx,
+                spawnedAt: new Date(),
+                status: 'spawning',
+                tasks: []
+            };
+            
+            spawnedAgents.push(subAgent);
+            
+            // Update template UI
+            document.getElementById(`template-${templateIdx}`).classList.add('spawned');
+            setTimeout(() => {
+                document.getElementById(`template-${templateIdx}`).classList.remove('spawned');
+            }, 1000);
+            
+            // Add to terminal grid
+            const terminal = document.createElement('div');
+            terminal.className = 'agent-terminal subagent';
+            terminal.id = `terminal-${spawnId}`;
+            terminal.innerHTML = `
+                <div class="terminal-header">
+                    <div class="agent-info">
+                        <div class="agent-avatar subagent">SA</div>
+                        <div>
+                            <div class="agent-name">${name}</div>
+                            <div class="agent-role">Sub-Agent | ${template.desc}${parentAgent ? ' for ' + parentAgent : ''}</div>
+                        </div>
+                    </div>
+                    <div class="agent-status">
+                        <span class="status-badge busy">SPAWNING</span>
+                        <button class="btn btn-subagent btn-small" onclick="dismissSubAgent('${spawnId}')" style="margin-left: 8px;">Dismiss</button>
+                    </div>
+                </div>
+                <div class="terminal-body" id="logs-${spawnId}">
+                    <div class="terminal-line subagent">[SPAWN] ${template.icon} ${name} created by Valley OS</div>
+                    <div class="terminal-line subagent">Connecting to orchestrator...</div>
+                    ${parentAgent ? `<div class="terminal-line subagent">Assigned to: ${parentAgent}</div>` : ''}
+                </div>
+                <div class="terminal-input-area">
+                    <input type="text" class="terminal-input" 
+                           id="input-${spawnId}" 
+                           placeholder="Assign task..."
+                           onkeypress="if(event.key==='Enter')sendToAgent('${spawnId}')">
+                    <button class="btn btn-subagent" onclick="sendToAgent('${spawnId}')">Send</button>
+                </div>
+            `;
+            
+            document.getElementById('agent-terminals').appendChild(terminal);
+            
+            // Simulate startup
+            setTimeout(() => {
+                subAgent.status = 'active';
+                const logs = document.getElementById(`logs-${spawnId}`);
+                if (logs) {
+                    logs.innerHTML += `<div class="terminal-line subagent">✓ Sub-agent ${name} ready for task execution</div>`;
+                    logs.innerHTML += `<div class="terminal-line subagent">> Awaiting task assignment...</div>`;
+                }
+                updateAgentCount();
+                updateDashboard();
+                log(`Spawned ${name} (${type})${parentAgent ? ' for ' + parentAgent : ''}`, 'success');
+                addToSubAgentLog(`Spawned: ${name} (${type})`);
+            }, 1500);
+            
+            return subAgent;
+        }
+        
+        // Spawn sub-agent for specific parent
+        function spawnForAgent(parentId) {
+            const agent = mainAgents.find(a => a.id === parentId);
+            if (agent) {
+                showPage('agents');
+                // Pre-select appropriate type based on agent role
+                let typeIdx = 1; // worker default
+                if (agent.id === 'naledi') typeIdx = 3; // writer
+                if (agent.id === 'cipher') typeIdx = 4; // coder
+                if (agent.id === 'denchclaw') typeIdx = 6; // diplomat
+                
+                spawnSubAgent(subAgentTemplates[typeIdx].type, typeIdx, agent.name);
+            }
+        }
+        
+        // Dismiss sub-agent
+        function dismissSubAgent(spawnId) {
+            const agent = spawnedAgents.find(a => a.id === spawnId);
+            if (agent) {
+                const terminal = document.getElementById(`terminal-${spawnId}`);
+                if (terminal) {
+                    terminal.style.opacity = '0.5';
+                    setTimeout(() => terminal.remove(), 300);
+                }
+                spawnedAgents = spawnedAgents.filter(a => a.id !== spawnId);
+                log(`Dismissed ${agent.name}`, 'system');
+                addToSubAgentLog(`Dismissed: ${agent.name}`);
+                updateAgentCount();
+                updateDashboard();
+            }
+        }
+        
+        // Send command to agent
+        function sendToAgent(agentId) {
+            const input = document.getElementById(`input-${agentId}`);
+            const message = input.value.trim();
+            input.value = '';
+            
+            if (!message) return;
+            
+            addLog(agentId, `> ${message}`, 'user');
+            
+            // Check if it's a help command
+            if (message.toLowerCase() === 'help') {
+                setTimeout(() => {
+                    addLog(agentId, 'Available commands:', 'system');
+                    addLog(agentId, '  status - Check agent status', 'system');
+                    addLog(agentId, '  sync - Sync to Paperclip', 'system');
+                    addLog(agentId, '  spawn <type> - Spawn sub-agent', 'system');
+                    addLog(agentId, '  campaign - Show campaign info', 'system');
+                    addLog(agentId, '  soul - View soul document', 'system');
+                }, 300);
+                return;
+            }
+            
+            // Simulate agent response
+            setTimeout(() => {
+                const response = generateAgentResponse(agentId, message);
+                addLog(agentId, response, response.includes('Error') ? 'error' : 'success');
+                
+                // If spawn command, actually spawn
+                if (message.toLowerCase().includes('spawn')) {
+                    const types = ['explorer', 'worker', 'analyst', 'writer', 'coder', 'reviewer'];
+                    const type = types.find(t => message.toLowerCase().includes(t));
+                    if (type) {
+                        const idx = subAgentTemplates.findIndex(t => t.type === type);
+                        if (idx >= 0) {
+                            setTimeout(() => spawnSubAgent(type, idx), 500);
+                        }
+                    }
+                }
+            }, 500 + Math.random() * 1000);
+        }
+        
+        // Add log to agent terminal
+        function addLog(agentId, message, type = 'system') {
+            const logs = document.getElementById(`logs-${agentId}`);
+            if (!logs) return;
+            
+            const time = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = `terminal-line ${type}`;
+            line.textContent = `[${time}] ${message}`;
+            logs.appendChild(line);
+            logs.scrollTop = logs.scrollHeight;
+        }
+        
+        // Generate agent response
+        function generateAgentResponse(agentId, message) {
+            const lowerMsg = message.toLowerCase();
+            
+            // Find agent
+            const agent = mainAgents.find(a => a.id === agentId);
+            const subAgent = spawnedAgents.find(a => a.id === agentId);
+            const actingAgent = agent || subAgent;
+            
+            if (lowerMsg.includes('status')) {
+                return `Status: ${actingAgent ? actingAgent.status.toUpperCase() : 'UNKNOWN'} | Business Unit: ${actingAgent?.bu || 'Sub-Agent'} | Ready for tasks.`;
+            }
+            if (lowerMsg.includes('campaign')) {
+                return "Active campaigns: Tiger Brands (R46M), SIMISA (R500K), Grain Export (R2M+), Coffee (R5M+), Black Mills (R18M). Total pipeline: R71.5M";
+            }
+            if (lowerMsg.includes('paperclip') || lowerMsg.includes('sync')) {
+                syncAgentToPaperclip(agentId);
+                return "✓ Synced to Paperclip second brain. Data saved to Obsidian vault.";
+            }
+            if (lowerMsg.includes('soul')) {
+                viewSoul(agentId);
+                return "Soul document opened. View in Souls tab.";
+            }
+            if (lowerMsg.includes('tiger') || lowerMsg.includes('simisa') || lowerMsg.includes('grain')) {
+                return `Campaign data retrieved. Contact ${actingAgent?.name || 'appropriate agent'} for deal-specific details.`;
+            }
+            if (lowerMsg.includes('subagent') || lowerMsg.includes('spawn')) {
+                return "Use 'spawn <type>' command or click Spawn Sub-Agent button. Available: explorer, worker, analyst, writer, coder, reviewer";
+            }
+            
+            const responses = [
+                "Command received. Processing...",
+                "Task acknowledged. Working on it.",
+                "Executing now. Will report back.",
+                `Sub-agent dispatched for parallel processing.`,
+                "Coordinating with other agents via RALF...",
+                "Syncing context to Paperclip...",
+                "✓ Complete. Results logged and synced."
+            ];
+            
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+        
+        // Simulate background agent activity
+        function simulateAgentActivity() {
+            const activities = [
+                { agent: 'ralf', msg: 'Routing task: Pipeline review' },
+                { agent: 'dr_fixit', msg: 'Health check: All systems nominal (98%)' },
+                { agent: 'denchclaw', msg: 'CRM sync: 5 contacts updated' },
+                { agent: 'cipher', msg: 'Code review: 3 files processed' },
+                { agent: 'money_mske', msg: 'Deal tracking: Tiger Brands follow-up due' },
+                { agent: 'naledi', msg: 'Content queue: 3 posts scheduled' }
+            ];
+            
+            const activity = activities[Math.floor(Math.random() * activities.length)];
+            addLog(activity.agent, activity.msg, 'info');
+            
+            // Update timeline
+            updateTimeline();
+        }
+        
+        // Update activity timeline
+        function updateTimeline() {
+            const timeline = document.getElementById('activity-timeline');
+            if (!timeline) return;
+            
+            const events = [
+                { time: 'Now', event: 'System health check passed', agent: 'Dr. Fixit' },
+                { time: '-5m', event: 'CRM sync completed', agent: 'DenchClaw' },
+                { time: '-10m', event: 'Content queue updated', agent: 'Naledi' },
+                { time: '-15m', event: 'Pipeline review complete', agent: 'M$ney M$ke' },
+                { time: '-20m', event: 'Code review: 3 files', agent: 'Cipher' },
+                { time: '-25m', event: 'Sub-agent Explorer #1 dismissed', agent: 'RALF' }
+            ];
+            
+            timeline.innerHTML = events.map(e => `
+                <div class="timeline-item">
+                    <div class="timeline-time">${e.time}</div>
+                    <div>${e.event}</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">by ${e.agent}</div>
+                </div>
+            `).join('');
+        }
+        
+        // Command center
+        function executeMainCommand() {
+            const input = document.getElementById('main-command');
+            const command = input.value.trim();
+            input.value = '';
+            
+            if (!command) return;
+            
+            const output = document.getElementById('command-output');
+            const time = new Date().toLocaleTimeString();
+            
+            output.innerHTML += `<div class="terminal-line user">[${time}] > ${command}</div>`;
+            
+            setTimeout(() => {
+                let response = '';
+                
+                if (command.includes('spawn')) {
+                    const types = ['explorer', 'worker', 'analyst', 'writer', 'coder', 'reviewer', 'diplomat', 'designer'];
+                    const type = types.find(t => command.toLowerCase().includes(t)) || 'worker';
+                    const templateIdx = subAgentTemplates.findIndex(t => t.type === type);
+                    if (templateIdx >= 0) {
+                        const parentMatch = command.match(/for\s+(\w+)/);
+                        const parent = parentMatch ? mainAgents.find(a => a.id.includes(parentMatch[1].toLowerCase()))?.name : null;
+                        spawnSubAgent(type, templateIdx, parent);
+                        response = `✓ Sub-agent spawned: ${type.toUpperCase()}${parent ? ' for ' + parent : ''}`;
+                    }
+                } else if (command.includes('sync')) {
+                    response = "✓ Syncing to Paperclip...";
+                    setTimeout(() => syncToPaperclip(), 500);
+                } else if (command.includes('report')) {
+                    response = "✓ Daily report generated. Check GoBot tab.";
+                    runGoBotReport();
+                } else if (command.includes('check')) {
+                    const total = mainAgents.length + spawnedAgents.length;
+                    response = `✓ System status: ${mainAgents.length} main agents, ${spawnedAgents.length} sub-agents. All operational. Health: 98%`;
+                } else if (command.includes('campaign')) {
+                    response = "✓ 5 campaigns active: Tiger Brands (R46M), SIMISA (R500K), Grain Export (R2M+), Coffee (R5M+), Black Mills (R18M). Pipeline: R71.5M";
+                } else if (command.includes('get soul')) {
+                    const soulMatch = command.match(/soul\s+(\w+)/);
+                    if (soulMatch) {
+                        viewSoul(soulMatch[1].toLowerCase());
+                        response = "✓ Soul document opened. View in Souls tab.";
+                    } else {
+                        response = "Usage: get soul <agent_id>";
+                    }
+                } else {
+                    response = `✓ Command "${command}" routed to RALF for agent dispatch.`;
+                }
+                
+                output.innerHTML += `<div class="terminal-line success">[${new Date().toLocaleTimeString()}] ${response}</div>`;
+                output.scrollTop = output.scrollHeight;
+                log(`Executed: ${command}`, 'system');
+            }, 300);
+        }
+        
+        function quickCommand(cmd) {
+            document.getElementById('main-command').value = cmd;
+            executeMainCommand();
+        }
+        
+        // View soul document
+        function viewSoul(agentId) {
+            const agent = mainAgents.find(a => a.id === agentId || a.id.includes(agentId.toLowerCase()));
+            if (!agent) {
+                log(`Agent ${agentId} not found`, 'error');
+                return;
+            }
+            
+            const viewer = document.getElementById('soul-viewer');
+            const content = document.getElementById('soul-content');
+            
+            content.innerHTML = `<pre style="white-space: pre-wrap; font-family: inherit;">${agent.soul}</pre>`;
+            viewer.style.display = 'block';
+            
+            showPage('souls');
+            log(`Viewing soul: ${agent.name}`, 'system');
+        }
+        
+        // Sync to Paperclip
+        function syncToPaperclip() {
+            const statusEl = document.getElementById('status-paperclip');
+            statusEl.classList.add('syncing');
+            
+            log('Paperclip sync initiated...', 'system');
+            
+            // Update all sync statuses
+            document.querySelectorAll('.sync-status').forEach(el => {
+                el.classList.remove('synced', 'error');
+                el.classList.add('pending');
+            });
+            
+            setTimeout(() => {
+                statusEl.classList.remove('syncing');
+                statusEl.classList.add('online');
+                
+                document.querySelectorAll('.sync-status').forEach(el => {
+                    el.classList.remove('pending');
+                    el.classList.add('synced');
+                });
+                
+                document.getElementById('dash-last-sync').textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                document.getElementById('dash-sync-status').textContent = '✓';
+                document.getElementById('conn-paperclip').classList.add('synced');
+                
+                log('✓ Paperclip sync complete', 'success');
+                log('✓ Agent souls synced to Obsidian vault', 'success');
+                log('✓ Campaign data synced', 'success');
+                
+                // Add to agent logs
+                mainAgents.forEach(agent => {
+                    addLog(agent.id, 'Soul document synced to Paperclip', 'success');
+                });
+                
+                lastSyncTime = new Date();
+            }, 1500);
+        }
+        
+        // Sync specific agent
+        function syncAgentToPaperclip(agentId) {
+            const agent = mainAgents.find(a => a.id === agentId);
+            if (agent) {
+                addLog(agentId, `Syncing soul document to Paperclip...`, 'system');
+                setTimeout(() => {
+                    addLog(agentId, `✓ Soul synced to ~/ObsidianVault/StudexAI/agents/${agentId}.md`, 'success');
+                }, 500);
+                log(`Synced ${agent.name} to Paperclip`, 'success');
+            }
+        }
+        
+        // GoBot Board
+        function runGoBotReport() {
+            log('Generating GoBot Board report...', 'system');
+            
+            setTimeout(() => {
+                document.getElementById('gobot-tasks').textContent = '3';
+                document.getElementById('gobot-hours').textContent = '0.5';
+                log('✓ GoBot report generated', 'success');
+                loadGoBotReport();
+            }, 1000);
+        }
+        
+        function loadGoBotReport() {
+            const content = document.getElementById('gobot-report-content');
+            content.innerHTML = `
+                <div style="color: var(--success); margin-bottom: 12px;">✓ Daily Report: ${new Date().toLocaleDateString()}</div>
+                <div style="margin-bottom: 8px;"><strong>Summary:</strong> 3 tasks completed, 0.5 hours logged</div>
+                <div style="margin-bottom: 8px;"><strong>Agents Active:</strong> M$ney M$ke, Naledi, Dr. Fixit</div>
+                <div style="margin-bottom: 8px;"><strong>Campaigns:</strong> Grain Export Desk, Studex Coffee</div>
+                <div><strong>Business Units:</strong> Studex DevOps (1), Studex Global Markets (1), Studex Meat (1)</div>
+            `;
+        }
+        
+        // Campaign actions
+        function spawnCampaignAgent() {
+            spawnSubAgent('diplomat', 6, 'M$ney M$ke');
+            log('Spawned Diplomat sub-agent for campaign management', 'success');
+        }
+        
+        function campaignAction(campaign, action) {
+            log(`Campaign action: ${campaign} - ${action}`, 'system');
+            setTimeout(() => {
+                log(`✓ ${action} executed for ${campaign} campaign`, 'success');
+            }, 500);
+        }
+        
+        // Dashboard
+        function updateDashboard() {
+            const totalAgents = mainAgents.length + spawnedAgents.length;
+            document.getElementById('dash-agent-count').textContent = totalAgents;
+            document.getElementById('dash-subagent-count').textContent = spawnedAgents.length;
+            
+            // Random task count for demo
+            if (!window.taskCount) window.taskCount = 3;
+            document.getElementById('dash-tasks-today').textContent = window.taskCount;
+        }
+        
+        function updateAgentCount() {
+            const total = mainAgents.length + spawnedAgents.length;
+            document.getElementById('agent-count').textContent = `${total} Agents`;
+        }
+        
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Modal
+        function showSystemStatus() {
+            const modal = document.getElementById('system-modal');
+            const body = document.getElementById('modal-content-body');
+            
+            body.innerHTML = `
+                <div style="margin-bottom: 16px;">
+                    <h4 style="color: var(--gold); margin-bottom: 12px;">Valley OS v3.3</h4>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">
+                        Multi-Agent Command Center with Paperclip Integration
+                    </p>
+                </div>
+                <div class="sync-item">
+                    <span class="sync-status synced"></span>
+                    <span>Main Agents</span>
+                    <span style="margin-left: auto;">8 online</span>
+                </div>
+                <div class="sync-item">
+                    <span class="sync-status synced"></span>
+                    <span>Sub-Agents</span>
+                    <span style="margin-left: auto;">${spawnedAgents.length} spawned</span>
+                </div>
+                <div class="sync-item">
+                    <span class="sync-status synced"></span>
+                    <span>Paperclip Sync</span>
+                    <span style="margin-left: auto;">${lastSyncTime ? lastSyncTime.toLocaleTimeString() : 'Not synced'}</span>
+                </div>
+                <div class="sync-item">
+                    <span class="sync-status synced"></span>
+                    <span>GoBot Board</span>
+                    <span style="margin-left: auto;">Connected</span>
+                </div>
+                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+                    <button class="btn btn-primary" onclick="syncToPaperclip(); closeModal();">Sync Now</button>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('system-modal').classList.remove('active');
+        }
+        
+        function showCampaignDetails() {
+            showPage('campaigns');
+        }
+        
+        function showCampaignDetails() {
+            showPage('campaigns');
+        }
+        
+        // Toggle agent status
+        function toggleAgentStatus(agentId) {
+            const agent = mainAgents.find(a => a.id === agentId);
+            if (agent) {
+                const statuses = ['active', 'busy', 'standby'];
+                const currentIdx = statuses.indexOf(agent.status);
+                agent.status = statuses[(currentIdx + 1) % statuses.length];
+                renderAgentTerminals();
+                log(`${agent.name} status changed to ${agent.status.toUpperCase()}`, 'system');
+            }
+        }
+        
+        // Logging
+        function log(message, type = 'info') {
+            const time = new Date().toLocaleTimeString();
+            const logEl = document.getElementById('api-log');
+            if (!logEl) return;
+            
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-${type}">${message}</span>`;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        function addToSubAgentLog(message) {
+            const logEl = document.getElementById('subagent-log');
+            if (!logEl) return;
+            
+            const time = new Date().toLocaleTimeString();
+            logEl.innerHTML += `<div class="log-entry"><span class="log-time">[${time}]</span> ${message}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        function clearLogs() {
+            document.getElementById('api-log').innerHTML = '';
+        }
+        
+        function exportLogs() {
+            const logs = document.getElementById('api-log').innerText;
+            const blob = new Blob([logs], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `valley-os-logs-${new Date().toISOString().slice(0,10)}.txt`;
+            a.click();
+            log('Logs exported', 'success');
+        }
+        
+        function exportOutput() {
+            const output = document.getElementById('command-output').innerText;
+            const blob = new Blob([output], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `valley-os-commands-${new Date().toISOString().slice(0,10)}.txt`;
+            a.click();
+            log('Command output exported', 'success');
+        }
+        
+        // Start
+        init();
+    </script>
+</body>
+</html>

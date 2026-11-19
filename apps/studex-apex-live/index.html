@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StudEx Group</title>
+  <meta name="description" content="StudEx Group, Johannesburg: Halaal Wagyu, Rwandan speciality coffee, contract wheat and Global Markets — plus AI agents and automation we design and build for South African businesses.">
+  <link rel="canonical" href="https://studex-group.com/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Space+Mono&display=swap" rel="stylesheet">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="StudEx Group">
+  <meta property="og:title" content="StudEx Group — Four desks. One group.">
+  <meta property="og:description" content="Halaal Wagyu, Rwandan coffee, contract wheat and Global Markets — and we design and build AI agents and automation for South African businesses.">
+  <meta property="og:url" content="https://studex-group.com/">
+  <meta property="og:image" content="https://studex-group.com/images/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="StudEx Group — Black and Gold, Johannesburg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="StudEx Group — Four desks. One group.">
+  <meta name="twitter:description" content="Halaal Wagyu, Rwandan coffee, contract wheat, Global Markets, and AI agents and automation we build for South African businesses.">
+  <meta name="twitter:image" content="https://studex-group.com/images/og.jpg">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-2: #141414;
+      --ink: #f0e5d3;
+      --muted: #b7b1a6;
+      --line: #3a3a3a;
+      --gold: #c9a84c;
+      --gold-2: #e8cf85;
+      --line-strong: #606060;
+      --gold-ink: #1a1408;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+    section[id], .pane[id] { scroll-margin-top: 5rem; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 1.25rem;
+      line-height: 1.45;
+    }
+    a { color: inherit; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      height: 68px;
+      padding: 0 1.5rem;
+      background: rgba(10, 10, 10, 0.92);
+      border-bottom: 1px solid var(--line);
+    }
+    .word {
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.16em;
+      font-size: 1.35rem;
+      text-decoration: none;
+    }
+    .nav ul {
+      display: flex;
+      gap: 1.35rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .nav a { text-decoration: none; }
+    .nav a:hover { color: var(--gold); }
+    .nav .nav-cta { margin-left: 0.6rem; padding-left: 1.1rem; border-left: 1px solid var(--gold); }
+    .nav .nav-cta a { color: var(--gold); }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      min-height: calc(100dvh - 68px);
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 4.5rem 6vw 4rem;
+      max-width: 46rem;
+    }
+    .eyebrow {
+      margin: 0 0 1rem;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    h1 {
+      margin: 0;
+      font-family: "Bebas Neue", sans-serif;
+      font-weight: 400;
+      font-size: clamp(4.2rem, 8vw, 7.4rem);
+      letter-spacing: 0.04em;
+      line-height: 0.88;
+    }
+    .lede {
+      max-width: 36rem;
+      margin: 1.4rem 0 0;
+      color: var(--muted);
+      font-size: 1.45rem;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 2rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 3rem;
+      padding: 0.7rem 1.2rem;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      white-space: nowrap;
+      border: 1px solid var(--gold);
+    }
+    .btn-solid { background: var(--gold-2); color: var(--gold-ink); border-color: var(--gold-2); }
+    .btn-line { background: transparent; color: var(--ink); }
+    .btn:active { transform: translateY(1px); }
+    :focus-visible { outline: 2px solid var(--gold-2); outline-offset: 3px; }
+    .btn:focus-visible { outline-offset: 2px; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--gold-2); outline-offset: 3px; }
+    .hero-photo { min-height: 52vh; background: var(--bg-2); }
+    .meat, .coffee, .register {
+      border-bottom: 1px solid var(--line);
+    }
+    .meat .copy { max-width: 46rem; }
+    .copy {
+      padding: 5.5rem 6vw;
+      max-width: 40rem;
+    }
+    h2 {
+      margin: 0 0 1rem;
+      font-family: "Bebas Neue", sans-serif;
+      font-weight: 400;
+      font-size: clamp(3.2rem, 6vw, 5.4rem);
+      letter-spacing: 0.05em;
+      line-height: 0.9;
+    }
+    p { margin: 0 0 1rem; }
+    .price {
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.85rem;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+    }
+    .meat-photo, .coffee-photo { min-height: 70vh; background: var(--bg-2); }
+    .coffee {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+    .coffee .copy { order: 2; }
+    .register {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .pane {
+      padding: 5.5rem 6vw;
+      min-height: 24rem;
+    }
+    .pane + .pane { border-left: 1px solid var(--line); }
+    .pane a.more {
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .factory { background: var(--bg-2); border-bottom: 1px solid var(--line); }
+    .factory .copy { max-width: 46rem; }
+    .factory-label {
+      margin: 0 0 1rem;
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 2rem 6vw 3rem;
+      color: var(--muted);
+      font-family: "Space Mono", ui-monospace, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+    }
+    footer a { color: var(--ink); }
+    @media (max-width: 800px) {
+      .nav { height: 60px; min-height: 60px; padding: 0 1rem; align-items: center; flex-direction: row; gap: 0.75rem; }
+      .nav ul { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 1rem; scrollbar-width: none; }
+      .nav ul::-webkit-scrollbar { display: none; }
+      .nav li { flex: 0 0 auto; }
+      .nav a { display: inline-flex; align-items: center; min-height: 44px; font-size: 0.8rem; }
+      .nav .nav-cta { margin-left: 0; padding-left: 1rem; }
+      .hero, .coffee, .register { grid-template-columns: 1fr; }
+      .hero-copy, .copy, .pane { padding: 2.5rem 1.15rem; }
+      .pane + .pane { border-left: 0; border-top: 1px solid var(--line); }
+      .coffee .copy { order: 0; }
+      .hero-photo, .coffee-photo { min-height: 52vw; }
+      h1 { font-size: 4.4rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn:active { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <a class="word" href="/">StudEx</a>
+    <ul>
+      <li><a href="#meat">Meat</a></li>
+      <li><a href="#coffee">Coffee</a></li>
+      <li><a href="#markets">Markets</a></li>
+      <li><a href="#wheat">Wheat</a></li>
+      <li><a href="os.html">OS</a></li>
+      <li class="nav-cta"><a href="https://hermes-intake.vercel.app" rel="noopener">Start a project</a></li>
+    </ul>
+  </header>
+
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">StudEx Group · Johannesburg</p>
+      <h1>Four desks.<br>One group.</h1>
+      <p class="lede">Halaal Wagyu, Rwandan coffee, contract wheat and own-stock commodity trade. We also design and build AI agents and automation for South African businesses.</p>
+      <div class="actions">
+        <a class="btn btn-solid" href="https://hermes-intake.vercel.app" rel="noopener">Start a project</a>
+        <a class="btn btn-line" href="mailto:t.ramaphosa@studex.dev?subject=StudEx%20Group%20desk">Talk to the desk</a>
+        <a class="btn btn-line" href="https://markets.studex-group.com">Global Markets</a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <img src="images/meat.webp" width="1248" height="832" alt="A raw Wagyu ribeye on a black board with a gold rim" decoding="async" fetchpriority="high" srcset="images/meat-640.webp 640w, images/meat-1248.webp 1248w" sizes="(max-width: 800px) 100vw, 48vw">
+    </div>
+  </section>
+
+  <section class="meat" id="meat">
+    <div class="copy">
+      <h2>Meat</h2>
+      <p>Halaal Wagyu and Ankole, cut and packed for the table. Wagyu Biltong Gold is air-dried in Original, chilli, and BBQ.</p>
+      <p class="price">StudBot Rise, R4,599. 1kg of Halaal Wagyu Biltong Gold in 14 sealed 70g packets.</p>
+      <p>The counter at studexmeat.com is open — order the cut and the quantity you want there, or send a note to the desk with the cut and the quantity named, and the desk confirms stock, cut and packing time by email.</p>
+    </div>
+  </section>
+
+  <section class="coffee" id="coffee">
+    <div class="coffee-photo">
+      <img src="images/coffee.webp" width="1248" height="832" alt="A black cup of coffee on a dark wood counter" loading="lazy" decoding="async" srcset="images/coffee-640.webp 640w, images/coffee-1248.webp 1248w" sizes="(max-width: 800px) 100vw, 52vw">
+    </div>
+    <div class="copy">
+      <h2>Coffee</h2>
+      <p>Rwandan speciality coffee shares the meat checkout. Fully washed, honey, aerobic, and natural. There is no second store.</p>
+      <p>The same counter takes coffee orders. Name the process and the bag size and the desk will confirm the batch.</p>
+    </div>
+  </section>
+
+  <section class="register">
+    <div class="pane" id="markets">
+      <h2>Markets</h2>
+      <p>Global Markets introduces a partner only after the work can be checked. The page holds the offer. It does not take a card.</p>
+      <a class="more" href="https://markets.studex-group.com">Open the markets page</a>
+    </div>
+    <div class="pane" id="wheat">
+      <h2>Wheat</h2>
+      <p>Wheat is quoted per contract. There is no public menu and no checkout on this page.</p>
+    </div>
+  </section>
+
+  <section class="factory">
+    <div class="copy">
+      <p class="factory-label">Dark Factory</p>
+      <h2>Build with StudEx</h2>
+      <p>Tell Hermes what you need. It writes the brief, our team reviews it, and you get a scoped proposal back. No payment is taken on the form.</p>
+      <div class="actions">
+        <a class="btn btn-solid" href="https://hermes-intake.vercel.app" rel="noopener">Start a project with Hermes</a>
+        <a class="btn btn-line" href="https://factory.studex-group.com">Open the Dark Factory</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>StudEx Group. Johannesburg.</span>
+    <a href="mailto:t.ramaphosa@studex.dev">t.ramaphosa@studex.dev</a>
+  </footer>
+</body>
+</html>
